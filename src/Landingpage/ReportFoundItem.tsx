@@ -1,10 +1,26 @@
 import React, { useState } from "react";
 import homei from "../assets/images/home.jpg";
 import { Upload } from "lucide-react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import ReUsableInput from "../ReusableComponents/ReUsableInput";
 import ReUsableSelect from "../ReusableComponents/ReUsableSelect";
 
+
+interface FormErrors {
+  name?: string;
+  category?: string;
+  description?: string;
+  serialnumber?: string;
+  founderEmail?: string;
+  location?: string;
+  phoneNumber?: string;
+  lastName?: string;
+  firstName?: string;
+  address?: string;
+  province?: string;
+  district?: string;
+  deviceimage?: string;
+}
 interface FormData {
   name: string;
   category: string;
@@ -38,87 +54,99 @@ const ReportFoundItem: React.FC = () => {
     deviceimage: null,
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState("");
+ 
+   const [errors, setErrors] = React.useState<any>({});
+   const [isLoading, setIsLoading] = React.useState(false);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+ 
+   const validate = () => {
+     const newerrors: FormErrors = {};
+     
+     if (!formData.name) {
+       newerrors.name = "Name is required";
+     }
+     if (!formData.category) {
+       newerrors.category = "Select Any Category";
+     }
+     if (!formData.founderEmail) {
+       newerrors.founderEmail = "Founder Email is required";
+     }
+     if (!formData.address) {
+       newerrors.address= "Address is required";
+     }
+     if (!formData.description) {
+       newerrors.description = "Description is required";
+     }
+     if (!formData.deviceimage) {
+       newerrors.deviceimage = "DeviceImage is required";
+     }
+     if (!formData.firstName) {
+       newerrors.firstName = "FirstName is required";
+     }
+     if (!formData.lastName) {
+       newerrors.lastName = "LastName is required";
+     }
+     if (!formData.district) {
+       newerrors.district = "District is required";
+     }
+     if (!formData.location) {
+       newerrors.location = "Location is required";
+     }
+     if (!formData.phoneNumber) {
+       newerrors.phoneNumber = "PhoneNumber is required";
+     }
+      if (!formData.serialnumber) {
+        newerrors.serialnumber = "SerialNumber is required";
+     }
+       if (!formData.province) {
+         newerrors.province = "Province is required";
+       }
+     setErrors(newerrors);
+     return Object.keys(newerrors).length === 0;
   };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setFormData((prev) => ({
-      ...prev,
-      device_image: file,
-    }));
-  };
-
-  const validateForm = (): boolean => {
-    const requiredFields: (keyof FormData)[] = [
-      "name",
-      "category",
-      "description",
-      "founderEmail",
-      "location",
-      "lastName",
-      "firstName",
-      "phoneNumber",
-      "name",
-      "serialnumber",
-    ];
-
-    for (const field of requiredFields) {
-      if (!formData[field]) {
-        setSubmitMessage(
-          `Please fill in the ${field
-            .replace(/_/g, " ")
-            .replace(/([A-Z])/g, " $1")
-            .toLowerCase()} field.`
-        );
-        return false;
-      }
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.founderEmail)) {
-      setSubmitMessage("Please enter a valid email address.");
-      return false;
-    }
-
-    return true;
-  };
-
-  const submitToDatabase = async (data: FormData): Promise<boolean> => {
-    // Static form - no actual submission
-    console.log("Form data (static - not submitted):", data);
-    return true;
-  };
-
+    const handleInputChange = (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >
+    ) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+      // Clear error when user starts typing
+      setErrors((prev:any) => ({
+        ...prev,
+        [name]: "",
+      }));
+    };
+ 
+   const handleChange = (
+     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+   ) => {
+     setFormData({ ...formData, [e.target.name]: e.target.value });
+     setErrors({ ...errors, [e.target.name]: "" });
+   };
+ 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitMessage("");
+    if (!validate()) return;
 
-    if (!validateForm()) {
-      return;
-    }
-
-    setIsSubmitting(true);
+    setIsLoading(true);
 
     try {
-      const success = await submitToDatabase(formData);
+      const response = await fetch(
+        "https://smart-trace-device-backend.onrender.com/api/devices/found/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
-      if (success) {
-        toast.success("Form completed (static mode - not actually submitted)");
-        // Reset form
+      if (response.ok) {
         setFormData({
           name: "",
           category: "",
@@ -127,20 +155,22 @@ const ReportFoundItem: React.FC = () => {
           founderEmail: "",
           location: "",
           phoneNumber: "",
-          deviceimage: null,
           firstName: "",
-          lastName: "",
-           address: "",
-           province: "",
+          address: "",
+          province: "",
           district: "",
+          lastName: "",
+          deviceimage: null,
         });
+        toast.success("FoundItem Created successfully!");
       } else {
-        toast.error("Static form - no actual submission performed");
+        toast.error("Failed to Create FoundItem. Please try again.");
       }
     } catch (error) {
-      toast.info("Static form - no submission functionality");
+      console.error("Error for creating item:", error);
+      toast.error("An error occurred. Please try again.");
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
@@ -175,17 +205,6 @@ const ReportFoundItem: React.FC = () => {
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12"
       >
         {/* Submit Message */}
-        {submitMessage && (
-          <div
-            className={`mb-6 p-4 rounded-md ${
-              submitMessage.includes("successfully")
-                ? "bg-green-100 text-green-800 border border-green-300"
-                : "bg-red-100 text-red-800 border border-red-300"
-            }`}
-          >
-            {submitMessage}
-          </div>
-        )}
 
         {/* Found Item Information Section */}
         <div className="bg-white rounded-lg shadow-sm mb-8">
@@ -200,51 +219,69 @@ const ReportFoundItem: React.FC = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-7 lg:gap-7">
               {/* Name */}
-              <ReUsableInput
-                type="text"
-                label="Device Name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Name of the device found"
-              />
-
-              {/* Category */}
-              <ReUsableSelect
-                label="Choose Category"
-                name="category"
-                value={formData.category}
-                onChange={handleInputChange}
-              >
-                <option value="">Select Electronic Category</option>
-                <option value="Phone">Phone</option>
-                <option value="Laptop">Laptop</option>
-                <option value="Tablet">Tablet</option>
-                <option value="Camera">Camera</option>
-                <option value="Audio Device">Audio Device</option>
-                <option value="Accessories">Accessories</option>
-                <option value="Other">Other Electronics</option>
-              </ReUsableSelect>
-
-              {/* Color */}
+              <div>
+                <ReUsableInput
+                  type="text"
+                  label="Device Name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Name of the device found"
+                />
+                {errors && (
+                  <p className=" text-sm text-red-400">{errors.name}</p>
+                )}
+              </div>
+              <div>
+                {/* Category */}
+                <ReUsableSelect
+                  label="Choose Category"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Select Electronic Category</option>
+                  <option value="Phone">Phone</option>
+                  <option value="Laptop">Laptop</option>
+                  <option value="Tablet">Tablet</option>
+                  <option value="Camera">Camera</option>
+                  <option value="Audio Device">Audio Device</option>
+                  <option value="Accessories">Accessories</option>
+                  <option value="Other">Other Electronics</option>
+                </ReUsableSelect>
+                {errors && (
+                  <p className=" text-sm text-red-400">{errors.category}</p>
+                )}
+              </div>
 
               {/* Serial Number */}
-              <ReUsableInput
-                label="Serial Number (if visible)"
-                type="text"
-                name="serial_number"
-                value={formData.serialnumber}
-                onChange={handleInputChange}
-                placeholder="Serial number or IMEI"
-              />
-              <ReUsableInput
-                label="Location Found"
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleInputChange}
-                placeholder="Where did you find this device?"
-              />
+              <div>
+                <ReUsableInput
+                  label="Serial Number (if visible)"
+                  type="text"
+                  name="serialnumber"
+                  value={formData.serialnumber}
+                  onChange={handleChange}
+                  placeholder="Serial number or IMEI"
+                />
+
+                {errors && (
+                  <p className=" text-sm text-red-400">{errors.serialnumber}</p>
+                )}
+              </div>
+              <div>
+                <ReUsableInput
+                  label="Location Found"
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  placeholder="Where did you find this device?"
+                />
+                {errors && (
+                  <p className=" text-sm text-red-400">{errors.location}</p>
+                )}
+              </div>
 
               {/* Upload Image */}
               <div className="space-y-2">
@@ -260,35 +297,53 @@ const ReportFoundItem: React.FC = () => {
                   </p>
                   <input
                     type="file"
-                    onChange={handleFileChange}
-                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] || null;
+                      setFormData((prev) => ({
+                        ...prev,
+                        deviceimage: file,
+                      }));
+                    }}
+                    accept="application/pdf,image/*"
                     className="hidden"
                     id="image-upload"
                   />
                   <label
                     htmlFor="image-upload"
-                    className="cursor-pointer text-blue-600 hover:text-blue-800"
+                    className="cursor-pointer text-blue-600 text-sm hover:text-blue-800"
                   >
                     Choose File
                   </label>
+                  <div>
+                    {errors && (
+                      <p className=" text-sm text-red-400">
+                        {errors.deviceimage}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
-
-              {/* Location */}
 
               {/* Description */}
               <div className="space-y-2 lg:col-span-2">
                 <label className="block text-sm font-medium text-gray-700">
                   Description
                 </label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  placeholder="Detailed description of the device and circumstances"
-                  rows={5}
-                  className="w-full px-3 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none resize-vertical"
-                />
+                <div>
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    placeholder="Detailed description of the device and circumstances"
+                    rows={5}
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none resize-vertical"
+                  />
+                  {errors && (
+                    <p className=" text-sm text-red-400">
+                      {errors.description}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -307,55 +362,67 @@ const ReportFoundItem: React.FC = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
               {/* Address */}
-              <ReUsableSelect
-                label="Address"
-                name="category"
-                value={formData.address}
-                onChange={handleInputChange}
-              >
-                <option value="">Where did you find the device?</option>
-                <option value="Market">Market</option>
-                <option value="work">Work</option>
-                <option value="school">School</option>
-                <option value="park">Park</option>
-                <option value="restaurant">Restaurant</option>
-                <option value="publicTransport">Public Transport</option>
-                <option value="other">Other</option>
-              </ReUsableSelect>
-
+              <div>
+                <ReUsableSelect
+                  label="Address"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Where did you find the device?</option>
+                  <option value="Market">Market</option>
+                  <option value="work">Work</option>
+                  <option value="school">School</option>
+                  <option value="park">Park</option>
+                  <option value="restaurant">Restaurant</option>
+                  <option value="publicTransport">Public Transport</option>
+                  <option value="other">Other</option>
+                </ReUsableSelect>
+                {errors && (
+                  <p className=" text-sm text-red-400">{errors.address}</p>
+                )}
+              </div>
               {/* State */}
-
-              <ReUsableSelect
-                label="District"
-                name="lcation"
-                value={formData.district}
-                onChange={handleInputChange}
-              >
-                <option value="">Please select the District</option>
-                <option value="ca">Kicukiro</option>
-                <option value="ny">Nyarugenge</option>
-                <option value="tx">Gasabo</option>
-                <option value="fl">Bugesera</option>
-                <option value="il">Kamonyi</option>
-                <option value="pa">Rwamagana</option>
-                <option value="ca">Kayonza</option>
-                <option value="ny">Ngoma</option>
-                <option value="tx">Kirehe</option>
-                <option value="fl">Rusizi</option>
-                <option value="il">Rubavu</option>
-                <option value="pa">Musanze</option>
-              </ReUsableSelect>
+              <div>
+                <ReUsableSelect
+                  label="District"
+                  name="district"
+                  value={formData.district}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Please select the District</option>
+                  <option value="ca">Kicukiro</option>
+                  <option value="ny">Nyarugenge</option>
+                  <option value="tx">Gasabo</option>
+                  <option value="fl">Bugesera</option>
+                  <option value="il">Kamonyi</option>
+                  <option value="pa">Rwamagana</option>
+                  <option value="ca">Kayonza</option>
+                  <option value="ny">Ngoma</option>
+                  <option value="tx">Kirehe</option>
+                  <option value="fl">Rusizi</option>
+                  <option value="il">Rubavu</option>
+                  <option value="pa">Musanze</option>
+                </ReUsableSelect>
+                {errors && (
+                  <p className=" text-sm text-red-400">{errors.district}</p>
+                )}
+              </div>
 
               {/* City/Town */}
-
-              <ReUsableInput
-                label="Province"
-                type="text"
-                name="location"
-                value={formData.province}
-                onChange={handleInputChange}
-                placeholder="Please select City/Town"
-              />
+              <div>
+                <ReUsableInput
+                  label="Province"
+                  type="text"
+                  name="province"
+                  value={formData.province}
+                  onChange={handleChange}
+                  placeholder="Please select City/Town"
+                />
+                {errors && (
+                  <p className=" text-sm text-red-400">{errors.province}</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -373,46 +440,62 @@ const ReportFoundItem: React.FC = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
               {/* First Name */}
-
-              <ReUsableInput
-                label="FirstName"
-                type="text"
-                name="name"
-                value={formData.firstName}
-                onChange={handleInputChange}
-                placeholder="First Name"
-              />
+              <div>
+                <ReUsableInput
+                  label="FirstName"
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  placeholder="First Name"
+                />
+                {errors && (
+                  <p className=" text-sm text-red-400">{errors.firstName}</p>
+                )}
+              </div>
 
               {/* Last Name */}
-
-              <ReUsableInput
-                label="LastName"
-                type="text"
-                name="name"
-                value={formData.lastName}
-                onChange={handleInputChange}
-                placeholder="Last Name"
-              />
+              <div>
+                <ReUsableInput
+                  label="LastName"
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  placeholder="Last Name"
+                />
+                {errors && (
+                  <p className=" text-sm text-red-400">{errors.lastName}</p>
+                )}
+              </div>
 
               {/* Phone Number */}
-
-              <ReUsableInput
-                label="PhoneNumber"
-                type="tel"
-                name="phone_number"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-                placeholder="Phone Number"
-              />
-
-              <ReUsableInput
-                label="Email"
-                type="email"
-                name="contact_email"
-                value={formData.founderEmail}
-                onChange={handleInputChange}
-                placeholder="Email"
-              />
+              <div>
+                <ReUsableInput
+                  label="PhoneNumber"
+                  type="tel"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleChange}
+                  placeholder="Phone Number"
+                />
+                {errors && (
+                  <p className=" text-sm text-red-400">{errors.phoneNumber}</p>
+                )}
+              </div>
+              <div>
+                <ReUsableInput
+                  label="Email"
+                  type="email"
+                  name="founderEmail"
+                  value={formData.founderEmail}
+                  onChange={handleChange}
+                  placeholder="Email"
+                />
+                {errors && (
+                  <p className=" text-sm text-red-400">{errors.founderEmail}</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -421,17 +504,24 @@ const ReportFoundItem: React.FC = () => {
         <div className="flex justify-center">
           <button
             type="submit"
-            disabled={isSubmitting}
-            className={`px-8 py-3 rounded-md text-white font-medium transition-all ${
-              isSubmitting
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-primaryColor-100 hover:bg-blue-300 hover:shadow-lg"
-            }`}
+            disabled={isLoading}
+            className="px-8 py-3 rounded-md text-white font-medium transition-all bg-primaryColor-100 hover:bg-blue-300 hover:shadow-lg"
           >
-            {isSubmitting ? "Submitting..." : "Submit Found Items"}
+            {isLoading ? "Submitting..." : "Submit Found Items"}
           </button>
         </div>
       </form>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };
