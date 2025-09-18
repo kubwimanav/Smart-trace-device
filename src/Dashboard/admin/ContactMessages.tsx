@@ -1,0 +1,592 @@
+import { useState, useEffect, type JSX } from "react";
+import {
+  Send,
+  Search,
+  Filter,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  MoreHorizontal,
+  Menu,
+  Delete,
+} from "lucide-react";
+import { FiDelete } from "react-icons/fi";
+import { MdDelete } from "react-icons/md";
+
+// TypeScript interfaces
+interface ContactMessage {
+  id: string;
+  _id: string;
+  name: string;
+  email: string;
+  subject: string;
+  description: string;
+  message: string;
+  time: string;
+  status: "unread" | "pending" | "resolved";
+}
+
+// Static data
+const staticContactMessages: ContactMessage[] = [
+  {
+    id: "1",
+    _id: "1",
+    name: "John Smith",
+    email: "john.smith@email.com",
+    subject: "Website Inquiry",
+    description:
+      "I'm interested in learning more about your services. Could you please provide more details about your pricing and packages?",
+    message:
+      "I'm interested in learning more about your services. Could you please provide more details about your pricing and packages?",
+    time: "2 hours ago",
+    status: "unread",
+  },
+  {
+    id: "2",
+    _id: "2",
+    name: "Sarah Johnson",
+    email: "sarah.johnson@email.com",
+    subject: "Technical Support",
+    description:
+      "I'm having trouble with the login functionality on your website. Every time I try to log in, it shows an error message.",
+    message:
+      "I'm having trouble with the login functionality on your website. Every time I try to log in, it shows an error message.",
+    time: "5 hours ago",
+    status: "pending",
+  },
+  {
+    id: "3",
+    _id: "3",
+    name: "Mike Wilson",
+    email: "mike.wilson@email.com",
+    subject: "Partnership Opportunity",
+    description:
+      "Hello, I represent a company that would like to explore partnership opportunities with your organization. We believe there could be mutual benefits.",
+    message:
+      "Hello, I represent a company that would like to explore partnership opportunities with your organization. We believe there could be mutual benefits.",
+    time: "1 day ago",
+    status: "resolved",
+  },
+  {
+    id: "4",
+    _id: "4",
+    name: "Emma Davis",
+    email: "emma.davis@email.com",
+    subject: "Product Feedback",
+    description:
+      "I recently used your product and wanted to share some feedback. Overall, I'm very satisfied but have a few suggestions for improvement.",
+    message:
+      "I recently used your product and wanted to share some feedback. Overall, I'm very satisfied but have a few suggestions for improvement.",
+    time: "2 days ago",
+    status: "unread",
+  },
+  {
+    id: "5",
+    _id: "5",
+    name: "David Brown",
+    email: "david.brown@email.com",
+    subject: "Billing Question",
+    description:
+      "I have a question about my recent invoice. There seems to be a discrepancy in the billing amount that I'd like to clarify.",
+    message:
+      "I have a question about my recent invoice. There seems to be a discrepancy in the billing amount that I'd like to clarify.",
+    time: "3 days ago",
+    status: "pending",
+  },
+  {
+    id: "6",
+    _id: "6",
+    name: "Lisa Anderson",
+    email: "lisa.anderson@email.com",
+    subject: "General Inquiry",
+    description:
+      "I'm researching solutions for my business and came across your website. Could you provide more information about your company and services?",
+    message:
+      "I'm researching solutions for my business and came across your website. Could you provide more information about your company and services?",
+    time: "1 week ago",
+    status: "resolved",
+  },
+  {
+    id: "7",
+    _id: "7",
+    name: "Robert Taylor",
+    email: "robert.taylor@email.com",
+    subject: "Feature Request",
+    description:
+      "I'm a regular user of your platform and would like to suggest a new feature that could benefit many users. The feature would help with workflow automation.",
+    message:
+      "I'm a regular user of your platform and would like to suggest a new feature that could benefit many users. The feature would help with workflow automation.",
+    time: "1 week ago",
+    status: "unread",
+  },
+];
+
+export default function ContactMessagesPage(): JSX.Element {
+  const contact = staticContactMessages;
+
+  const [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(
+    null
+  );
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+
+  const messagesPerPage = 4;
+
+  // Update messages when context data changes
+  useEffect(() => {
+    if (contact && Array.isArray(contact)) {
+      // Ensure each message has the required properties
+      const processedMessages = contact.map((message) => ({
+        ...message,
+        time: message.time || "Recently",
+        description:
+          message.description || message.message || "No description available",
+      }));
+      setMessages(processedMessages);
+    }
+  }, [contact]);
+
+  // Update status handler
+  const handleStatusChange = (id: string, newStatus: string) => {
+    setMessages(
+      messages.map((message) =>
+        message.id === id
+          ? {
+              ...message,
+              status: newStatus as "unread" | "pending" | "resolved",
+            }
+          : message
+      )
+    );
+    if (selectedMessage && selectedMessage.id === id) {
+      setSelectedMessage({
+        ...selectedMessage,
+        status: newStatus as "unread" | "pending" | "resolved",
+      });
+    }
+  };
+
+  // Filter messages based on search term and status filter
+  const filteredMessages = messages.filter((message) => {
+    const matchesSearch =
+      (message.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (message.email || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (message.description || "")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+    const matchesFilter =
+      filterStatus === "all" || message.status === filterStatus;
+
+    return matchesSearch && matchesFilter;
+  });
+
+  // Pagination logic
+  const indexOfLastMessage = currentPage * messagesPerPage;
+  const indexOfFirstMessage = indexOfLastMessage - messagesPerPage;
+  const currentMessages = filteredMessages.slice(
+    indexOfFirstMessage,
+    indexOfLastMessage
+  );
+  const totalPages = Math.ceil(filteredMessages.length / messagesPerPage);
+
+  // Status badge color mapping
+  const statusColors: Record<string, string> = {
+    unread: "bg-blue-100 text-blue-800",
+    pending: "bg-yellow-100 text-yellow-800",
+    resolved: "bg-green-100 text-green-800",
+  };
+
+  return (
+    <div className="bg-gray-50 rounded-2xl">
+      <div className="max-w-7xl mx-auto py-3 px-2 sm:px-4 lg:px-6">
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          {/* Header */}
+          <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+            <h1 className="text-lg sm:text-xl font-semibold text-gray-800">
+              Contact Messages
+            </h1>
+            <div className="flex space-x-2">
+              <button
+                className="md:hidden text-gray-600 hover:text-gray-900"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                <Menu size={20} />
+              </button>
+              <span className="hidden md:inline text-blue-600 hover:text-blue-800 cursor-pointer font-medium text-sm">
+                View All
+              </span>
+            </div>
+          </div>
+
+          {/* Mobile menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden px-4 py-2 bg-gray-50 border-b border-gray-200">
+              <div className="flex flex-col space-y-2">
+                <button className="text-left text-blue-600 hover:text-blue-800 font-medium text-sm py-1">
+                  View All Messages
+                </button>
+                <button className="text-left text-blue-600 hover:text-blue-800 font-medium text-sm py-1">
+                  Export Data
+                </button>
+                <button className="text-left text-blue-600 hover:text-blue-800 font-medium text-sm py-1">
+                  Settings
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Search and filter */}
+          <div className="px-4 py-3 flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 md:space-x-3 border-b border-gray-200">
+            <div className="relative w-full md:w-64">
+              <input
+                type="text"
+                placeholder="Search messages..."
+                className="pl-10 pr-4 py-2 border border-gray-300 rounded-md w-full"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1); // Reset to first page on search
+                }}
+              />
+              <div className="absolute left-3 top-2.5 text-gray-400">
+                <Search size={18} />
+              </div>
+              {searchTerm && (
+                <button
+                  className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+                  onClick={() => {
+                    setSearchTerm("");
+                    setCurrentPage(1);
+                  }}
+                >
+                  <X size={18} />
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-2 w-full md:w-auto">
+              <span className="text-gray-500">
+                <Filter size={18} />
+              </span>
+              <select
+                className="border border-gray-300 rounded-md px-3 py-2 w-full"
+                value={filterStatus}
+                onChange={(e) => {
+                  setFilterStatus(e.target.value);
+                  setCurrentPage(1); // Reset to first page on filter change
+                }}
+              >
+                <option value="all">All Status</option>
+                <option value="unread">Unread</option>
+                <option value="pending">Pending</option>
+                <option value="resolved">Resolved</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="md:hidden">
+            {currentMessages.length > 0 ? (
+              <div className="divide-y divide-gray-200">
+                {currentMessages.map((message) => (
+                  <div key={message.id} className="p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h3 className="font-medium text-gray-900">
+                          {message.name || "Unknown"}
+                        </h3>
+                        <p className="text-xs text-gray-500">
+                          {message.email || "No email"}
+                        </p>
+                      </div>
+                      <span
+                        className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                          statusColors[message.status] || statusColors.unread
+                        }`}
+                      >
+                        {(message.status || "unread").charAt(0).toUpperCase() +
+                          (message.status || "unread").slice(1)}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-700 mb-2 line-clamp-2">
+                      {message.description || "No description available"}
+                    </p>
+                    <div className="flex justify-between items-center">
+                      <p className="text-xs text-gray-500">
+                        {message.time || "Recently"}
+                      </p>
+                      <div className="flex space-x-2">
+                        <button
+                          className="text-blue-600 hover:text-blue-900 p-1"
+                          title="View Details"
+                          onClick={() => setSelectedMessage(message)}
+                        >
+                          <MoreHorizontal size={16} />
+                        </button>
+                        <button
+                          className="text-blue-600 hover:text-blue-900 p-1"
+                          title="Reply"
+                        >
+                          <Send size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-12 text-center text-gray-500">
+                {messages.length === 0
+                  ? "No messages available"
+                  : "No messages found matching your criteria"}
+              </div>
+            )}
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 tracking-wider">
+                    Name
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 tracking-wider hidden lg:table-cell">
+                    Email
+                  </th>
+
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 tracking-wider">
+                    Subject
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500  tracking-wider">
+                    Description
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {currentMessages.length > 0 ? (
+                  currentMessages.map((message) => (
+                    <tr key={message.id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">
+                          {message.name || "Unknown"}
+                        </div>
+                        <div className="text-sm text-gray-500 md:hidden">
+                          {message.email || "No email"}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap hidden lg:table-cell">
+                        <div className="text-sm text-gray-500">
+                          {message.email || "No email"}
+                        </div>
+                      </td>
+
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <span className="px-2 py-1 inline-flex text-sm font-semibold rounded-full">
+                          {message.subject}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="text-sm text-gray-900 flex items-center">
+                          <span className="line-clamp-1 xl:line-clamp-2">
+                            {message.description || "No description available"}
+                          </span>
+                          <button
+                            className="ml-1 flex-shrink-0 text-sm text-blue-600 hover:text-blue-800"
+                            title="View full description"
+                            onClick={() => setSelectedMessage(message)}
+                          >
+                            <MoreHorizontal size={16} />
+                          </button>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                        <div className="flex space-x-2">
+                          
+                          <button
+                            className="text-red-300 hover:text-blue-900 p-1"
+                            title="Reply"
+                          >
+                            <MdDelete size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="px-4 py-6 text-center text-gray-500"
+                    >
+                      {messages.length === 0
+                        ? "No messages available"
+                        : "No messages found matching your criteria"}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          {filteredMessages.length > 0 && (
+            <div className="bg-white px-4 py-3 flex flex-col sm:flex-row items-center justify-between border-t border-gray-200">
+              <div className="text-sm text-gray-700 mb-2 sm:mb-0">
+                Showing{" "}
+                <span className="font-medium">{indexOfFirstMessage + 1}</span>{" "}
+                to{" "}
+                <span className="font-medium">
+                  {Math.min(indexOfLastMessage, filteredMessages.length)}
+                </span>{" "}
+                of{" "}
+                <span className="font-medium">{filteredMessages.length}</span>{" "}
+                results
+              </div>
+              <div>
+                <nav
+                  className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                  aria-label="Pagination"
+                >
+                  <button
+                    className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium ${
+                      currentPage === 1
+                        ? "text-gray-300 cursor-not-allowed"
+                        : "text-gray-500 hover:bg-gray-50"
+                    }`}
+                    onClick={() =>
+                      currentPage > 1 && setCurrentPage(currentPage - 1)
+                    }
+                    disabled={currentPage === 1}
+                  >
+                    <span className="sr-only">Previous</span>
+                    <ChevronLeft size={16} />
+                  </button>
+
+                  {/* Show limited page numbers */}
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    const pageNumber = i + 1;
+                    return (
+                      <button
+                        key={pageNumber}
+                        onClick={() => setCurrentPage(pageNumber)}
+                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                          currentPage === pageNumber
+                            ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
+                            : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                        }`}
+                      >
+                        {pageNumber}
+                      </button>
+                    );
+                  })}
+
+                  <button
+                    className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium ${
+                      currentPage === totalPages
+                        ? "text-gray-300 cursor-not-allowed"
+                        : "text-gray-500 hover:bg-gray-50"
+                    }`}
+                    onClick={() =>
+                      currentPage < totalPages &&
+                      setCurrentPage(currentPage + 1)
+                    }
+                    disabled={currentPage === totalPages}
+                  >
+                    <span className="sr-only">Next</span>
+                    <ChevronRight size={16} />
+                  </button>
+                </nav>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Message Detail Modal */}
+        {selectedMessage && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-auto">
+              <div className="px-4 py-3 bg-gray-50 border-b flex justify-between items-center">
+                <h3 className="text-lg font-medium text-gray-900">
+                  Message Details
+                </h3>
+                <button
+                  onClick={() => setSelectedMessage(null)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="px-4 py-3 max-h-64 sm:max-h-96 overflow-y-auto">
+                <div className="mb-3">
+                  <p className="text-sm font-medium text-gray-500">From</p>
+                  <p className="text-sm text-gray-900">
+                    {selectedMessage.name || "Unknown"} (
+                    {selectedMessage.email || "No email"})
+                  </p>
+                </div>
+                <div className="mb-3">
+                  <p className="text-sm font-medium text-gray-500">Time</p>
+                  <p className="text-sm text-gray-900">
+                    {selectedMessage.time || "Recently"}
+                  </p>
+                </div>
+                <div className="mb-3">
+                  <p className="text-sm font-medium text-gray-500">Status</p>
+                  <div className="flex items-center space-x-2 mt-1">
+                    <span
+                      className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                        statusColors[selectedMessage.status] ||
+                        statusColors.unread
+                      }`}
+                    >
+                      {(selectedMessage.status || "unread")
+                        .charAt(0)
+                        .toUpperCase() +
+                        (selectedMessage.status || "unread").slice(1)}
+                    </span>
+                    <select
+                      className="text-xs border border-gray-300 rounded-md px-2 py-1"
+                      value={selectedMessage.status || "unread"}
+                      onChange={(e) =>
+                        handleStatusChange(selectedMessage.id, e.target.value)
+                      }
+                    >
+                      <option value="unread">Unread</option>
+                      <option value="pending">Pending</option>
+                      <option value="resolved">Resolved</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Message</p>
+                  <p className="text-sm text-gray-900 mt-1">
+                    {selectedMessage.description || "No description available"}
+                  </p>
+                </div>
+              </div>
+              <div className="px-4 py-3 bg-gray-50 border-t flex justify-end space-x-3">
+                <button
+                  className="py-1.5 px-3 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  onClick={() => setSelectedMessage(null)}
+                >
+                  Close
+                </button>
+                <button className="py-1.5 px-3 bg-blue-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700">
+                  Reply
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
