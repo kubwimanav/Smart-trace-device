@@ -11,7 +11,7 @@ import imag6 from "../assets/images/Tablet.jpg";
 import imag7 from "../assets/images/mouse.jpg";
 import imag8 from "../assets/images/laptop.jpg";
 import imag9 from "../assets/images/phonen.jpg";
-import { Search, ChevronDown, MapPin } from "lucide-react";
+import { Search, ChevronDown} from "lucide-react";
 
 const FoundItem: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
