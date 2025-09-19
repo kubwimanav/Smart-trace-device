@@ -18,13 +18,19 @@ import AdminDashLayout from "../Dashboard/admin/AdminDashLayout";
 import UserDashLayout from "../Dashboard/userdash/UserDashLayout";
 import UserDashHome from "../Dashboard/userdash/UserDashHome";
 import MatchedItem from "../Dashboard/admin/MatchedItem";
+import Login from "../Landingpage/login";
+import Register from "../Landingpage/Register";
+import OtpPage from "../Landingpage/otp";
 
 const AppRaute = () => {
   return (
-    <BrowserRouter>
+    <>
       <ScrollToTop />
       <Routes>
         <Route path="/LandingAuth" element={<LandingAuth />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/otp" element={<OtpPage />} />
 
         {/* admin */}
 
@@ -56,7 +62,7 @@ const AppRaute = () => {
         </Route>
       </Routes>
       
-    </BrowserRouter>
+    </>
   );
 };
 export default AppRaute;
