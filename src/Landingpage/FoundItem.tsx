@@ -12,6 +12,7 @@ import imag7 from "../assets/images/mouse.jpg";
 import imag8 from "../assets/images/laptop.jpg";
 import imag9 from "../assets/images/phonen.jpg";
 import { Search, ChevronDown} from "lucide-react";
+import { useGetProductsQuery } from "../Api/item";
 
 const FoundItem: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -85,6 +86,9 @@ const FoundItem: React.FC = () => {
     },
   ];
 
+  const { data } = useGetProductsQuery();
+
+
   // Rwandan districts for location filtering
   const rwandanDistricts = [
     "Kicukiro", "Gasabo", "Nyarugenge", "Bugesera", "Kamonyi", "Rwamagana",
@@ -129,7 +133,9 @@ const FoundItem: React.FC = () => {
         }}
       >
         <div className="text-white grid gap-5">
-          <h1 className="font-bold text-3xl md:text-4xl">Looking for Your Device?</h1>
+          <h1 className="font-bold text-3xl md:text-4xl">
+            Looking for Your Device?
+          </h1>
           <p className="text-lg md:text-xl">
             Reporting your lost or stolen device helps protect everyone by
             making it harder to resell and easier for a finder to return it to
@@ -137,12 +143,28 @@ const FoundItem: React.FC = () => {
           </p>
         </div>
       </div>
+      <div>
+        {data?.map((item: any) => (
+          <div>
+            <p>{data.length}</p>
+            <p className=" text-red-300 text-2xl">{item.name}</p>
+            <p className=" text-red-300 text-2xl">{item.category}</p>
+            <p className=" text-red-300 text-2xl">{item.serialnumber}</p>
+            <p className=" text-red-300 text-2xl">{item.lastName}</p>
+            <p className=" text-red-300 text-2xl">{item.province}</p>
+            <p className=" text-red-300 text-2xl">{item.district}</p>
+            <p className=" text-red-300 text-2xl">{item.description}</p>
+
+            <img src={item.deviceimage} alt="" />
+          </div>
+        ))}
+      </div>
 
       <div className="w-full p-8">
         <div className="max-w-7xl mx-auto mb-8 space-y-4">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <h1 className="text-2xl font-bold">Browse Found Items</h1>
-            
+
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
               {/* Search with integrated filter dropdown */}
               <div className="relative flex-1 flex">
@@ -155,7 +177,7 @@ const FoundItem: React.FC = () => {
                     {searchBy === "title" ? "Title" : "Location"}
                     <ChevronDown className="w-4 h-4" />
                   </button>
-                  
+
                   {showSearchOptions && (
                     <div className="absolute top-full left-0 mt-1 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10">
                       <button
@@ -179,14 +201,14 @@ const FoundItem: React.FC = () => {
                     </div>
                   )}
                 </div>
-                
+
                 {/* Search input */}
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
                     placeholder={
-                      searchBy === "title" 
-                        ? "Search by item title..." 
+                      searchBy === "title"
+                        ? "Search by item title..."
                         : "Search by district..."
                     }
                     value={searchTerm}
@@ -197,7 +219,7 @@ const FoundItem: React.FC = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Location quick filters - only show when searching by location */}
           {/* {searchBy === "location" && (
             <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 mt-2">
@@ -218,7 +240,7 @@ const FoundItem: React.FC = () => {
               </div>
             </div>
           )} */}
-          
+
           <p className="text-gray-600">
             Statistics show 85% of lost property (phones, bags, pets, luggage,
             etc.) is in honest hands. Let Lostings help you find the
@@ -226,16 +248,17 @@ const FoundItem: React.FC = () => {
             property with our lost and found department today!
           </p>
         </div>
-        
+
         {/* Results count */}
         <div className="mb-6 flex justify-between items-center">
           <p className="text-gray-600">
-            {filteredItems.length} {filteredItems.length === 1 ? 'item' : 'items'} found
-            {searchTerm ? ` matching "${searchTerm}" in ${searchBy}` : ''}
+            {filteredItems.length}{" "}
+            {filteredItems.length === 1 ? "item" : "items"} found
+            {searchTerm ? ` matching "${searchTerm}" in ${searchBy}` : ""}
           </p>
-          
+
           {searchTerm && (
-            <button 
+            <button
               onClick={clearSearch}
               className="text-sm text-blue-600 hover:text-blue-800"
             >
@@ -243,30 +266,29 @@ const FoundItem: React.FC = () => {
             </button>
           )}
         </div>
-        
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-center justify-items-center place-items-center mx-auto">
           {filteredItems.length > 0 ? (
             filteredItems.map((item) => (
               <div className="w-full max-w-sm" key={item.id}>
-                <LostItemCard
-                  title="Item Found"
-                  item={item}
-                />
+                <LostItemCard title="Item Found" item={item} />
               </div>
             ))
           ) : (
             <div className="col-span-full text-center py-12">
               <div className="text-gray-500 text-lg mb-2">No items found</div>
               <p className="text-gray-400">
-                {searchTerm 
-                  ? `No items found matching "${searchTerm}" in ${searchBy}` 
+                {searchTerm
+                  ? `No items found matching "${searchTerm}" in ${searchBy}`
                   : "No found items have been reported yet"}
               </p>
               {searchBy === "location" && searchTerm && (
                 <div className="mt-4">
-                  <p className="text-sm text-gray-500 mb-2">Popular districts in Rwanda:</p>
+                  <p className="text-sm text-gray-500 mb-2">
+                    Popular districts in Rwanda:
+                  </p>
                   <div className="flex flex-wrap justify-center gap-2">
-                    {rwandanDistricts.slice(0, 8).map(district => (
+                    {rwandanDistricts.slice(0, 8).map((district) => (
                       <button
                         key={district}
                         onClick={() => setSearchTerm(district)}
