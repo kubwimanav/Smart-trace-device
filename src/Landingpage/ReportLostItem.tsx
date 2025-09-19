@@ -20,6 +20,7 @@ interface FormData {
   serialNumber: string;
   firstName: string;
   lastName: string;
+  losterEmail:string;
   phoneNumber: string;
   // email: string;
 }
@@ -40,6 +41,7 @@ interface FormErrors {
   firstName?: string;
   lastName?: string;
   phoneNumber?: string;
+  losterEmail?: string;
   // email: string;
 }
 
@@ -60,6 +62,7 @@ const ReportLostItem: React.FC = () => {
     firstName: "",
     lastName: "",
     phoneNumber: "",
+    losterEmail:"",
     // email: "",
   });
   const [errors, setErrors] = React.useState<any>({});
@@ -127,10 +130,10 @@ const ReportLostItem: React.FC = () => {
     if (!formData.serialNumber) {
       newErrors.serialNumber = "Serial Number Is Required";
     }
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // if (!emailRegex.test(formData.email)) {
-    //   newErrors.email="Please enter a valid email address.";
-    // }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.losterEmail)) {
+      newErrors.losterEmail="Please enter a valid email address.";
+    }
 
     setErrors(newErrors);
     return Object.values(newErrors).every((error) => error === "");
@@ -173,6 +176,7 @@ const ReportLostItem: React.FC = () => {
           firstName: "",
           lastName: "",
           phoneNumber: "",
+          losterEmail:"",
           // email: "",
         });
 
@@ -252,8 +256,9 @@ const ReportLostItem: React.FC = () => {
                   onChange={handleChange}
                   placeholder="Title Of Item Found"
                 />
-                {errors && <p className=" text-sm text-red-400">{errors.title}</p>
-                }
+                {errors && (
+                  <p className=" text-sm text-red-400">{errors.title}</p>
+                )}
               </div>
 
               {/* Date Item Found */}
@@ -266,9 +271,9 @@ const ReportLostItem: React.FC = () => {
                   value={formData.dateFound}
                   onChange={handleInputChange}
                 />
-                {errors && 
+                {errors && (
                   <p className=" text-sm text-red-400">{errors.dateFound}</p>
-                }
+                )}
               </div>
 
               {/* Category */}
@@ -292,9 +297,9 @@ const ReportLostItem: React.FC = () => {
                   </option>
                   <option value="other">Other Electronics</option>
                 </ReUsableSelect>
-                {errors && 
+                {errors && (
                   <p className=" text-sm text-red-400">{errors.category}</p>
-                }
+                )}
               </div>
 
               {/* Time Found */}
@@ -307,9 +312,9 @@ const ReportLostItem: React.FC = () => {
                   value={formData.timeFound}
                   onChange={handleInputChange}
                 />
-                {errors&& 
+                {errors && (
                   <p className=" text-sm text-red-400">{errors.timeFound}</p>
-                }
+                )}
               </div>
 
               {/* Upload Receipt */}
@@ -379,9 +384,9 @@ const ReportLostItem: React.FC = () => {
                       Choose File
                     </label>
                   </div>
-                  {errors&& 
+                  {errors && (
                     <p className=" text-sm text-red-400">{errors.image}</p>
-                  }
+                  )}
                 </div>
               </div>
 
@@ -394,9 +399,9 @@ const ReportLostItem: React.FC = () => {
                   onChange={handleChange}
                   placeholder="Search Brand"
                 />
-                {errors&& 
+                {errors && (
                   <p className=" text-sm text-red-400">{errors.brand}</p>
-                }
+                )}
               </div>
 
               {/* Additional Information */}
@@ -413,11 +418,11 @@ const ReportLostItem: React.FC = () => {
                     rows={5}
                     className="w-full px-3 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none resize-vertical"
                   />
-                  {errors&& 
+                  {errors && (
                     <p className=" text-sm text-red-400">
                       {errors.additionalInfo}
                     </p>
-                  }
+                  )}
                 </div>
               </div>
             </div>
@@ -452,9 +457,9 @@ const ReportLostItem: React.FC = () => {
                   <option value="restaurant">Restaurant</option>
                   <option value="other">Other</option>
                 </ReUsableSelect>
-                {errors&& 
+                {errors && (
                   <p className=" text-sm text-red-400">{errors.addressType}</p>
-                }
+                )}
               </div>
 
               {/* State */}
@@ -479,9 +484,9 @@ const ReportLostItem: React.FC = () => {
                   <option value="il">Rubavu</option>
                   <option value="pa">Musanze</option>
                 </ReUsableSelect>
-                {errors&& 
+                {errors && (
                   <p className=" text-sm text-red-400">{errors.state}</p>
-                }
+                )}
               </div>
 
               {/* City/Town */}
@@ -495,9 +500,9 @@ const ReportLostItem: React.FC = () => {
                   placeholder="Please enter the Province"
                 />
 
-                {errors&& 
+                {errors && (
                   <p className=" text-sm text-red-400">{errors.cityTown}</p>
-                }
+                )}
               </div>
               {/* serialNumber */}
               <div>
@@ -510,9 +515,9 @@ const ReportLostItem: React.FC = () => {
                   placeholder="SerialNumber"
                 />
 
-                {errors&&
+                {errors && (
                   <p className=" text-sm text-red-400">{errors.serialNumber}</p>
-                }
+                )}
               </div>
             </div>
           </div>
@@ -540,9 +545,9 @@ const ReportLostItem: React.FC = () => {
                   onChange={handleInputChange}
                   placeholder="First Name"
                 />
-                {errors && 
+                {errors && (
                   <p className=" text-sm text-red-400">{errors.firstName}</p>
-                }
+                )}
               </div>
               {/* Last Name */}
               <div>
@@ -554,9 +559,9 @@ const ReportLostItem: React.FC = () => {
                   onChange={handleInputChange}
                   placeholder="Last Name"
                 />
-                {errors && 
+                {errors && (
                   <p className=" text-sm text-red-400">{errors.lastName}</p>
-                }
+                )}
               </div>
 
               {/* Phone Number */}
@@ -569,9 +574,23 @@ const ReportLostItem: React.FC = () => {
                   onChange={handleInputChange}
                   placeholder="Phone Number"
                 />
-                {errors && 
+                {errors && (
                   <p className=" text-sm text-red-400">{errors.phoneNumber}</p>
-                }
+                )}
+              </div>
+
+              <div>
+                <ReUsableInput
+                  label="Email"
+                  type="email"
+                  name="losterEmail"
+                  value={formData.losterEmail}
+                  onChange={handleInputChange}
+                  placeholder="Your Email"
+                />
+                {errors && (
+                  <p className=" text-sm text-red-400">{errors.losterEmail}</p>
+                )}
               </div>
             </div>
           </div>
