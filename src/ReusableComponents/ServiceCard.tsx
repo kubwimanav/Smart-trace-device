@@ -12,15 +12,13 @@ const ServiceCard: React.FC< ServiceCardProps> =({
     return (
         <div className="text-center">
 
-        <div className="w-17 h-17 mx-auto mb-2 text-2xl border-2 border-gray-300 rounded-full flex items-center justify-center">
+        <div className="w-17 h-17 mx-auto mb-2 text-2xl border-2 border-[#3A7196] rounded-full flex items-center justify-center">
                 {icon}
         </div>
-        <h3 className="text-xl sm:text-xl font-normal text-gray-900 mb-4">
+        <h3 className="text-xl sm:text-2xl font-small text-[#3A7196] mb-4">
                 { title}
         </h3>
-
-        {/* Description */}
-        <p className="text-gray-600 text-sm sm:text-base leading-relaxed max-w-xs mx-auto">
+        <p className="text-gray-600 text-[11px] sm:text-base leading-relaxed max-w-xs mx-auto">
            {description}
         </p>
       </div>

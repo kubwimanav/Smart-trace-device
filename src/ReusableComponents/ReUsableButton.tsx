@@ -18,7 +18,7 @@ const ReUsableButton: React.FC<ButtonProps> = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className="w-full font-normal  sm:w-auto px-7 sm:px-5 py-3 text-white bg-[#000002]  border-1 border-primaryColor-50   rounded-md hover:bg-gray-100 hover:text-primaryColor-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white "
+      className="w-full font-normal  sm:w-auto px-7 sm:px-5 py-3 text-white   border-1 border-primaryColor-50   rounded-4xl hover:bg-gray-100 hover:text-primaryColor-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white "
     >
       {label}
     </button>

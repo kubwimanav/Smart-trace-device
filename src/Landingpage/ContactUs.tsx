@@ -106,7 +106,7 @@ const ContactUs: React.FC<FormErrors> = () => {
           {/* Left Section - Get In Touch */}
           <div className="space-y-8">
             <div>
-              <h1 className="text-3xl font-normal text-gray-900 mb-6">
+              <h1 className="text-4xl sm:text-4xl lg:text-4xl font-medium  my-6 text-[#3A7196] ">
                 Get In Touch
               </h1>
               <p className="text-gray-600 leading-relaxed">
@@ -119,7 +119,7 @@ const ContactUs: React.FC<FormErrors> = () => {
             {/* Head Office */}
             <div className="flex items-start space-x-4">
               <div className="w-16 h-16 rounded-full border border-gray-300 flex items-center justify-center flex-shrink-0">
-                <div className="w-6 h-6 text-gray-600">
+                <div className=" text-gray-600">
                   <PiOfficeChair />
                 </div>
               </div>
@@ -134,7 +134,7 @@ const ContactUs: React.FC<FormErrors> = () => {
             {/* Location */}
             <div className="flex items-start space-x-4">
               <div className="w-16 h-16 rounded-full border border-gray-300 flex items-center justify-center flex-shrink-0">
-                <div className="w-6 h-6 text-gray-600">
+                <div className="w-8 h-8 text-gray-600">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -170,8 +170,8 @@ const ContactUs: React.FC<FormErrors> = () => {
           </div>
 
           {/* Right Section - Contact Form */}
-          <div className="bg-primaryColor-400 p-9">
-            <h2 className="text-2xl font-normal text-gray-900 mb-5">
+          <div className="bg-[#f0f9ff] rounded-3xl  p-9">
+            <h2 className="text-4xl sm:text-4xl lg:text-4xl font-medium mb-5  text-[#3A7196]">
               Leave Your message
             </h2>
 

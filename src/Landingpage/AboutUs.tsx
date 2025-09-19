@@ -4,7 +4,7 @@ import ChatGPT from "../assets/images/cotton.jpeg";
 import ServiceCard from "../ReusableComponents/ServiceCard";
 import { FaMobileAlt } from "react-icons/fa";
 import { BsBook } from "react-icons/bs";
-import homei from '../assets/images/home.jpg'
+import homei from '../assets/images/hero-reunion.jpg'
 import mission from "../assets/images/mission.png";
 import ReUsableButton from "../ReusableComponents/ReUsableButton";
 import ContactUs from "./ContactUs";
@@ -14,30 +14,29 @@ import { Link } from "react-router-dom";
 
 export default function About() {
   const { data } = useGetProductsQuery();
-  console.log('hhhhhhhhhnnnnn',data);
-  
+  console.log('hhhhhhhhhnnnnn', data);
+
 
   return (
     <div>
       <div
-        className="h-screen flex flex-col items-center justify-center gap-10 px-4 md:px-16 lg:px-60 text-center text-white"
+        className="relative h-screen flex flex-col items-center justify-center gap-10 px-1 md:px-16 lg:px-60 text-center text-white overflow-hidden"
         style={{
-          background: `linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url(${homei})`,
+          background: `linear-gradient(rgba(41, 108, 181, 0.65), rgba(2, 17, 32, 0.84)), url(${homei})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div className=" font-medium text-[20px] sm:text-[25px]  text-white leading-tight mb-3 sm:mb-3">
-          Connect Lost Gadgets With Their Rightful Owners
-          <p className=" font-normal text-[15px] sm:text-[20px] mt-3">
+         <div className="absolute inset-0 bg-black/60 backdrop-blur-[3px]"></div>
+        <div className= "relative z-10  font-medium text-[20px] sm:text-[25px]  text-white leading-tight mb-3 sm:mb-3">
+          <p className=" font-normal  mt-3 sm:text-4xl lg:text-5xl leading-snug drop-shadow-md">
             A safer way to report, find, and verify electronic devices.
           </p>
-        </div>
-        {/* Button container */}
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
+        </div>  
+        <div className=" relative z-10  flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
           <Link to="/reportlostitem">
-        
+
             <ReUsableButton label="Submit Lost Items" />
           </Link>
           <Link to={"/reportfounditem"}>
@@ -52,9 +51,12 @@ export default function About() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-7 lg:gap-7 items-center">
             {/* Left side - Content */}
             <div className="order-2 lg:order-1 space-y-4">
-              <h1 className="text-2xl font-normal text-gray-900 ">
-                Stop Fraud, Reunite Device And Build Trust
-              </h1>
+             
+              <div className="mb-9">
+                <h1 className="text-4xl sm:text-4xl lg:text-4xl font-medium  mb-6 text-[#3A7196]   ">
+                  Stop Fraud, Reunite Device And Build Trust
+                </h1>
+              </div>
 
               <p className="text-size-md sm:text-size-md text-gray-600 leading-relaxed max-w-xl">
                 Digitalization has enabled our recovery platform to harness the
@@ -63,7 +65,7 @@ export default function About() {
                 electronics while preventing the sale of stolen device
               </p>
 
-              <button className="bg-primaryColor-100 hover:bg-primaryColor-400 hover:text-primaryColor-100 text-white font-medium px-8 py-3 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+              <button className="bg-primaryColor-100 hover:bg-primaryColor-400 hover:text-primaryColor-100 text-white font-small px-8 py-3 rounded-3xl transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                 Read More
               </button>
             </div>
@@ -82,13 +84,17 @@ export default function About() {
         </div>
       </div>
 
-      {/* Services Section */}
-      <div className="bg-[#769EB81A] py-15 px-4 sm:py-15 sm:px-6 lg:py-15 lg:px-8">
+      <div className="bg-[#f0f9ff] py-15 px-4 sm:py-15 sm:px-6 lg:py-15 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Section Title */}
-          <h1 className="text-center text-2xl font-normal text-gray-900 mb-10">
-            Our Services
-          </h1>
+          <div className="text-center mb-9">
+            <h1 className="text-4xl sm:text-4xl lg:text-4xl font-medium  mb-6 text-[#3A7196]    ">
+              Our Services
+            </h1>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+              Our services make it easy to report, find, and verify lost gadgets quickly, securely, and reliably.
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
             <ServiceCard
@@ -110,25 +116,26 @@ export default function About() {
         </div>
       </div>
 
-      {/* Why We Exist Section */}
+
       <div className="bg-white py-16 px-4 sm:py-15 sm:px-6 lg:py-15 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          {/* Section Title */}
-          <h1 className="text-center text-2xl font-normal text-gray-900 mb-1 sm:mb-1 lg:mb-1">
-            WHY WE EXIST &amp;&amp; WHAT WE AIM FOR
-          </h1>
+          <div className="text-center mb-9">
+            <h1 className="text-4xl sm:text-4xl lg:text-4xl font-medium  mb-6 text-[#3A7196]    ">
+              Why We Exist &amp; What We Aim For
+            </h1>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+              We exist to help reunite people with lost gadgets and aim to build safer, trusted communities.
+            </p>
+          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            {/* Left side - Image and Stats */}
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center bg">
             <div className="">
               <img src={mission} alt="" />
             </div>
-
-            {/* Right side - Content */}
             <div className="order-1 lg:order-2 space-y-8">
-              {/* Our Mission */}
               <div>
-                <h3 className="text-xl font-medium text-gray-900 mb-4">
+                <h3 className="text-xl font-medium text-[#3A7196] mb-4  ">
                   Our Mission
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
@@ -141,7 +148,7 @@ export default function About() {
 
               {/* Our Goals */}
               <div>
-                <h3 className="text-xl font-medium  text-gray-900 mb-6">
+                <h3 className="text-xl font-medium text-[#3A7196] mb-4">
                   Our Goals
                 </h3>
                 <div className="space-y-4">
@@ -149,7 +156,7 @@ export default function About() {
                   <div className="flex items-start space-x-4">
                     <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                       <svg
-                        className="w-5 h-5 text-blue-600"
+                        className="w-5 h-5 text-[#3A7196]"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -163,7 +170,7 @@ export default function About() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-medium text-gray-900 mb-1">
+                      <h4 className="font-medium text-gray-600 mb-1">
                         Enhance Consumer Protection
                       </h4>
                     </div>
@@ -173,7 +180,7 @@ export default function About() {
                   <div className="flex items-start space-x-4">
                     <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                       <svg
-                        className="w-5 h-5 text-blue-600"
+                        className="w-5 h-5 text-[#3A7196]"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -192,7 +199,7 @@ export default function About() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-medium text-gray-900 mb-1">
+                      <h4 className="font-medium text-gray-600 mb-1">
                         Reduce Theft and Black-Market Activity
                       </h4>
                     </div>
@@ -202,7 +209,7 @@ export default function About() {
                   <div className="flex items-start space-x-4">
                     <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                       <svg
-                        className="w-5 h-5 text-blue-600"
+                        className="w-5 h-5 text-[#3A7196]"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -220,7 +227,7 @@ export default function About() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-medium text-gray-900 mb-1">
+                      <h4 className="font-medium text-gray-600 mb-1">
                         Promote Rwanda's Digital Transformation
                       </h4>
                     </div>
@@ -228,9 +235,10 @@ export default function About() {
                 </div>
               </div>
 
+
               {/* Discover More Button */}
               <div className="pt-4">
-                <button className="bg-primaryColor-100 hover:bg-primaryColor-400 hover:text-primaryColor-100 text-white font-medium px-8 py-3 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                <button className="bg-primaryColor-100 hover:bg-primaryColor-400 hover:text-primaryColor-100 text-white font-medium px-8 py-3 rounded-3xl transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                   Discover More
                 </button>
               </div>
