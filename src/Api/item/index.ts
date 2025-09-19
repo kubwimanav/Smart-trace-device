@@ -8,6 +8,13 @@ export const productApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getLostitem: builder.query<any, void>({
+      query: () => ({
+        url: "/api/devices/lost/list",
+        method: "GET",
+      }),
+    }),
+
     createProduct: builder.mutation({
       query: (data) => ({
         url: "/api/devices/found",
@@ -54,4 +61,5 @@ export const {
   useDeletepRODUCTMutation,
   usePostUserMutation,
   useCreateLostMutation,
+  useGetLostitemQuery,
 } = productApi;

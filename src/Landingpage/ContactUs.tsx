@@ -3,7 +3,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { PiOfficeChair } from "react-icons/pi";
 import { toast, ToastContainer } from "react-toastify";
 import ReUsableInput from "../ReusableComponents/ReUsableInput";
-import { useGetContactQuery } from "../Api/contact";
 
 interface FormErrors {
   first_name?: string;
@@ -89,18 +88,13 @@ const ContactUs: React.FC<FormErrors> = () => {
     }
   };
 
-  const { data } = useGetContactQuery();
-  console.log("contactttttttt", data);
+ 
   return (
     <section
       id="contact"
       className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8"
     >
-      {data?.map((item: any) => (
-        <div>
-          <p>{item.first_name}</p>
-        </div>
-      ))}
+    
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           {/* Left Section - Get In Touch */}

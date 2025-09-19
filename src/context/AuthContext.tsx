@@ -1,5 +1,5 @@
 // src/context/AuthContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode} from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -45,11 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<string | null>(null);
 
   // Prefer .env, fallback to production URL
-  const API_BASE =
-    import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ||
-    "https://smart-trace-device-backend.onrender.com";
-
-  // ---------------- Login ----------------
+ 
   const handleLogin = async (email: string, password: string): Promise<boolean> => {
     setLoading(true);
     setError(null);

@@ -37,7 +37,6 @@ export default function About() {
         {/* Button container */}
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
           <Link to="/reportlostitem">
-        
             <ReUsableButton label="Submit Lost Items" />
           </Link>
           <Link to={"/reportfounditem"}>
@@ -45,7 +44,12 @@ export default function About() {
           </Link>
         </div>
       </div>
-
+      {data?.map((item: any) => (
+        <div>
+          <p className=""> {item.firstName}</p>
+          <img src={item.deviceimage} />
+        </div>
+      ))}
       {/* Device Recovery Section */}
       <div className="bg-gray-50 py-8 px-4 sm:py-12 sm:px-6 lg:py-16 lg:px-8">
         <div className="max-w-7xl mx-auto">
