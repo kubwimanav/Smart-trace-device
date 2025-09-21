@@ -60,8 +60,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!res.ok) throw new Error(data.message || "Login failed. Please check credentials.");
 
       if (data.token) localStorage.setItem("authToken", data.token);
+      console.log(data);
+      
       setUser(data.user || null);
-
+      
       const userRole: string = (data.user?.role || data.user?.user_type || "user").toLowerCase();
       switch (userRole) {
         case "admin":
@@ -79,6 +81,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     }
   };
+
+  
 
   // ---------------- Signup ----------------
   const handleSignup = async (
@@ -120,6 +124,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         code,
       });
       setLoading(false);
+      console.log(res);
+      
       return true; // verification succeeded
     } catch (err: any) {
       setLoading(false);
@@ -136,7 +142,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const res = await axios.post("https://smart-trace-device-backend.onrender.com/api/auth/resend-code/", {
         email,
-      });
+        
+      }
+      
+      );
+      console.log(res);
+      
       setLoading(false);
       return true; // code resent successfully
     } catch (err: any) {

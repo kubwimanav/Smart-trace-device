@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import UserHeader from "./DashNavbar";
-import UserDashSidebar from "./UserDashSidebar";
+import UserDashSidebar from "./UserDashsidebar";
 
 const UserDashLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);

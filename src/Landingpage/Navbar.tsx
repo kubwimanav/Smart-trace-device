@@ -160,8 +160,8 @@ const Navbar: React.FC<HeaderProps> = () => {
                   to={"home"}
                   className={`font-medium text-sm xl:text-base tracking-wide transition-colors ${
                     isHomeActive
-                      ? "text-blue-500"
-                      : "text-slate-600 hover:text-blue-500"
+                      ? "text-[#3A7196]"
+                      : "text-slate-600 hover:text-[#3A7196]"
                   }`}
                 >
                   Home
@@ -174,8 +174,8 @@ const Navbar: React.FC<HeaderProps> = () => {
                     className="text-slate-600 hover:text-slate-800 font-normal text-sm xl:text-base tracking-wide flex items-center"
                   >
                     <span
-                      className={`hover:text-blue-500 font-light hover:font-medium tracking-wide transition-colors ${
-                        isSubmitItemsActive ? "text-blue-500" : "text-slate-600"
+                      className={`hover:text-[#3A7196] font-light hover:font-medium tracking-wide transition-colors ${
+                        isSubmitItemsActive ? "text-[#3A7196]" : "text-slate-600"
                       }`}
                     >
                       Submit Items
@@ -194,7 +194,7 @@ const Navbar: React.FC<HeaderProps> = () => {
                         to="reportlostitem"
                         className={`block px-4 py-3 text-sm hover:bg-gray-50 transition-colors ${
                           location.pathname === "/reportlostitem"
-                            ? "bg-blue-50 text-blue-600 font-medium"
+                            ? "bg-blue-50 text-[#3A7196] font-medium"
                             : "text-slate-700"
                         }`}
                       >
@@ -205,7 +205,7 @@ const Navbar: React.FC<HeaderProps> = () => {
                         to="reportfounditem"
                         className={`block px-4 py-3 text-sm hover:bg-gray-50 transition-colors ${
                           location.pathname === "/reportfounditem"
-                            ? "bg-blue-50 text-blue-600 font-medium"
+                            ? "bg-blue-50 text-[#3A7196] font-medium"
                             : "text-slate-700"
                         }`}
                       >
@@ -222,8 +222,8 @@ const Navbar: React.FC<HeaderProps> = () => {
                     className="text-slate-600 hover:text-slate-800 font-normal text-sm xl:text-base tracking-wide flex items-center"
                   >
                     <span
-                      className={`hover:text-blue-500 font-medium tracking-wide transition-colors ${
-                        isBrowseItemsActive ? "text-blue-500" : "text-slate-600"
+                      className={`hover:text-[#3A7196] font-medium tracking-wide transition-colors ${
+                        isBrowseItemsActive ? "text-[#3A7196]" : "text-slate-600"
                       }`}
                     >
                       Browse Items
@@ -242,7 +242,7 @@ const Navbar: React.FC<HeaderProps> = () => {
                         to="lostitem"
                         className={`block px-4 py-3 text-sm hover:bg-gray-50 transition-colors ${
                           location.pathname === "/lostitem"
-                            ? "bg-blue-50 text-blue-600 font-medium"
+                            ? "bg-blue-50 text-[#3A7196] font-medium"
                             : "text-slate-700"
                         }`}
                       >
@@ -253,7 +253,7 @@ const Navbar: React.FC<HeaderProps> = () => {
                         to="founditem"
                         className={`block px-4 py-3 text-sm hover:bg-gray-50 transition-colors ${
                           location.pathname === "/founditem"
-                            ? "bg-blue-50 text-blue-600 font-medium"
+                            ? "bg-blue-50 text-[#3A7196] font-medium"
                             : "text-slate-700"
                         }`}
                       >
@@ -277,7 +277,7 @@ const Navbar: React.FC<HeaderProps> = () => {
               </nav>
 
               {/* Login Button */}
-              <button className="bg-primaryColor-100 text-white px-5 py-2 xl:px-6 xl:py-2 font-medium text-sm xl:text-base hover:bg-slate-600 rounded-lg transition-all duration-200 hover:shadow-md">
+              <button className="bg-primaryColor-100 text-white px-5 py-2 xl:px-6 xl:py-2 font-medium text-sm xl:text-base hover:bg-slate-600 rounded-4xl transition-all duration-200 hover:shadow-md">
                 <Link to={"/login"}>Login</Link>
               </button>
             </div>

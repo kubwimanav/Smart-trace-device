@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import "../App.css";
 import Layout from "../Landingpage/Layout";
 import About from "../Landingpage/AboutUs";
@@ -21,6 +21,7 @@ import MatchedItem from "../Dashboard/admin/MatchedItem";
 import Login from "../Landingpage/login";
 import Register from "../Landingpage/Register";
 import OtpPage from "../Landingpage/otp";
+import AdminFoundItem from "../Dashboard/admin/AdminFoundItem";
 
 const AppRaute = () => {
   return (
@@ -38,7 +39,7 @@ const AppRaute = () => {
           <Route index element={<AdminDashHome />} />
           <Route path="admin" element={<AdminDashHome />} />
           <Route path="users" element={<AdminManagement />} />
-          <Route path="adminfounditem" element={<AdminLostItem />} />
+          <Route path="adminfounditem" element={<AdminFoundItem />} />
           <Route path="adminlostitem" element={<AdminLostItem />} />
           <Route path="message" element={<ContactMessagesPage />} />
           <Route path="match" element={<MatchedItem />} />

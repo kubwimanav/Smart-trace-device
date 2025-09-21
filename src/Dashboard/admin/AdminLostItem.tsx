@@ -11,6 +11,9 @@ import {
   X,
   Save,
 } from "lucide-react";
+import { useDeleteFounditemMutation,useGetLostitemQuery } from "../../Api/item";
+import Notiflix from "notiflix";
+import { toast } from "react-toastify";
 
 // TypeScript interfaces
 interface LostItem {
@@ -69,94 +72,7 @@ interface FormErrors {
 }
 
 // Static data for demonstration
-const staticLostItems: LostItem[] = [
-  {
-    _id: "1",
-    id: "1",
-    itemName: "iPhone 14 Pro",
-    ownerName: "John Smith",
-    ownerEmail: "john.smith@email.com",
-    ownerPhone: "+1-555-0123",
-    location: "Central Park, NYC",
-    date: "2024-01-15",
-    itemSerial: "IPHONE123456",
-    descrption:
-      "Black iPhone 14 Pro with blue case, has a small crack on the back",
-    itemImage:
-      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=200&h=200&fit=crop",
-    dateFound: "2024-01-15",
-    foundBy: "John Smith",
-    contact: "+1-555-0123",
-  },
-  {
-    _id: "2",
-    id: "2",
-    itemName: "MacBook Air",
-    ownerName: "Sarah Johnson",
-    ownerEmail: "sarah.j@email.com",
-    ownerPhone: "+1-555-0456",
-    location: "Coffee Shop, 5th Ave",
-    date: "2024-01-12",
-    itemSerial: "MAC789012",
-    descrption: "Silver MacBook Air 13-inch with stickers on the lid",
-    itemImage:
-      "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=200&h=200&fit=crop",
-    dateFound: "2024-01-12",
-    foundBy: "Sarah Johnson",
-    contact: "+1-555-0456",
-  },
-  {
-    _id: "3",
-    id: "3",
-    itemName: "Leather Wallet",
-    ownerName: "Mike Davis",
-    ownerEmail: "mike.davis@email.com",
-    ownerPhone: "+1-555-0789",
-    location: "Times Square Subway",
-    date: "2024-01-10",
-    itemSerial: "WALLET001",
-    descrption: "Brown leather wallet with multiple cards and cash",
-    itemImage:
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=200&h=200&fit=crop",
-    dateFound: "2024-01-10",
-    foundBy: "Mike Davis",
-    contact: "+1-555-0789",
-  },
-  {
-    _id: "4",
-    id: "4",
-    itemName: "AirPods Pro",
-    ownerName: "Emily Wilson",
-    ownerEmail: "emily.w@email.com",
-    ownerPhone: "+1-555-0321",
-    location: "Bryant Park",
-    date: "2024-01-08",
-    itemSerial: "AIRPODS456",
-    descrption: "White AirPods Pro with charging case, slightly used",
-    itemImage:
-      "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=200&h=200&fit=crop",
-    dateFound: "2024-01-08",
-    foundBy: "Emily Wilson",
-    contact: "+1-555-0321",
-  },
-  {
-    _id: "5",
-    id: "5",
-    itemName: "Car Keys",
-    ownerName: "David Brown",
-    ownerEmail: "david.brown@email.com",
-    ownerPhone: "+1-555-0654",
-    location: "Mall Parking Lot",
-    date: "2024-01-05",
-    itemSerial: "KEYS789",
-    descrption: "Toyota car keys with blue keychain and house keys attached",
-    itemImage:
-      "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=200&h=200&fit=crop",
-    dateFound: "2024-01-05",
-    foundBy: "David Brown",
-    contact: "+1-555-0654",
-  },
-];
+
 
 const EditModal: React.FC<EditModalProps> = ({
   item,
@@ -728,21 +644,17 @@ const ReportLostItem: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
 };
 
 export default function AdminLostItem(): JSX.Element {
-  // Use static data instead of context
-  const allItems: LostItem[] = staticLostItems;
+  const { data, refetch } = useGetLostitemQuery();
+  
+  
+  const allItems: LostItem[] = data;
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(3);
+  const [itemsPerPage] = useState<number>(3);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
 
   // Modal and form state
-  const [selected, setSelected] = useState<LostItem>({} as LostItem);
-  const [open, setOpen] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
-  const [tourToDelete, setTourToDelete] = useState<LostItem | null>(null);
 
   // Filter items based on search term
   const filteredItems = allItems.filter((item) => {
@@ -778,30 +690,37 @@ export default function AdminLostItem(): JSX.Element {
   // Form handling
 
   // Edit handler
-  const handleEditClick = (item: LostItem) => {
-    setSelected(item);
-    setOpen(true);
-  };
+
 
   // Delete handlers
+  const [deleteProduct] = useDeleteFounditemMutation();
+  
   const handleConfirmDelete = async (id: string) => {
-    // Mock confirmation dialog
-    const confirmed = window.confirm("Do you want to delete this item?");
-    if (confirmed) {
-      try {
-        setIsLoading(true);
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        console.log("Item deleted:", id);
-        setIsLoading(false);
-        // In a real app, you would update the state or refetch data
-        alert("Item deleted successfully");
-      } catch (error) {
-        setIsLoading(false);
-        console.log(error);
-        alert("Failed to delete item");
+    Notiflix.Confirm.show(
+      'Delete Confirmation',
+      'Do you want to delete this item?',
+      'Delete',
+      'Cancel',
+      () => {
+        // User clicked Delete
+        deleteProduct(id);
+        toast.success("Product deleted successfully!");
+        refetch();
+        console.log(id);
+        
+        
+      },
+      () => {
+        // User clicked Cancel - do nothing
+        console.log("Delete cancelled");
+      },
+      {
+        width: '320px',
+        borderRadius: '8px',
+        titleColor: '#ff5549',
+        okButtonBackground: '#ff5549',
       }
-    }
+    );
   };
 
   const handleDeleteClick = (item: LostItem) => {
@@ -813,10 +732,7 @@ export default function AdminLostItem(): JSX.Element {
     }
   };
 
-  const handleCancelDelete = () => {
-    setShowDeleteConfirm(false);
-    setTourToDelete(null);
-  };
+ 
 
   const handleEdit = (item: LostItem) => {
     setItemToEdit(item);
