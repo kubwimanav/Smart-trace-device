@@ -141,7 +141,10 @@ const OtpPage: React.FC = () => {
       <div className="flex flex-col lg:flex-row w-full max-w-[800px] min-h-[500px] shadow-lg rounded-2xl overflow-hidden">
         {/* Left Section */}
         <div className="w-full lg:w-1/2 bg-primaryColor-100 text-white flex flex-col items-center justify-center p-6 sm:p-10">
-          <Link to="/" className="flex items-center gap-2 self-start text-white/90 hover:text-white mb-6">
+          <Link
+            to="/"
+            className="flex items-center gap-2 self-start text-white/90 hover:text-white mb-6"
+          >
             <Backpack className="text-red-300" />
             <span>Back</span>
           </Link>
@@ -186,7 +189,9 @@ const OtpPage: React.FC = () => {
                 />
               </div>
               {!emailValid && emailInput.length > 0 && (
-                <p className="text-red-500 text-xs mt-1">Enter a valid email.</p>
+                <p className="text-red-500 text-xs mt-1">
+                  Enter a valid email.
+                </p>
               )}
             </div>
 
@@ -195,7 +200,9 @@ const OtpPage: React.FC = () => {
               {Array.from({ length: OTP_LENGTH }).map((_, i) => (
                 <input
                   key={i}
-                  ref={(el) => (inputsRef.current[i] = el)}
+                  ref={(el) => {
+                    inputsRef.current[i] = el;
+                  }}
                   inputMode="numeric"
                   pattern="[0-9]*"
                   maxLength={1}
@@ -243,7 +250,11 @@ const OtpPage: React.FC = () => {
             {/* Go to Login */}
             <p className="mt-2 text-xs text-gray-600 text-center">
               Already verified?{" "}
-              <Link to="/login" state={{ email: emailInput }} className="text-primaryColor-100 hover:underline">
+              <Link
+                to="/login"
+                state={{ email: emailInput }}
+                className="text-primaryColor-100 hover:underline"
+              >
                 Go to Sign in
               </Link>
             </p>
