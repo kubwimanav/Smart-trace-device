@@ -2,12 +2,19 @@ import { apiSlice } from "../apiEntry";
 
 export const productApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getProducts: builder.query<any, void>({
+    getFounditem: builder.query<any, void>({
       query: () => ({
         url: "/api/devices/found/list",
         method: "GET",
       }),
     }),
+    getLostitem: builder.query<any, void>({
+      query: () => ({
+        url: "/api/devices/lost/list",
+        method: "GET",
+      }),
+    }),
+
     createProduct: builder.mutation({
       query: (data) => ({
         url: "/api/devices/found",
@@ -38,9 +45,15 @@ export const productApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    deletepRODUCT: builder.mutation({
+    deleteLostitem: builder.mutation({
       query: (id) => ({
-        url: `/products/${id}`,
+        url: `/api/devices/lost/${id}/delete/`,
+        method: "DELETE",
+      }),
+    }),
+    deleteFounditem: builder.mutation({
+      query: (id) => ({
+        url: `/api/devices/found/${id}/delete/`,
         method: "DELETE",
       }),
     }),
@@ -48,10 +61,12 @@ export const productApi = apiSlice.injectEndpoints({
 });
 
 export const {
-  useGetProductsQuery,
+  useGetFounditemQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
-  useDeletepRODUCTMutation,
+  useDeleteLostitemMutation,
+  useDeleteFounditemMutation,
   usePostUserMutation,
   useCreateLostMutation,
+  useGetLostitemQuery,
 } = productApi;

@@ -7,9 +7,7 @@ import {
   MdPayment
 } from "react-icons/md";
 import logo from '../../assets/images/logo.jpeg'
-import { TbUsers } from "react-icons/tb";
-import { LuMessageSquareText } from "react-icons/lu";
-import { CgFormatCenter } from "react-icons/cg";
+
 
 
 interface ToggleProps{

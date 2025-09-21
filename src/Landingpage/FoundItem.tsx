@@ -12,7 +12,7 @@ import imag7 from "../assets/images/mouse.jpg";
 import imag8 from "../assets/images/laptop.jpg";
 import imag9 from "../assets/images/phonen.jpg";
 import { Search, ChevronDown} from "lucide-react";
-import { useGetProductsQuery } from "../Api/item";
+import { useGetFounditemQuery } from "../Api/item";
 
 const FoundItem: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -86,7 +86,7 @@ const FoundItem: React.FC = () => {
     },
   ];
 
-  const { data } = useGetProductsQuery();
+  const { data } = useGetFounditemQuery();
 
 
   // Rwandan districts for location filtering

@@ -5,7 +5,6 @@ import { toast, ToastContainer } from "react-toastify";
 import ReUsableInput from "../ReusableComponents/ReUsableInput";
 import ReUsableSelect from "../ReusableComponents/ReUsableSelect";
 
-
 interface FormErrors {
   name?: string;
   category?: string;
@@ -134,15 +133,29 @@ const ReportFoundItem: React.FC = () => {
 
     setIsLoading(true);
 
+ const data = new window.FormData();
+
+    data.append("name", formData.name)
+    data.append("category", formData.category) 
+    data.append("description", formData.description)
+    data.append("serialnumber", formData.serialnumber)
+    data.append("foundEmail", formData.founderEmail)
+    data.append("location", formData.location)
+    data.append("phoneNumber", formData.phoneNumber);
+    data.append("firstName", formData.firstName);
+    data.append("address", formData.address);
+    data.append("province", formData.province);
+    data.append("district", formData.district);
+    data.append("lastName", formData.lastName);
+    if (formData.deviceimage) {
+   data.append("deviceimage", formData.deviceimage);
+   }
     try {
       const response = await fetch(
         "https://smart-trace-device-backend.onrender.com/api/devices/found/",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
+          body: data,
         }
       );
 

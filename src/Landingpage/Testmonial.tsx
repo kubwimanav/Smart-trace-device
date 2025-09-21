@@ -1,11 +1,8 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay, A11y, EffectCoverflow } from "swiper/modules";
-import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/effect-coverflow";
+import { ChevronLeft, ChevronRight, Quote} from "lucide-react";
+import "swiper/swiper.css";
 
 type Testimonial = {
   quote: string;
@@ -69,22 +66,9 @@ const testimonials: Testimonial[] = [
   },
 ];
 
-const StarRating: React.FC<{ rating: number }> = ({ rating }) => (
-  <div className="flex gap-1 mb-4">
-    {[1, 2, 3, 4, 5].map((star) => (
-      <Star
-        key={star}
-        className={`w-4 h-4 ${
-          star <= rating 
-            ? "fill-yellow-400 text-yellow-400" 
-            : "text-gray-300"
-        }`}
-      />
-    ))}
-  </div>
-);
 
-const TestimonialCard: React.FC<Testimonial> = ({ quote, name, role, avatar, rating, company }) => (
+
+const TestimonialCard: React.FC<Testimonial> = ({ quote, name, role, avatar,company }) => (
   <div className="group">
     <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 h-full flex flex-col relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-105">
       {/* Background decoration */}
@@ -195,7 +179,7 @@ const TestimonialComponent: React.FC = () => {
         </div>
       </div>
       
-      <style jsx>{`
+      <style >{`
         .swiper-pagination-bullet-custom {
           width: 12px !important;
           height: 12px !important;

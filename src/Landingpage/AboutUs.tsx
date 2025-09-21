@@ -9,14 +9,10 @@ import mission from "../assets/images/mission.png";
 import ReUsableButton from "../ReusableComponents/ReUsableButton";
 import ContactUs from "./ContactUs";
 import TestimonialComponent from "./Testmonial";
-import { useGetProductsQuery } from "../Api/item";
 import { Link } from "react-router-dom";
 
 export default function About() {
-  const { data } = useGetProductsQuery();
-  console.log('hhhhhhhhhnnnnn', data);
-
-
+ 
   return (
     <div>
       <div
@@ -44,7 +40,7 @@ export default function About() {
           </Link>
         </div>
       </div>
-
+   
       {/* Device Recovery Section */}
       <div className="bg-gray-50 py-8 px-4 sm:py-12 sm:px-6 lg:py-16 lg:px-8">
         <div className="max-w-7xl mx-auto">

@@ -3,7 +3,7 @@ import homei from "../assets/images/lostitempage.jpg";
 import { Upload } from "lucide-react";
 import ReUsableInput from "../ReusableComponents/ReUsableInput";
 import ReUsableSelect from "../ReusableComponents/ReUsableSelect";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 interface FormData {
   title: string;
@@ -146,15 +146,43 @@ const ReportLostItem: React.FC = () => {
 
     setIsLoading(true);
 
+
+
+ const data = new window.FormData();
+
+ // Append text fields
+ data.append("title", formData.title);
+ data.append("dateFound", formData.dateFound);
+ data.append("category", formData.category);
+ data.append("timeFound", formData.timeFound);
+ data.append("brand", formData.brand);
+ data.append("additionalInfo", formData.additionalInfo);
+ data.append("addressType", formData.addressType);
+ data.append("state", formData.state);
+ data.append("cityTown", formData.cityTown);
+ data.append("serialNumber", formData.serialNumber);
+ data.append("firstName", formData.firstName);
+ data.append("lastName", formData.lastName);
+ data.append("phoneNumber", formData.phoneNumber);
+ data.append("losterEmail", formData.losterEmail);
+
+ // Append files (only if not null)
+ if (formData.image) {
+   data.append("image", formData.image);
+ }
+ if (formData.recepiet) {
+   data.append("recepiet", formData.recepiet);
+ }
+
+    
+    
+    
     try {
       const response = await fetch(
         "https://smart-trace-device-backend.onrender.com/api/devices/lost/",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
+          body:data,
         }
       );
 
@@ -611,6 +639,17 @@ const ReportLostItem: React.FC = () => {
           </button>
         </div>
       </form>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

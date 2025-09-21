@@ -1,5 +1,5 @@
 // src/context/AuthContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode} from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -45,11 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<string | null>(null);
 
   // Prefer .env, fallback to production URL
-  const API_BASE =
-    import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ||
-    "https://smart-trace-device-backend.onrender.com";
-
-  // ---------------- Login ----------------
+ 
   const handleLogin = async (email: string, password: string): Promise<boolean> => {
     setLoading(true);
     setError(null);
@@ -64,8 +60,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!res.ok) throw new Error(data.message || "Login failed. Please check credentials.");
 
       if (data.token) localStorage.setItem("authToken", data.token);
+      console.log(data);
+      
       setUser(data.user || null);
-
+      
       const userRole: string = (data.user?.role || data.user?.user_type || "user").toLowerCase();
       switch (userRole) {
         case "admin":
@@ -83,6 +81,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     }
   };
+
+  
 
   // ---------------- Signup ----------------
   const handleSignup = async (
@@ -124,6 +124,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         code,
       });
       setLoading(false);
+      console.log(res);
+      
       return true; // verification succeeded
     } catch (err: any) {
       setLoading(false);
@@ -140,7 +142,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const res = await axios.post("https://smart-trace-device-backend.onrender.com/api/auth/resend-code/", {
         email,
-      });
+        
+      }
+      
+      );
+      console.log(res);
+      
       setLoading(false);
       return true; // code resent successfully
     } catch (err: any) {

@@ -8,10 +8,9 @@ import {
   ChevronRight,
   MoreHorizontal,
   Menu,
-  Delete,
 } from "lucide-react";
-import { FiDelete } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
+import { useGetContactQuery } from "../../Api/contact";
 
 // TypeScript interfaces
 interface ContactMessage {
@@ -27,102 +26,10 @@ interface ContactMessage {
 }
 
 // Static data
-const staticContactMessages: ContactMessage[] = [
-  {
-    id: "1",
-    _id: "1",
-    name: "John Smith",
-    email: "john.smith@email.com",
-    subject: "Website Inquiry",
-    description:
-      "I'm interested in learning more about your services. Could you please provide more details about your pricing and packages?",
-    message:
-      "I'm interested in learning more about your services. Could you please provide more details about your pricing and packages?",
-    time: "2 hours ago",
-    status: "unread",
-  },
-  {
-    id: "2",
-    _id: "2",
-    name: "Sarah Johnson",
-    email: "sarah.johnson@email.com",
-    subject: "Technical Support",
-    description:
-      "I'm having trouble with the login functionality on your website. Every time I try to log in, it shows an error message.",
-    message:
-      "I'm having trouble with the login functionality on your website. Every time I try to log in, it shows an error message.",
-    time: "5 hours ago",
-    status: "pending",
-  },
-  {
-    id: "3",
-    _id: "3",
-    name: "Mike Wilson",
-    email: "mike.wilson@email.com",
-    subject: "Partnership Opportunity",
-    description:
-      "Hello, I represent a company that would like to explore partnership opportunities with your organization. We believe there could be mutual benefits.",
-    message:
-      "Hello, I represent a company that would like to explore partnership opportunities with your organization. We believe there could be mutual benefits.",
-    time: "1 day ago",
-    status: "resolved",
-  },
-  {
-    id: "4",
-    _id: "4",
-    name: "Emma Davis",
-    email: "emma.davis@email.com",
-    subject: "Product Feedback",
-    description:
-      "I recently used your product and wanted to share some feedback. Overall, I'm very satisfied but have a few suggestions for improvement.",
-    message:
-      "I recently used your product and wanted to share some feedback. Overall, I'm very satisfied but have a few suggestions for improvement.",
-    time: "2 days ago",
-    status: "unread",
-  },
-  {
-    id: "5",
-    _id: "5",
-    name: "David Brown",
-    email: "david.brown@email.com",
-    subject: "Billing Question",
-    description:
-      "I have a question about my recent invoice. There seems to be a discrepancy in the billing amount that I'd like to clarify.",
-    message:
-      "I have a question about my recent invoice. There seems to be a discrepancy in the billing amount that I'd like to clarify.",
-    time: "3 days ago",
-    status: "pending",
-  },
-  {
-    id: "6",
-    _id: "6",
-    name: "Lisa Anderson",
-    email: "lisa.anderson@email.com",
-    subject: "General Inquiry",
-    description:
-      "I'm researching solutions for my business and came across your website. Could you provide more information about your company and services?",
-    message:
-      "I'm researching solutions for my business and came across your website. Could you provide more information about your company and services?",
-    time: "1 week ago",
-    status: "resolved",
-  },
-  {
-    id: "7",
-    _id: "7",
-    name: "Robert Taylor",
-    email: "robert.taylor@email.com",
-    subject: "Feature Request",
-    description:
-      "I'm a regular user of your platform and would like to suggest a new feature that could benefit many users. The feature would help with workflow automation.",
-    message:
-      "I'm a regular user of your platform and would like to suggest a new feature that could benefit many users. The feature would help with workflow automation.",
-    time: "1 week ago",
-    status: "unread",
-  },
-];
 
 export default function ContactMessagesPage(): JSX.Element {
-  const contact = staticContactMessages;
+    const { data } = useGetContactQuery();
+  const contact = data;
 
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -200,6 +107,8 @@ export default function ContactMessagesPage(): JSX.Element {
     resolved: "bg-green-100 text-green-800",
   };
 
+  
+  
   return (
     <div className="bg-gray-50 rounded-2xl">
       <div className="max-w-7xl mx-auto py-3 px-2 sm:px-4 lg:px-6">

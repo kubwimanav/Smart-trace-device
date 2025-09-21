@@ -733,16 +733,11 @@ export default function MatchedItem(): JSX.Element {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(3);
+  const [itemsPerPage] = useState<number>(3);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
 
   // Modal and form state
-  const [selected, setSelected] = useState<LostItem>({} as LostItem);
-  const [open, setOpen] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
-  const [tourToDelete, setTourToDelete] = useState<LostItem | null>(null);
+  const [, setIsLoading] = useState<boolean>(false);
 
   // Filter items based on search term
   const filteredItems = allItems.filter((item) => {
@@ -778,10 +773,7 @@ export default function MatchedItem(): JSX.Element {
   // Form handling
 
   // Edit handler
-  const handleEditClick = (item: LostItem) => {
-    setSelected(item);
-    setOpen(true);
-  };
+
 
   // Delete handlers
   const handleConfirmDelete = async (id: string) => {
@@ -813,10 +805,7 @@ export default function MatchedItem(): JSX.Element {
     }
   };
 
-  const handleCancelDelete = () => {
-    setShowDeleteConfirm(false);
-    setTourToDelete(null);
-  };
+ 
 
   const handleEdit = (item: LostItem) => {
     setItemToEdit(item);
