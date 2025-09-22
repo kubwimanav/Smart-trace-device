@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import homei from "../assets/images/home.jpg";
 import LostItemCard from "../hooks/useItem";
-import { useLostItems } from "../context/ItemContext";
 import { Search, ChevronDown } from "lucide-react";
 import { useGetLostitemQuery } from "../Api/item";
 
@@ -22,28 +21,19 @@ const LostItem: React.FC = () => {
   const { data } = useGetLostitemQuery();
   console.log("hello my friend", data);
 
-  const { lostItems, loading } = useLostItems();
+  const lostItems =data;
   const [searchTerm, setSearchTerm] = useState("");
   const [searchBy, setSearchBy] = useState<"title" | "location">("title");
   const [showSearchOptions, setShowSearchOptions] = useState(false);
   const [filteredItems, setFilteredItems] = useState(lostItems);
 
-  // Rwandan districts for location filtering
-  // const rwandanDistricts = [
-  //   "Kicukiro", "Gasabo", "Nyarugenge", "Bugesera", "Kamonyi", "Rwamagana",
-  //   "Gicumbi", "Ruhango", "Nyamagabe", "Nyanza", "Kayonza", "Ngoma",
-  //   "Nyagatare", "Gatsibo", "Rubavu", "Rutsiro", "Karongi", "Nyabihu",
-  //   "Ngororero", "Rusizi", "Muhanga", "Huye", "Nyamasheke", "Rulindo"
-  // ];
-
-  // Apply search filter when search term or searchBy changes
   useEffect(() => {
     if (!searchTerm.trim()) {
       setFilteredItems(lostItems);
       return;
     }
 
-    const results = lostItems.filter((item) => {
+    const results = lostItems.filter((item:any) => {
       const searchLower = searchTerm.toLowerCase();
 
       if (searchBy === "title") {
@@ -62,13 +52,7 @@ const LostItem: React.FC = () => {
     setSearchTerm("");
   };
 
-  if (loading) {
-    return (
-      <div className="lg:w-3/4 flex items-center justify-center h-64">
-        <div className="text-gray-600">Loading items...</div>
-      </div>
-    );
-  }
+
 
   return (
     <div>
@@ -92,17 +76,7 @@ const LostItem: React.FC = () => {
           </p>
         </div>
       </div>
-      <div>
-        {data?.map((item: any) => (
-          <div>
-            <img
-              src={import.meta.env.VITE_API_BASE_URL + item.image}
-              alt=""
-              className=" h-15 w-15"
-            />
-          </div>
-        ))}
-      </div>
+      
 
       <div className="w-full p-8">
         <div className="max-w-7xl mx-auto mb-8 space-y-4">
@@ -164,26 +138,6 @@ const LostItem: React.FC = () => {
             </div>
           </div>
 
-          {/* Location quick filters - only show when searching by location */}
-          {/* {searchBy === "location" && (
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 mt-2">
-              <div className="flex items-center gap-2 mb-2">
-                <MapPin className="w-4 h-4 text-blue-600" />
-                <h3 className="text-sm font-medium text-blue-800">Popular Districts:</h3>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {["Kicukiro", "Gasabo", "Nyarugenge", "Bugesera", "Kamonyi", "Rwamagana"].map(district => (
-                  <button
-                    key={district}
-                    onClick={() => setSearchTerm(district)}
-                    className="text-xs px-3 py-1 bg-white border border-blue-200 text-blue-700 rounded-full hover:bg-blue-50 transition-colors"
-                  >
-                    {district}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )} */}
 
           <p className="text-gray-600">
             Statistics show 85% of lost property (phones, bags, pets, luggage,
@@ -196,8 +150,8 @@ const LostItem: React.FC = () => {
         {/* Results count */}
         <div className="mb-6 flex justify-between items-center">
           <p className="text-gray-600">
-            {filteredItems.length}{" "}
-            {filteredItems.length === 1 ? "item" : "items"} found
+            {filteredItems?.length}
+            {filteredItems?.length === 1 ? "item" : "items"} found
             {searchTerm ? ` matching "${searchTerm}" in ${searchBy}` : ""}
           </p>
 
@@ -212,10 +166,14 @@ const LostItem: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-center justify-items-center place-items-center mx-auto">
-          {filteredItems.length > 0 ? (
-            filteredItems.map((item) => (
+          {filteredItems?.length > 0 ? (
+            filteredItems.map((item: any) => (
               <div className="w-full max-w-sm" key={item.id}>
-                <LostItemCard title="Item Lost" item={item} />
+                <LostItemCard
+                  title={item.title}
+                  image={import.meta.env.VITE_API_BASE_URL + item.image}
+                  location={item.addressType}
+                />
               </div>
             ))
           ) : (
@@ -226,22 +184,7 @@ const LostItem: React.FC = () => {
                   ? `No items found matching "${searchTerm}" in ${searchBy}`
                   : "No lost items have been reported yet"}
               </p>
-              {/* {searchBy === "location" && searchTerm && (
-                <div className="mt-4">
-                  <p className="text-sm text-gray-500 mb-2">Popular districts in Rwanda:</p>
-                  <div className="flex flex-wrap justify-center gap-2">
-                    {rwandanDistricts.slice(0, 8).map(district => (
-                      <button
-                        key={district}
-                        onClick={() => setSearchTerm(district)}
-                        className="text-xs px-3 py-1 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
-                      >
-                        {district}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )} */}
+  
             </div>
           )}
         </div>

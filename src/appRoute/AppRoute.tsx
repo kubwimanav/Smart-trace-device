@@ -3,17 +3,14 @@ import "../App.css";
 import Layout from "../Landingpage/Layout";
 import About from "../Landingpage/AboutUs";
 import LostItem from "../Landingpage/LostItem";
-import FoundItem from "../Landingpage/FoundItem";
 import ReportFoundItem from "../Landingpage/ReportFoundItem";
 import ReportLostItem from "../Landingpage/ReportLostItem";
 import ScrollToTop from "../Landingpage/ScrollTop";
 import UserFoundItem from "../Dashboard/admin/AdminFoundItem";
 import ContactMessagesPage from "../Dashboard/admin/ContactMessages";
-import UserLostItem from "../Dashboard/admin/AdminLostItem";
 import LandingAuth from "../Landingpage/auth";
 import AdminDashHome from "../Dashboard/admin/AdminDashHome";
 import AdminManagement from "../Dashboard/admin/AdminManagement";
-import AdminLostItem from "../Dashboard/admin/AdminFoundItem";
 import AdminDashLayout from "../Dashboard/admin/AdminDashLayout";
 import UserDashLayout from "../Dashboard/userdash/UserDashLayout";
 import UserDashHome from "../Dashboard/userdash/UserDashHome";
@@ -22,6 +19,8 @@ import Login from "../Landingpage/login";
 import Register from "../Landingpage/Register";
 import OtpPage from "../Landingpage/otp";
 import AdminFoundItem from "../Dashboard/admin/AdminFoundItem";
+import FoundItem from "../Landingpage/FoundItem";
+import AdminLostItems from "../Dashboard/admin/AdminLostItem";
 
 const AppRaute = () => {
   return (
@@ -40,9 +39,9 @@ const AppRaute = () => {
           <Route path="admin" element={<AdminDashHome />} />
           <Route path="users" element={<AdminManagement />} />
           <Route path="adminfounditem" element={<AdminFoundItem />} />
-          <Route path="adminlostitem" element={<AdminLostItem />} />
           <Route path="message" element={<ContactMessagesPage />} />
           <Route path="match" element={<MatchedItem />} />
+          <Route path="adminlostitem" element={<AdminLostItems/> } />
         </Route>
 
         {/* userdash */}
@@ -50,7 +49,7 @@ const AppRaute = () => {
           <Route index element={<UserDashHome />} />
           <Route path="userdash" element={<UserDashHome />} />
           <Route path="userfounditem" element={<UserFoundItem />} />
-          <Route path="userlostitem" element={<UserLostItem />} />
+          <Route path="users" element={<AdminManagement />} />
         </Route>
 
         <Route path="/" element={<Layout />}>

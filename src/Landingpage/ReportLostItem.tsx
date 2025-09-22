@@ -318,10 +318,7 @@ const ReportLostItem: React.FC = () => {
                   <option value="tablets">Tablets</option>
                   <option value="cameras">Cameras</option>
                   <option value="audio">
-                    Audio Devices (Headphones, Speakers)
-                  </option>
-                  <option value="accessories">
-                    Accessories (Chargers, Cables, etc.)
+                    Audio Devices 
                   </option>
                   <option value="other">Other Electronics</option>
                 </ReUsableSelect>
