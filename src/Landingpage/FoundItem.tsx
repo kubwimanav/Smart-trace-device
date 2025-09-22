@@ -1,92 +1,21 @@
 import React, { useState, useEffect } from "react";
 import homei from "../assets/images/image1-24.jpg";
 import LostItemCard from "../hooks/useItem";
-import type { LostItem } from "../type/type";
-import imag1 from '../assets/images/Frame.png'
-import imag2 from'../assets/images/Frame 401 (2).png'
-import imag3 from '../assets/images/imag1.jpg'
-import imag4 from '../assets/images/Frame 401 (4).png'
-import imag5 from '../assets/images/Frame 401.png'
-import imag6 from "../assets/images/Tablet.jpg";
-import imag7 from "../assets/images/mouse.jpg";
-import imag8 from "../assets/images/laptop.jpg";
-import imag9 from "../assets/images/phonen.jpg";
+
 import { Search, ChevronDown} from "lucide-react";
 import { useGetFounditemQuery } from "../Api/item";
+import type { Founditem } from "../type/type";
 
 const FoundItem: React.FC = () => {
+  const { data } = useGetFounditemQuery();
+  
   const [searchTerm, setSearchTerm] = useState("");
   const [searchBy, setSearchBy] = useState<"title" | "location">("title");
   const [showSearchOptions, setShowSearchOptions] = useState(false);
-  const [filteredItems, setFilteredItems] = useState<LostItem[]>([]);
+  const [filteredItems, setFilteredItems] = useState<Founditem[]>([]);
 
-  const lostItems: LostItem[] = [
-    {
-      id: 1,
-      title: "White i POD",
-      location: "Kicukiro",
-      image: imag5,
-      type: "ipod",
-    },
-    {
-      id: 2,
-      title: "Laptop Lenovo i7",
-      location: "Nyarugenge",
-      image: imag1,
-      type: "laptop",
-    },
-    {
-      id: 3,
-      title: "I Phone 7 plus",
-      location: "Gasabo",
-      image: imag3,
-      type: "phone",
-    },
-    {
-      id: 4,
-      title: "White Tablet",
-      location: "Kicukiro",
-      image: imag6,
-      type: "tablet",
-    },
-    {
-      id: 5,
-      title: "Mouse",
-      location: "Nyarugenge",
-      image: imag7,
-      type: "wallet",
-    },
-    {
-      id: 6,
-      title: "Phone",
-      location: "Kicukiro",
-      image: imag9,
-      type: "charger",
-    },
-    {
-      id: 7,
-      title: "Adapter",
-      location: "Gasabo",
-      image: imag4,
-      type: "adapter",
-    },
-    {
-      id: 8,
-      title: "Telphone Spark",
-      location: "Gasabo",
-      image: imag2,
-      type: "camera",
-    },
-    {
-      id: 9,
-      title: "Laptop",
-      location: "Huye",
-      image: imag8,
-      type: "camera",
-    },
-  ];
+  const lostItems = data;
 
-  const { data } = useGetFounditemQuery();
 
 
   // Rwandan districts for location filtering
@@ -104,7 +33,7 @@ const FoundItem: React.FC = () => {
       return;
     }
 
-    const results = lostItems.filter(item => {
+    const results = lostItems.filter((item:any) => {
       const searchLower = searchTerm.toLowerCase();
       
       if (searchBy === "title") {
@@ -142,22 +71,6 @@ const FoundItem: React.FC = () => {
             you.
           </p>
         </div>
-      </div>
-      <div>
-        {data?.map((item: any) => (
-          <div>
-            <p>{data.length}</p>
-            <p className=" text-red-300 text-2xl">{item.name}</p>
-            <p className=" text-red-300 text-2xl">{item.category}</p>
-            <p className=" text-red-300 text-2xl">{item.serialnumber}</p>
-            <p className=" text-red-300 text-2xl">{item.lastName}</p>
-            <p className=" text-red-300 text-2xl">{item.province}</p>
-            <p className=" text-red-300 text-2xl">{item.district}</p>
-            <p className=" text-red-300 text-2xl">{item.description}</p>
-
-            <img src={item.deviceimage} alt="" />
-          </div>
-        ))}
       </div>
 
       <div className="w-full p-8">
@@ -220,26 +133,7 @@ const FoundItem: React.FC = () => {
             </div>
           </div>
 
-          {/* Location quick filters - only show when searching by location */}
-          {/* {searchBy === "location" && (
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 mt-2">
-              <div className="flex items-center gap-2 mb-2">
-                <MapPin className="w-4 h-4 text-blue-600" />
-                <h3 className="text-sm font-medium text-blue-800">Popular Districts:</h3>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {["Kicukiro", "Gasabo", "Nyarugenge", "Bugesera", "Kamonyi", "Rwamagana"].map(district => (
-                  <button
-                    key={district}
-                    onClick={() => setSearchTerm(district)}
-                    className="text-xs px-3 py-1 bg-white border border-blue-200 text-blue-700 rounded-full hover:bg-blue-50 transition-colors"
-                  >
-                    {district}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )} */}
+          
 
           <p className="text-gray-600">
             Statistics show 85% of lost property (phones, bags, pets, luggage,
@@ -252,8 +146,8 @@ const FoundItem: React.FC = () => {
         {/* Results count */}
         <div className="mb-6 flex justify-between items-center">
           <p className="text-gray-600">
-            {filteredItems.length}{" "}
-            {filteredItems.length === 1 ? "item" : "items"} found
+            {filteredItems?.length}{" "}
+            {filteredItems?.length === 1 ? "item" : "items"} found
             {searchTerm ? ` matching "${searchTerm}" in ${searchBy}` : ""}
           </p>
 
@@ -268,10 +162,14 @@ const FoundItem: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-center justify-items-center place-items-center mx-auto">
-          {filteredItems.length > 0 ? (
+          {filteredItems?.length > 0 ? (
             filteredItems.map((item) => (
-              <div className="w-full max-w-sm" key={item.id}>
-                <LostItemCard title="Item Found" item={item} />
+              <div className="w-full max-w-sm">
+                <LostItemCard
+                  title={item.name}
+                  image={import.meta.env.VITE_API_BASE_URL + item.deviceimage}
+                  location={item.location}
+                />
               </div>
             ))
           ) : (

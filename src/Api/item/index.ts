@@ -14,6 +14,12 @@ export const productApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getUsers: builder.query<any, void>({
+      query: () => ({
+        url: "api/auth/users/",
+        method: "GET",
+      }),
+    }),
 
     createProduct: builder.mutation({
       query: (data) => ({
@@ -25,14 +31,6 @@ export const productApi = apiSlice.injectEndpoints({
     createLost: builder.mutation({
       query: (data) => ({
         url: "api/devices/lost/",
-        method: "POST",
-        body: data,
-      }),
-    }),
-
-    PostUser: builder.mutation({
-      query: (data) => ({
-        url: "/api/auth/login",
         method: "POST",
         body: data,
       }),
@@ -66,7 +64,7 @@ export const {
   useUpdateProductMutation,
   useDeleteLostitemMutation,
   useDeleteFounditemMutation,
-  usePostUserMutation,
+  useGetUsersQuery,
   useCreateLostMutation,
   useGetLostitemQuery,
 } = productApi;

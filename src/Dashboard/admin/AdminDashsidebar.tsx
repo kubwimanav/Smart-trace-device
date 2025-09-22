@@ -39,7 +39,7 @@ const AdminDashSidebar:React.FC<ToggleProps> = ({ isOpen, toggleSidebar }) => {
 
     {
       name: "Lost Items",
-      path: "adminlostitem",
+      path: "match",
       icon: <MdPayment className="h-4 w-4 mr-3" />,
     },
 
@@ -50,7 +50,7 @@ const AdminDashSidebar:React.FC<ToggleProps> = ({ isOpen, toggleSidebar }) => {
     },
     {
       name: "Matched",
-      path: "match",
+      path: "adminlostitem",
       icon: <CgFormatCenter className="h-5 w-5 mr-3" />,
     },
   ];

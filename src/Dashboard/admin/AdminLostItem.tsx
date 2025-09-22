@@ -25,8 +25,8 @@ interface LostItem {
   ownerPhone: string;
   location: string;
   date: string;
-  itemSerial: string;
-  descrption: string;
+  serialNumber: string;
+  additionalInfo: string;
   itemImage: string;
   dateFound?: string;
   foundBy?: string;
@@ -54,8 +54,9 @@ interface FormData {
   ownerPhone: string;
   location: string;
   date: string;
-  itemSerial: string;
-  descrption: string;
+  serialNumber: string;
+  additionalInfo
+: string;
   itemImage: string;
 }
 
@@ -65,8 +66,9 @@ interface FormErrors {
   ownerEmail?: string;
   location?: string;
   date?: string;
-  itemSerial?: string;
-  descrption?: string;
+  serialNumber?: string;
+  additionalInfo
+?: string;
   itemImage?: string;
   [key: string]: string | undefined;
 }
@@ -87,8 +89,9 @@ const EditModal: React.FC<EditModalProps> = ({
     ownerPhone: "",
     location: "",
     date: "",
-    itemSerial: "",
-    descrption: "",
+    serialNumber: "",
+    additionalInfo
+: "",
     itemImage: "",
   });
 
@@ -117,8 +120,11 @@ const EditModal: React.FC<EditModalProps> = ({
         ownerPhone: item.ownerPhone || "",
         location: item.location || "",
         date: formatDateForInput(item.date || item.date),
-        itemSerial: item.itemSerial || item.itemSerial || "",
-        descrption: item.descrption || item.descrption || "",
+        serialNumber: item.serialNumber || item.serialNumber || "",
+        additionalInfo
+: item.additionalInfo
+ || item.additionalInfo
+ || "",
         itemImage: item.itemImage || "",
       });
       setErrors({});
@@ -199,12 +205,15 @@ const EditModal: React.FC<EditModalProps> = ({
       newErrors.date = "Date found is required";
     }
 
-    if (!formData.itemSerial || !formData.itemSerial.trim()) {
-      newErrors.itemSerial = "Serial number is required";
+    if (!formData.serialNumber || !formData.serialNumber.trim()) {
+      newErrors.serialNumber = "Serial number is required";
     }
 
-    if (!formData.descrption || !formData.descrption.trim()) {
-      newErrors.descrption = "Description is required";
+    if (!formData.additionalInfo
+ || !formData.additionalInfo
+.trim()) {
+      newErrors.additionalInfo
+ = "Description is required";
     }
 
     // Validate email format if provided
@@ -254,8 +263,10 @@ const EditModal: React.FC<EditModalProps> = ({
         ownerPhone: formData.ownerPhone,
         location: formData.location,
         date: formData.date,
-        itemSerial: formData.itemSerial,
-        descrption: formData.descrption,
+        serialNumber: formData.serialNumber,
+        additionalInfo
+: formData.additionalInfo
+,
         itemImage: formData.itemImage,
       };
 
@@ -284,8 +295,9 @@ const EditModal: React.FC<EditModalProps> = ({
       ownerPhone: "",
       location: "",
       date: "",
-      itemSerial: "",
-      descrption: "",
+      serialNumber: "",
+      additionalInfo
+: "",
       itemImage: "",
     });
     setErrors({});
@@ -303,7 +315,7 @@ const EditModal: React.FC<EditModalProps> = ({
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h3 className="text-lg leading-6 font-medium text-gray-900">
-                Edit Found Item
+                Edit Lost Item
               </h3>
               <button
                 onClick={handleClose}
@@ -436,7 +448,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 {/* Location */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Location Found *
+                    Location Found
                   </label>
                   <input
                     type="text"
@@ -458,7 +470,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 {/* Date Found */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Date Found *
+                    Date Found
                   </label>
                   <input
                     type="date"
@@ -481,17 +493,17 @@ const EditModal: React.FC<EditModalProps> = ({
                   </label>
                   <input
                     type="text"
-                    name="itemSerial"
-                    value={formData.itemSerial}
+                    name="serialNumber"
+                    value={formData.serialNumber}
                     onChange={handleInputChange}
                     className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.itemSerial ? "border-red-300" : "border-gray-300"
+                      errors.serialNumber ? "border-red-300" : "border-gray-300"
                     }`}
                     placeholder="Enter serial number"
                   />
-                  {errors.itemSerial && (
+                  {errors.serialNumber && (
                     <p className="mt-1 text-sm text-red-600">
-                      {errors.itemSerial}
+                      {errors.serialNumber}
                     </p>
                   )}
                 </div>
@@ -502,25 +514,30 @@ const EditModal: React.FC<EditModalProps> = ({
                     Description *
                   </label>
                   <textarea
-                    name="descrption"
-                    value={formData.descrption}
+                    name="additionalInfo
+"
+                    value={formData.additionalInfo
+}
                     onChange={handleInputChange}
                     rows={3}
                     className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.descrption ? "border-red-300" : "border-gray-300"
+                      errors.additionalInfo
+ ? "border-red-300" : "border-gray-300"
                     }`}
-                    placeholder="Enter detailed descrption of the item"
+                    placeholder="Enter detailed additionalInfo
+ of the item"
                   />
-                  {errors.descrption && (
+                  {errors.additionalInfo
+ && (
                     <p className="mt-1 text-sm text-red-600">
-                      {errors.descrption}
+                      {errors.additionalInfo
+}
                     </p>
                   )}
                 </div>
               </div>
             </div>
 
-            {/* Footer */}
             <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
               <button
                 type="submit"
@@ -597,7 +614,8 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onEdit, onDelete }) => {
 
       <div className="mt-2 text-xs">
         <p className="text-gray-500">Description:</p>
-        <p className="font-medium text-gray-900">{item.descrption}</p>
+        <p className="font-medium text-gray-900">{item.additionalInfo
+}</p>
       </div>
 
       <div className="mt-4 flex justify-end space-x-2">
@@ -643,9 +661,10 @@ const ReportLostItem: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   );
 };
 
-export default function AdminLostItem(): JSX.Element {
+export default function AdminLostItems(): JSX.Element {
   const { data, refetch } = useGetLostitemQuery();
   
+  console.log("nbvcxzsxdcfghjkjhgfdcfvg",data);
   
   const allItems: LostItem[] = data;
 
@@ -657,7 +676,7 @@ export default function AdminLostItem(): JSX.Element {
   // Modal and form state
 
   // Filter items based on search term
-  const filteredItems = allItems.filter((item) => {
+  const filteredItems = allItems?.filter((item) => {
     const matchesSearch =
       item.itemName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -670,8 +689,8 @@ export default function AdminLostItem(): JSX.Element {
   // Calculate pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const currentItems = filteredItems?.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredItems?.length / itemsPerPage);
   const [itemToEdit, setItemToEdit] = useState<LostItem | null>(null);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
@@ -825,7 +844,7 @@ export default function AdminLostItem(): JSX.Element {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {currentItems.map((item) => (
+              {currentItems?.map((item) => (
                 <tr key={item._id || item.id} className="hover:bg-gray-50">
                   <td className="px-4 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -852,7 +871,8 @@ export default function AdminLostItem(): JSX.Element {
                   </td>
                   <td className="px-4 py-4">
                     <div className="text-sm text-gray-900 max-w-xs">
-                      {item.descrption}
+                      {item.additionalInfo
+}
                     </div>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap">
@@ -897,7 +917,7 @@ export default function AdminLostItem(): JSX.Element {
       {/* Tablet view - Cards */}
       <div className="hidden sm:block lg:hidden">
         <div className="grid gap-4">
-          {currentItems.length > 0 ? (
+          {currentItems?.length > 0 ? (
             currentItems.map((item) => (
               <div
                 key={item._id || item.id}
@@ -931,7 +951,8 @@ export default function AdminLostItem(): JSX.Element {
                         </p>
                       </div>
                       <p className="text-sm text-gray-700 mb-2">
-                        {item.descrption}
+                        {item.additionalInfo
+}
                       </p>
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
@@ -977,7 +998,7 @@ export default function AdminLostItem(): JSX.Element {
 
       {/* Mobile Card Layout */}
       <div className="md:hidden space-y-4">
-        {currentItems.map((item) => (
+        {currentItems?.map((item) => (
           <ItemCard
             key={item.id}
             item={item}
@@ -1021,13 +1042,13 @@ export default function AdminLostItem(): JSX.Element {
             <p className="text-sm text-gray-700">
               Showing{" "}
               <span className="font-medium">
-                {filteredItems.length > 0 ? indexOfFirstItem + 1 : 0}
+                {filteredItems?.length > 0 ? indexOfFirstItem + 1 : 0}
               </span>{" "}
               to{" "}
               <span className="font-medium">
-                {Math.min(indexOfLastItem, filteredItems.length)}
+                {Math.min(indexOfLastItem, filteredItems?.length)}
               </span>{" "}
-              of <span className="font-medium">{filteredItems.length}</span>{" "}
+              of <span className="font-medium">{filteredItems?.length}</span>{" "}
               results
             </p>
           </div>

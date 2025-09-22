@@ -13,8 +13,13 @@ import {
 } from "recharts";
 import { MdInsertDriveFile } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useGetLostitemQuery } from "../../Api/item";
 function AdminDashHome() {
   // Sample data for charts
+
+  const { data } = useGetLostitemQuery();
+
+  
 const revenueData = [
   { name: "Jan", revenue: 18500 },
   { name: "Feb", revenue: 21200 },
@@ -93,7 +98,7 @@ const usersData = [
           <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center">
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">LostItems</span>
-              <span className="text-xm font-bold mt-1">{15}</span>
+              <span className="text-xm font-bold mt-1">{ data?.length}</span>
               <span className="text-sm text-green-500 mt-1">
                 Total Lost Items
               </span>

@@ -34,7 +34,7 @@ const UserDashSidebar:React.FC<ToggleProps> = ({ isOpen, toggleSidebar }) => {
 
     {
       name: "Lost Items",
-      path: "userlostitem",
+      path: "users",
       icon: <MdPayment className="h-4 w-4 mr-3" />,
     },
 

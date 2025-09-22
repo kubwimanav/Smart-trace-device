@@ -1,111 +1,28 @@
 import React, { useState, type JSX } from "react";
 import { Trash2, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { useGetUsersQuery } from "../../Api/item";
 
 interface User {
   id: string;
   _id: string;
-  username: string;
+  last_name
+: string;
   name?: string;
   email: string;
   phoneNumber: string;
-  country: string;
+  lost_location
+: string;
 }
 
 // Static user data
-const staticUsers: User[] = [
-  {
-    id: "1",
-    _id: "64a1b2c3d4e5f6789012",
-    username: "john_doe",
-    name: "John Doe",
-    email: "john.doe@example.com",
-    phoneNumber: "+1234567890",
-    country: "United States",
-  },
-  {
-    id: "2",
-    _id: "64a1b2c3d4e5f6789013",
-    username: "jane_smith",
-    name: "Jane Smith",
-    email: "jane.smith@example.com",
-    phoneNumber: "+1234567891",
-    country: "Canada",
-  },
-  {
-    id: "3",
-    _id: "64a1b2c3d4e5f6789014",
-    username: "mike_johnson",
-    name: "Mike Johnson",
-    email: "mike.johnson@example.com",
-    phoneNumber: "+1234567892",
-    country: "United Kingdom",
-  },
-  {
-    id: "4",
-    _id: "64a1b2c3d4e5f6789015",
-    username: "sarah_wilson",
-    name: "Sarah Wilson",
-    email: "sarah.wilson@example.com",
-    phoneNumber: "+1234567893",
-    country: "Australia",
-  },
-  {
-    id: "5",
-    _id: "64a1b2c3d4e5f6789016",
-    username: "david_brown",
-    name: "David Brown",
-    email: "david.brown@example.com",
-    phoneNumber: "+1234567894",
-    country: "Germany",
-  },
-  {
-    id: "6",
-    _id: "64a1b2c3d4e5f6789017",
-    username: "lisa_davis",
-    name: "Lisa Davis",
-    email: "lisa.davis@example.com",
-    phoneNumber: "+1234567895",
-    country: "France",
-  },
-  {
-    id: "7",
-    _id: "64a1b2c3d4e5f6789018",
-    username: "robert_miller",
-    name: "Robert Miller",
-    email: "robert.miller@example.com",
-    phoneNumber: "+1234567896",
-    country: "Japan",
-  },
-  {
-    id: "8",
-    _id: "64a1b2c3d4e5f6789019",
-    username: "emily_garcia",
-    name: "Emily Garcia",
-    email: "emily.garcia@example.com",
-    phoneNumber: "+1234567897",
-    country: "Spain",
-  },
-  {
-    id: "9",
-    _id: "64a1b2c3d4e5f6789020",
-    username: "alex_martinez",
-    name: "Alex Martinez",
-    email: "alex.martinez@example.com",
-    phoneNumber: "+1234567898",
-    country: "Mexico",
-  },
-  {
-    id: "10",
-    _id: "64a1b2c3d4e5f6789021",
-    username: "chris_anderson",
-    name: "Chris Anderson",
-    email: "chris.anderson@example.com",
-    phoneNumber: "+1234567899",
-    country: "Brazil",
-  },
-];
+
 
 export default function AdminManagement(): JSX.Element {
+
+  const { data } = useGetUsersQuery();
+ 
+  
+  const staticUsers = data;
   // Use static data instead of context
   const [users, setUsers] = useState<User[]>(staticUsers);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -114,7 +31,7 @@ export default function AdminManagement(): JSX.Element {
   const usersPerPage: number = 3;
 
   // Filter users based on search term
-  const filteredUsers: User[] = users.filter(
+  const filteredUsers: User[] = users?.filter(
     (user: User) =>
       user?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -122,7 +39,7 @@ export default function AdminManagement(): JSX.Element {
   );
 
   // Pagination logic
-  const totalFilteredUsers: number = filteredUsers.length;
+  const totalFilteredUsers: number = filteredUsers?.length;
   const totalPages: number = Math.ceil(totalFilteredUsers / usersPerPage);
 
   // Ensure current page is valid after filtering/deletion
@@ -132,7 +49,7 @@ export default function AdminManagement(): JSX.Element {
 
   const indexOfLastUser: number = currentPage * usersPerPage;
   const indexOfFirstUser: number = indexOfLastUser - usersPerPage;
-  const currentUsers: User[] = filteredUsers.slice(
+  const currentUsers: User[] = filteredUsers?.slice(
     indexOfFirstUser,
     indexOfLastUser
   );
@@ -253,10 +170,10 @@ export default function AdminManagement(): JSX.Element {
         </div>
 
         {/* Show message when no results */}
-        {currentUsers.length === 0 && (
+        {currentUsers?.length === 0 && (
           <div className="text-center py-6 sm:py-8 bg-white rounded-lg shadow">
             <p className="text-gray-500 text-sm sm:text-base">
-              {filteredUsers.length === 0
+              {filteredUsers?.length === 0
                 ? "No users found matching your search."
                 : "No users available."}
             </p>
@@ -273,7 +190,7 @@ export default function AdminManagement(): JSX.Element {
         )}
 
         {/* Responsive container with scrolling */}
-        {currentUsers.length > 0 && (
+        {currentUsers?.length > 0 && (
           <div className="overflow-x-auto shadow rounded-lg bg-white">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
@@ -300,7 +217,8 @@ export default function AdminManagement(): JSX.Element {
                     scope="col"
                     className="px-2 sm:px-4 py-2 sm:py-3 text-left text-sm font-medium text-gray-500 tracking-wider hidden lg:table-cell"
                   >
-                    Country
+                    Location
+
                   </th>
                   <th
                     scope="col"
@@ -325,17 +243,20 @@ export default function AdminManagement(): JSX.Element {
                       <div className="flex items-center">
                         <div className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0 rounded-full bg-primaryColor-100 flex items-center justify-center text-white mr-2 sm:mr-3 text-xs sm:text-sm font-medium">
                           {user.name?.charAt(0) ||
-                            user.username.charAt(0).toUpperCase()}
+                            user.last_name
+.charAt(0).toUpperCase()}
                         </div>
                         <div className="text-xs sm:text-sm font-medium text-gray-900">
                           <div className="truncate max-w-24 sm:max-w-none">
-                            {user.username}
+                            {user.last_name
+}
                           </div>
                           <div className="md:hidden text-xs text-gray-500 mt-1 truncate max-w-24 sm:max-w-none">
                             {user.email}
                           </div>
                           <div className="lg:hidden text-xs text-gray-500 mt-1 md:block truncate max-w-24 sm:max-w-none">
-                            {user.country}
+                            {user.lost_location
+}
                           </div>
                         </div>
                       </div>
@@ -346,13 +267,15 @@ export default function AdminManagement(): JSX.Element {
                       </div>
                     </td>
                     <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 hidden lg:table-cell">
-                      {user.country}
+                      {user.lost_location
+}
                     </td>
                     <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         onClick={() => handleConfirmDelete(user._id)}
                         className="text-red-600 hover:text-red-800 transition-colors p-1 rounded hover:bg-red-50"
-                        aria-label={`Delete user ${user.username}`}
+                        aria-label={`Delete user ${user.last_name
+}`}
                         disabled={isLoading}
                       >
                         <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -366,7 +289,7 @@ export default function AdminManagement(): JSX.Element {
         )}
 
         {/* Pagination - only show if we have users */}
-        {filteredUsers.length > 0 && (
+        {filteredUsers?.length > 0 && (
           <div className="bg-white px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between border-t border-gray-200 mt-4 rounded-lg shadow-sm">
             <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
               <div>
