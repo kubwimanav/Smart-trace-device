@@ -13,11 +13,17 @@ import {
 } from "recharts";
 import { MdInsertDriveFile } from "react-icons/md";
 import { Link } from "react-router-dom";
-import { useGetLostitemQuery } from "../../Api/item";
+import { useGetLostitemQuery } from "../../Api/lostitem";
+import { useGetFounditemQuery } from "../../Api/founditem";
+import { useGetContactQuery } from "../../Api/contact";
+import { useGetUsersQuery } from "../../Api/user";
 function AdminDashHome() {
   // Sample data for charts
 
-  const { data } = useGetLostitemQuery();
+const { data: lostItemsData } = useGetLostitemQuery();
+  const { data: foundItemsData } = useGetFounditemQuery();
+  const { data: userData } = useGetUsersQuery();
+  const { data: contactData } = useGetContactQuery();
 
   
 const revenueData = [
@@ -36,40 +42,11 @@ const usersData = [
   { name: "Apr", users: 980 },
   { name: "May", users: 1200 },
   { name: "Jun", users: 1100 },
-];
-    const users = [
-      {
-        username: "johndoe",
-        email: "johndoe@example.com",
-        gender: "Male",
-        country: "Rwanda",
-      },
-      {
-        username: "janedoe",
-        email: "janedoe@example.com",
-        gender: "Female",
-        country: "Kenya",
-      },
-      {
-        username: "alexsmith",
-        email: "alexsmith@example.com",
-        gender: "Male",
-        country: "Uganda",
-      },
-      {
-        username: "maryjane",
-        email: "maryjane@example.com",
-        gender: "Female",
-        country: "Tanzania",
-      },
-      {
-        username: "peterjohn",
-        email: "peterjohn@example.com",
-        gender: "Male",
-        country: "Burundi",
-      },
-    ];
-
+  ];
+  
+  
+  const users = userData?.slice(0,5);
+  let i=0;
 
   // Sample data for activity table
 
@@ -86,7 +63,7 @@ const usersData = [
           <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center">
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">Users</span>
-              <span className="text-xm font-bold mt-1">{users.length}</span>
+              <span className="text-xm font-bold mt-1">{userData?.length}</span>
               <span className="text-sm text-green-500 mt-1">Total Users</span>
             </div>
             <div className="w-7 h-7 rounded-sm bg-[#EFF6FF] flex items-center justify-center text-blue-400 text-xl">
@@ -98,7 +75,9 @@ const usersData = [
           <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center">
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">LostItems</span>
-              <span className="text-xm font-bold mt-1">{ data?.length}</span>
+              <span className="text-xm font-bold mt-1">
+                {lostItemsData?.length}
+              </span>
               <span className="text-sm text-green-500 mt-1">
                 Total Lost Items
               </span>
@@ -112,7 +91,9 @@ const usersData = [
           <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center">
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">FoundItems</span>
-              <span className="text-sm font-bold mt-1">{12}</span>
+              <span className="text-sm font-bold mt-1">
+                {foundItemsData?.length}
+              </span>
               <span className="text-sm text-green-500 mt-1">
                 Total Found Items
               </span>
@@ -126,7 +107,9 @@ const usersData = [
           <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center">
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">Messages</span>
-              <span className="text-sm font-bold mt-1">{10}</span>
+              <span className="text-sm font-bold mt-1">
+                {contactData?.length}
+              </span>
               <span className="text-sm text-green-500 mt-1">
                 Total Messages
               </span>
@@ -203,7 +186,7 @@ const usersData = [
               Recent Activity
             </h3>
             <Link
-              to={"user"}
+              to={"users"}
               className="text-blue-600 hover:text-blue-800 text-sm"
             >
               View All
@@ -215,13 +198,16 @@ const usersData = [
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-4 py-2 text-left text-size-sm font-medium text-gray-900  tracking-wider">
+                    Id
+                  </th>
+                  <th className="px-4 py-2 text-left text-size-sm font-medium text-gray-900  tracking-wider">
                     Username
                   </th>
                   <th className="px-4 py-2 text-left text-size-sm font-medium text-gray-900  tracking-wider">
                     Email
                   </th>
                   <th className="px-4 py-2 text-left text-size-sm font-medium text-gray-900  tracking-wider">
-                    Gender
+                    Phone Number
                   </th>
                   <th className="px-4 py-2 text-left text-size-sm font-medium text-gray-900  tracking-wider">
                     Country
@@ -229,8 +215,11 @@ const usersData = [
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {users.map((activity) => (
+                {users?.map((activity: any) => (
                   <tr>
+                    <td className="px-4 py-2 whitespace-nowrap text-size-sm  text-gray-500">
+                      {(i += 1)}
+                    </td>
                     <td className="px-4 py-2 whitespace-nowrap text-size-sm  text-gray-500">
                       {activity.username}
                     </td>
@@ -238,11 +227,11 @@ const usersData = [
                       {activity.email}
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap text-size-sm text-gray-500">
-                      {activity.gender}
+                      {activity.phone}
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap">
                       <span className="px-2 inline-flex text-size-sm   rounded-full text-gray-500 ">
-                        {activity.country}
+                        {activity.lost_location}
                       </span>
                     </td>
                   </tr>

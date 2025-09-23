@@ -2,30 +2,35 @@ import { apiSlice } from "../apiEntry";
 
 export const productApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getContact: builder.query<any, void>({
+
+    getLostitem: builder.query<any, void>({
       query: () => ({
-        url: "api/devices/contact/list/",
+        url: "/api/devices/lost/list",
         method: "GET",
       }),
     }),
-    createcontact: builder.mutation({
+
+    createLost: builder.mutation({
       query: (data) => ({
-        url: "api/devices/contact",
+        url: "api/devices/lost/",
         method: "POST",
         body: data,
       }),
     }),
-    deletecontact: builder.mutation({
+
+    deleteLostitem: builder.mutation({
       query: (id) => ({
-        url: `/api/devices/contact/${id}/`,
+        url: `/api/devices/lost/${id}/delete/`,
         method: "DELETE",
       }),
     }),
+  
   }),
 });
 
 export const {
- useGetContactQuery,
-  useCreatecontactMutation,
-  useDeletecontactMutation,
+    useCreateLostMutation,
+    useGetLostitemQuery,
+    useDeleteLostitemMutation,
+  
 } = productApi;

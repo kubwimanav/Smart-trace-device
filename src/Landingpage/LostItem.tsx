@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import homei from "../assets/images/home.jpg";
 import LostItemCard from "../hooks/useItem";
 import { Search, ChevronDown } from "lucide-react";
-import { useGetLostitemQuery } from "../Api/item";
+import { useGetLostitemQuery } from "../Api/lostitem";
 
 interface LostItem {
   id: string;

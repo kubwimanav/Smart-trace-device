@@ -10,6 +10,7 @@ import logo from '../../assets/images/logo.jpeg'
 import { TbUsers } from "react-icons/tb";
 import { LuMessageSquareText } from "react-icons/lu";
 import { CgFormatCenter } from "react-icons/cg";
+import { useAuth } from "../../context/AuthContext";
 interface ToggleProps{
   isOpen: any;
   toggleSidebar:any
@@ -39,7 +40,7 @@ const AdminDashSidebar:React.FC<ToggleProps> = ({ isOpen, toggleSidebar }) => {
 
     {
       name: "Lost Items",
-      path: "match",
+      path: "adminlostitem",
       icon: <MdPayment className="h-4 w-4 mr-3" />,
     },
 
@@ -50,7 +51,7 @@ const AdminDashSidebar:React.FC<ToggleProps> = ({ isOpen, toggleSidebar }) => {
     },
     {
       name: "Matched",
-      path: "adminlostitem",
+      path: "match",
       icon: <CgFormatCenter className="h-5 w-5 mr-3" />,
     },
   ];
@@ -64,6 +65,7 @@ const AdminDashSidebar:React.FC<ToggleProps> = ({ isOpen, toggleSidebar }) => {
     }
   };
 
+const { logout } = useAuth();
   return (
     <aside
       className={`bg-white w-50 shadow-md flex-shrink-0 transition-all duration-300 ease-in-out fixed md:relative h-full z-40 ${
@@ -97,7 +99,9 @@ const AdminDashSidebar:React.FC<ToggleProps> = ({ isOpen, toggleSidebar }) => {
         </ul>
         <div className=" text-red-500 flex items-center mt-20 ml-6">
           <MdOutlineLogout className=" h-5 w-5 mr-3" />
-          <Link to={"/"} className=" mb-1">
+          <Link
+            onClick={logout}
+            to={"#"} className=" mb-1">
             Logout
           </Link>
         </div>

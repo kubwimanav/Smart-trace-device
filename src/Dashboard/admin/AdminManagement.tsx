@@ -1,6 +1,6 @@
 import React, { useState, type JSX } from "react";
 import { Trash2, ChevronLeft, ChevronRight, Search } from "lucide-react";
-import { useGetUsersQuery } from "../../Api/item";
+import { useGetUsersQuery } from "../../Api/user";
 
 interface User {
   id: string;
@@ -138,7 +138,7 @@ export default function AdminManagement(): JSX.Element {
   return (
     <div className=" bg-gray-50 p-4">
       <div className="w-full px-2 sm:px-4 py-2 mx-auto max-w-7xl">
-        <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-3 text-gray-900">
+        <h1 className="text-xl  font-normal mb-4 sm:mb-3 text-gray-800">
           User Management Dashboard
         </h1>
 

@@ -3,8 +3,8 @@ import homei from "../assets/images/image1-24.jpg";
 import LostItemCard from "../hooks/useItem";
 
 import { Search, ChevronDown} from "lucide-react";
-import { useGetFounditemQuery } from "../Api/item";
 import type { Founditem } from "../type/type";
+import { useGetFounditemQuery } from "../Api/founditem";
 
 const FoundItem: React.FC = () => {
   const { data } = useGetFounditemQuery();
@@ -37,7 +37,7 @@ const FoundItem: React.FC = () => {
       const searchLower = searchTerm.toLowerCase();
       
       if (searchBy === "title") {
-        return item.title.toLowerCase().includes(searchLower);
+        return item.title?.toLowerCase().includes(searchLower);
       } else {
         return item.location && item.location.toLowerCase().includes(searchLower);
       }
