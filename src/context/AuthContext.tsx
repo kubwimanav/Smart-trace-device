@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Confirm, Notify } from "notiflix";
 
 interface User {
   role?: string;
@@ -45,71 +46,71 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Updated AuthContext.tsx - just the login and logout functions
 
- const handleLogin = async (
-   email: string,
-   password: string
- ): Promise<boolean> => {
-   setLoading(true);
-   setError(null);
-   try {
-     const res = await fetch(
-       `https://smart-trace-device-backend.onrender.com/api/auth/login/`,
-       {
-         method: "POST",
-         headers: { "Content-Type": "application/json" },
-         body: JSON.stringify({ email, password }),
-       }
-     );
-     const data = await res.json();
+  const handleLogin = async (
+    email: string,
+    password: string
+  ): Promise<boolean> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(
+        `https://smart-trace-device-backend.onrender.com/api/auth/login/`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+      const data = await res.json();
 
-     if (!res.ok)
-       throw new Error(
-         data.message || "Login failed. Please check credentials."
-       );
+      if (!res.ok)
+        throw new Error(
+          data.message || "Login failed. Please check credentials."
+        );
 
-     if (data.access) {
-       // Store the access token from the response
-       localStorage.setItem("accessToken", data.access);
-       console.log("Access token saved to localStorage:", data.access);
-       console.log(
-         "Verification - token retrieved:",
-         localStorage.getItem("accessToken")
-       );
-     }
+      if (data.access) {
+        // Store the access token from the response
+        localStorage.setItem("accessToken", data.access);
+        localStorage.setItem("email", email);
+        console.log("Access token saved to localStorage:", data.access);
+        console.log(
+          "Verification - token retrieved:",
+          localStorage.getItem("accessToken")
+        );
+      }
 
-     // Optionally store refresh token too
-     if (data.refresh) {
-       localStorage.setItem("refreshToken", data.refresh);
-       console.log("Refresh token saved:", data.refresh);
-     }
-     console.log(data);
+      // Optionally store refresh token too
+      if (data.refresh) {
+        localStorage.setItem("refreshToken", data.refresh);
+        console.log("Refresh token saved:", data.refresh);
+      }
+      console.log(data);
 
-     setUser(data.user || null);
+      setUser(data.user || null);
 
-     const userRole: string = (
-       data.user?.role ||
-       data.user?.user_type ||
-       "user"
-     ).toLowerCase();
-     switch (userRole) {
-       case "admin":
-         navigate("/admin");
-         break;
-       default:
-         navigate("/userdash");
-     }
+      const userRole: string = (
+        data.user?.role ||
+        data.user?.user_type ||
+        "user"
+      ).toLowerCase();
+      switch (userRole) {
+        case "admin":
+          navigate("/admin");
+          break;
+        default:
+          navigate("/userdash");
+      }
 
-     return true;
-   } catch (e: any) {
-     setError(e?.message || "Network error. Please try again.");
-     return false;
-   } finally {
-     setLoading(false);
-   }
- };
+      return true;
+    } catch (e: any) {
+      setError(e?.message || "Network error. Please try again.");
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // ---------------- Logout ----------------
- 
 
   // ---------------- Signup ----------------
   const handleSignup = async (
@@ -198,11 +199,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // ---------------- Logout ----------------
-  const logout = () => {
-    localStorage.removeItem("authToken");
-    setUser(null);
-    window.location.href = "/";
-  };
+const logout = () => {
+  Confirm.show(
+    "Confirm Logout",
+    "Are you sure you want to logout?",
+    "Yes",
+    "Cancel",
+    () => {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("email");
+      setUser(null);
+      Notify.success("Logged out successfully!");
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1000);
+    },
+    () => {
+      Notify.info("Logout cancelled");
+    }
+  );
+};
 
   return (
     <AuthContext.Provider

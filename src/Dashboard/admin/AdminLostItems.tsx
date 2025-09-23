@@ -11,26 +11,26 @@ import {
   X,
   Save,
 } from "lucide-react";
-import { useDeleteFounditemMutation,useGetLostitemQuery } from "../../Api/item";
 import Notiflix from "notiflix";
 import { toast } from "react-toastify";
+import { useDeleteLostitemMutation, useGetLostitemQuery } from "../../Api/lostitem";
 
 // TypeScript interfaces
 interface LostItem {
   _id: string;
   id: string;
-  itemName: string;
-  ownerName: string;
-  ownerEmail: string;
+  title: string;
+  firstName: string;
+  losterEmail: string;
   ownerPhone: string;
-  location: string;
+  state: string;
   date: string;
   serialNumber: string;
   additionalInfo: string;
-  itemImage: string;
+  image: string;
   dateFound?: string;
   foundBy?: string;
-  contact?: string;
+ phoneNumber?: string;
   description?: string;
 }
 
@@ -48,32 +48,33 @@ interface ItemCardProps {
 }
 
 interface FormData {
-  itemName: string;
-  ownerName: string;
-  ownerEmail: string;
+  title: string;
+  firstName: string;
+  losterEmail: string;
   ownerPhone: string;
-  location: string;
+  
+state: string;
   date: string;
   serialNumber: string;
   additionalInfo
 : string;
-  itemImage: string;
+  image: string;
 }
 
 interface FormErrors {
   general?: string;
-  itemName?: string;
-  ownerEmail?: string;
-  location?: string;
+  title?: string;
+  losterEmail?: string;
+  
+state?: string;
   date?: string;
   serialNumber?: string;
   additionalInfo
 ?: string;
-  itemImage?: string;
+  image?: string;
   [key: string]: string | undefined;
 }
 
-// Static data for demonstration
 
 
 const EditModal: React.FC<EditModalProps> = ({
@@ -83,16 +84,15 @@ const EditModal: React.FC<EditModalProps> = ({
   onSave,
 }) => {
   const [formData, setFormData] = useState<FormData>({
-    itemName: "",
-    ownerName: "",
-    ownerEmail: "",
+    title: "",
+    firstName: "",
+    losterEmail: "",
     ownerPhone: "",
-    location: "",
+    state: "",
     date: "",
     serialNumber: "",
-    additionalInfo
-: "",
-    itemImage: "",
+    additionalInfo: "",
+    image: "",
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -114,18 +114,15 @@ const EditModal: React.FC<EditModalProps> = ({
   useEffect(() => {
     if (item && isOpen) {
       setFormData({
-        itemName: item.itemName || "",
-        ownerName: item.ownerName || "",
-        ownerEmail: item.ownerEmail || "",
+        title: item.title || "",
+        firstName: item.firstName || "",
+        losterEmail: item.losterEmail || "",
         ownerPhone: item.ownerPhone || "",
-        location: item.location || "",
+        state: item.state || "",
         date: formatDateForInput(item.date || item.date),
         serialNumber: item.serialNumber || item.serialNumber || "",
-        additionalInfo
-: item.additionalInfo
- || item.additionalInfo
- || "",
-        itemImage: item.itemImage || "",
+        additionalInfo: item.additionalInfo || item.additionalInfo || "",
+        image: item.image || "",
       });
       setErrors({});
     }
@@ -158,7 +155,7 @@ const EditModal: React.FC<EditModalProps> = ({
       if (file.size > 5 * 1024 * 1024) {
         setErrors((prev) => ({
           ...prev,
-          itemImage: "File size must be less than 5MB",
+          image: "File size must be less than 5MB",
         }));
         return;
       }
@@ -167,7 +164,7 @@ const EditModal: React.FC<EditModalProps> = ({
       if (!file.type.startsWith("image/")) {
         setErrors((prev) => ({
           ...prev,
-          itemImage: "Please select a valid image file",
+          image: "Please select a valid image file",
         }));
         return;
       }
@@ -176,12 +173,12 @@ const EditModal: React.FC<EditModalProps> = ({
       reader.onload = (e) => {
         setFormData((prev) => ({
           ...prev,
-          itemImage: e.target?.result as string,
+          image: e.target?.result as string,
         }));
         // Clear any previous image errors
         setErrors((prev) => ({
           ...prev,
-          itemImage: "",
+          image: "",
         }));
       };
       reader.readAsDataURL(file);
@@ -193,12 +190,12 @@ const EditModal: React.FC<EditModalProps> = ({
     const newErrors: FormErrors = {};
 
     // Check if fields exist and are not empty
-    if (!formData.itemName || !formData.itemName.trim()) {
-      newErrors.itemName = "Item name is required";
+    if (!formData.title || !formData.title.trim()) {
+      newErrors.title = "Item name is required";
     }
 
-    if (!formData.location || !formData.location.trim()) {
-      newErrors.location = "Location is required";
+    if (!formData.state || !formData.state.trim()) {
+      newErrors.state = "state is required";
     }
 
     if (!formData.date || !formData.date.trim()) {
@@ -209,18 +206,15 @@ const EditModal: React.FC<EditModalProps> = ({
       newErrors.serialNumber = "Serial number is required";
     }
 
-    if (!formData.additionalInfo
- || !formData.additionalInfo
-.trim()) {
-      newErrors.additionalInfo
- = "Description is required";
+    if (!formData.additionalInfo || !formData.additionalInfo.trim()) {
+      newErrors.additionalInfo = "Description is required";
     }
 
     // Validate email format if provided
-    if (formData.ownerEmail && formData.ownerEmail.trim()) {
+    if (formData.losterEmail && formData.losterEmail.trim()) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.ownerEmail)) {
-        newErrors.ownerEmail = "Please enter a valid email address";
+      if (!emailRegex.test(formData.losterEmail)) {
+        newErrors.losterEmail = "Please enter a valid email address";
       }
     }
 
@@ -251,27 +245,39 @@ const EditModal: React.FC<EditModalProps> = ({
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       // Prepare data for API call
-      const updateData: LostItem = {
-        ...item,
-        itemName: formData.itemName,
-        ownerName: formData.ownerName,
-        ownerEmail: formData.ownerEmail,
+      const updateData = {
+        title: formData.title,
+        firstName: formData.firstName,
+        losterEmail: formData.losterEmail,
         ownerPhone: formData.ownerPhone,
-        location: formData.location,
+        state: formData.state,
         date: formData.date,
         serialNumber: formData.serialNumber,
-        additionalInfo
-: formData.additionalInfo
-,
-        itemImage: formData.itemImage,
+        additionalInfo: formData.additionalInfo,
+        image: formData.image,
       };
 
-      // Call the onSave callback with updated data
-      onSave(updateData);
+      // Make API call to update the item
+      const response = await fetch(
+        `https://smart-trace-device-backend.onrender.com/api/devices/lost/${itemId}/`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const updatedItem = await response.json();
+
+      // Call the onSave callback with updated data from API response
+      onSave(updatedItem);
 
       // Close modal
       onClose();
@@ -279,7 +285,8 @@ const EditModal: React.FC<EditModalProps> = ({
       console.error("Error updating item:", error);
       setErrors((prev) => ({
         ...prev,
-        general: "Failed to update item. Please try again.",
+        general:
+          "Failed to update item. Please check your connection and try again.",
       }));
     } finally {
       setIsLoading(false);
@@ -289,16 +296,15 @@ const EditModal: React.FC<EditModalProps> = ({
   // Reset form and close modal
   const handleClose = () => {
     setFormData({
-      itemName: "",
-      ownerName: "",
-      ownerEmail: "",
+      title: "",
+      firstName: "",
+      losterEmail: "",
       ownerPhone: "",
-      location: "",
+      state: "",
       date: "",
       serialNumber: "",
-      additionalInfo
-: "",
-      itemImage: "",
+      additionalInfo: "",
+      image: "",
     });
     setErrors({});
     onClose();
@@ -348,9 +354,9 @@ const EditModal: React.FC<EditModalProps> = ({
                     Item Image
                   </label>
                   <div className="flex items-center space-x-4">
-                    {formData.itemImage && (
+                    {formData.image && (
                       <img
-                        src={formData.itemImage}
+                        src={formData.image}
                         alt="Item preview"
                         className="h-16 w-16 rounded-md object-cover border border-gray-200"
                       />
@@ -364,32 +370,28 @@ const EditModal: React.FC<EditModalProps> = ({
                       />
                     </div>
                   </div>
-                  {errors.itemImage && (
-                    <p className="mt-1 text-sm text-red-600">
-                      {errors.itemImage}
-                    </p>
+                  {errors.image && (
+                    <p className="mt-1 text-sm text-red-600">{errors.image}</p>
                   )}
                 </div>
 
                 {/* Item Name */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Item Name 
+                    Item Name
                   </label>
                   <input
                     type="text"
-                    name="itemName"
-                    value={formData.itemName}
+                    name="title"
+                    value={formData.title}
                     onChange={handleInputChange}
                     className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.itemName ? "border-red-300" : "border-gray-300"
+                      errors.title ? "border-red-300" : "border-gray-300"
                     }`}
                     placeholder="Enter item name"
                   />
-                  {errors.itemName && (
-                    <p className="mt-1 text-sm text-red-600">
-                      {errors.itemName}
-                    </p>
+                  {errors.title && (
+                    <p className="mt-1 text-sm text-red-600">{errors.title}</p>
                   )}
                 </div>
 
@@ -400,8 +402,8 @@ const EditModal: React.FC<EditModalProps> = ({
                   </label>
                   <input
                     type="text"
-                    name="ownerName"
-                    value={formData.ownerName}
+                    name="firstName"
+                    value={formData.firstName}
                     onChange={handleInputChange}
                     className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter founder name"
@@ -415,17 +417,17 @@ const EditModal: React.FC<EditModalProps> = ({
                   </label>
                   <input
                     type="email"
-                    name="ownerEmail"
-                    value={formData.ownerEmail}
+                    name="losterEmail"
+                    value={formData.losterEmail}
                     onChange={handleInputChange}
                     className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.ownerEmail ? "border-red-300" : "border-gray-300"
+                      errors.losterEmail ? "border-red-300" : "border-gray-300"
                     }`}
                     placeholder="Enter founder email"
                   />
-                  {errors.ownerEmail && (
+                  {errors.losterEmail && (
                     <p className="mt-1 text-sm text-red-600">
-                      {errors.ownerEmail}
+                      {errors.losterEmail}
                     </p>
                   )}
                 </div>
@@ -445,25 +447,23 @@ const EditModal: React.FC<EditModalProps> = ({
                   />
                 </div>
 
-                {/* Location */}
+                {/* state */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Location Found
+                    state Found
                   </label>
                   <input
                     type="text"
-                    name="location"
-                    value={formData.location}
+                    name="state"
+                    value={formData.state}
                     onChange={handleInputChange}
                     className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.location ? "border-red-300" : "border-gray-300"
+                      errors.state ? "border-red-300" : "border-gray-300"
                     }`}
-                    placeholder="Enter location where item was found"
+                    placeholder="Enter state where item was found"
                   />
-                  {errors.location && (
-                    <p className="mt-1 text-sm text-red-600">
-                      {errors.location}
-                    </p>
+                  {errors.state && (
+                    <p className="mt-1 text-sm text-red-600">{errors.state}</p>
                   )}
                 </div>
 
@@ -489,7 +489,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 {/* Serial Number */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Serial Number *
+                    Serial Number
                   </label>
                   <input
                     type="text"
@@ -511,27 +511,23 @@ const EditModal: React.FC<EditModalProps> = ({
                 {/* Description */}
                 <div className="sm:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Description *
+                    Description
                   </label>
                   <textarea
-                    name="additionalInfo
-"
-                    value={formData.additionalInfo
-}
+                    name="additionalInfo"
+                    value={formData.additionalInfo}
                     onChange={handleInputChange}
                     rows={3}
                     className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                       errors.additionalInfo
- ? "border-red-300" : "border-gray-300"
+                        ? "border-red-300"
+                        : "border-gray-300"
                     }`}
-                    placeholder="Enter detailed additionalInfo
- of the item"
+                    placeholder="Enter detailed additionalInfo of the item"
                   />
-                  {errors.additionalInfo
- && (
+                  {errors.additionalInfo && (
                     <p className="mt-1 text-sm text-red-600">
-                      {errors.additionalInfo
-}
+                      {errors.additionalInfo}
                     </p>
                   )}
                 </div>
@@ -578,23 +574,21 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onEdit, onDelete }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <img
-            src={item.itemImage}
-            alt={item.itemName}
+            src={import.meta.env.VITE_API_BASE_URL + item.image}
+            alt={item.title}
             className="w-12 h-12 rounded-md object-cover mr-4"
           />
           <div>
-            <h3 className="text-sm font-medium text-gray-900">
-              {item.itemName}
-            </h3>
-            <p className="text-xs text-gray-500">{item.ownerName}</p>
+            <h3 className="text-sm font-medium text-gray-900">{item.title}</h3>
+            <p className="text-xs text-gray-500">{item.firstName}</p>
           </div>
         </div>
       </div>
 
       <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
         <div>
-          <p className="text-gray-500">Location:</p>
-          <p className="font-medium">{item.location}</p>
+          <p className="text-gray-500">state:</p>
+          <p className="font-medium">{item.state}</p>
         </div>
         <div>
           <p className="text-gray-500">Date Found:</p>
@@ -602,20 +596,19 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onEdit, onDelete }) => {
         </div>
         <div>
           <p className="text-gray-500">Found By:</p>
-          <p className="font-medium">{item.foundBy || item.ownerName}</p>
+          <p className="font-medium">{item.losterEmail || item.firstName}</p>
         </div>
         <div>
           <p className="text-gray-500">Contact:</p>
           <p className="font-medium truncate">
-            {item.contact || item.ownerPhone}
+            {item.phoneNumber || item.ownerPhone}
           </p>
         </div>
       </div>
 
       <div className="mt-2 text-xs">
         <p className="text-gray-500">Description:</p>
-        <p className="font-medium text-gray-900">{item.additionalInfo
-}</p>
+        <p className="font-medium text-gray-900">{item.additionalInfo}</p>
       </div>
 
       <div className="mt-4 flex justify-end space-x-2">
@@ -662,10 +655,7 @@ const ReportLostItem: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
 };
 
 export default function AdminLostItems(): JSX.Element {
-  const { data, refetch } = useGetLostitemQuery();
-  
-  console.log("nbvcxzsxdcfghjkjhgfdcfvg",data);
-  
+  const { data} = useGetLostitemQuery();  
   const allItems: LostItem[] = data;
 
   // Pagination state
@@ -678,9 +668,10 @@ export default function AdminLostItems(): JSX.Element {
   // Filter items based on search term
   const filteredItems = allItems?.filter((item) => {
     const matchesSearch =
-      item.itemName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.
+state?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.foundBy?.toLowerCase().includes(searchTerm.toLowerCase());
 
     return matchesSearch;
@@ -712,44 +703,90 @@ export default function AdminLostItems(): JSX.Element {
 
 
   // Delete handlers
-  const [deleteProduct] = useDeleteFounditemMutation();
-  
-  const handleConfirmDelete = async (id: string) => {
-    Notiflix.Confirm.show(
-      'Delete Confirmation',
-      'Do you want to delete this item?',
-      'Delete',
-      'Cancel',
-      () => {
-        // User clicked Delete
-        deleteProduct(id);
-        toast.success("Product deleted successfully!");
-        refetch();
-        console.log(id);
-        
-        
-      },
-      () => {
-        // User clicked Cancel - do nothing
-        console.log("Delete cancelled");
-      },
-      {
-        width: '320px',
-        borderRadius: '8px',
-        titleColor: '#ff5549',
-        okButtonBackground: '#ff5549',
-      }
-    );
-  };
+const [deleteLostitem, { isLoading: isDeleting }] = useDeleteLostitemMutation();
 
-  const handleDeleteClick = (item: LostItem) => {
-    if (item && item._id) {
-      handleConfirmDelete(item._id);
-    } else {
-      console.error("Item or item ID is missing");
-      alert("Cannot delete item - ID is missing");
+const handleConfirmDelete = (id: string) => {
+  Notiflix.Confirm.show(
+    'Delete Confirmation',
+    'Do you want to delete this item?',
+    'Delete',
+    'Cancel',
+    async () => {
+      try {
+        console.log('Attempting to delete lost item with ID:', id);
+        
+        // Call the delete mutation and wait for response
+        const result = await deleteLostitem(id).unwrap();
+        
+        console.log('Delete successful:', result);
+        toast.success("Product deleted successfully!");
+        
+        // The RTK Query will automatically update the cache and refetch data
+        // No need to manually update local state since useGetLostitemQuery will re-run
+        
+      } catch (error: any) {
+        console.error('Delete failed:', error);
+        
+        // Handle different types of errors
+        let errorMessage = "Failed to delete item. Please try again.";
+        
+        if (error?.status === 404) {
+          errorMessage = "Item not found. It may have already been deleted.";
+        } else if (error?.status === 403) {
+          errorMessage = "You don't have permission to delete this item.";
+        } else if (error?.status === 500) {
+          errorMessage = "Server error. Please try again later.";
+        } else if (error?.data?.message) {
+          errorMessage = error.data.message;
+        } else if (error?.message) {
+          errorMessage = error.message;
+        }
+        
+        toast.error(errorMessage);
+      }
+    },
+    () => {
+      // User clicked Cancel - do nothing
+      console.log("Delete cancelled");
+    },
+    {
+      width: '320px',
+      borderRadius: '8px',
+      titleColor: '#ff5549',
+      okButtonBackground: '#ff5549',
     }
-  };
+  );
+};
+
+const handleDeleteClick = (item: LostItem) => {
+  console.log('Delete clicked for item:', item);
+  
+  // Check for both _id and id fields since your API uses 'id'
+  const itemId = item._id || item.id;
+  console.log('Item ID (_id):', item._id);
+  console.log('Item ID (id):', item.id);
+  console.log('Final Item ID:', itemId);
+  
+  if (!item) {
+    console.error("Item is null or undefined");
+    toast.error("Cannot delete - item not found");
+    return;
+  }
+  
+  if (!itemId) {
+    console.error("Item ID is missing", item);
+    toast.error("Cannot delete item - ID is missing");
+    return;
+  }
+  
+  // Prevent multiple delete attempts if already deleting
+  if (isDeleting) {
+    toast.warning("Please wait, deletion in progress...");
+    return;
+  }
+  
+  handleConfirmDelete(itemId.toString());
+};
 
  
 
@@ -766,7 +803,7 @@ export default function AdminLostItems(): JSX.Element {
 
   return (
     <div className="w-full max-w-7xl mx-auto p-3 sm:p-6 bg-white shadow-lg rounded-lg">
-      <h1 className="text-xl sm:text-xl font-normal text-gray-800 mb-2 sm:mb-2">
+      <h1 className="text-xl font-normal text-gray-800 mb-2 sm:mb-2">
         Lost Items Dashboard
       </h1>
 
@@ -778,7 +815,8 @@ export default function AdminLostItems(): JSX.Element {
           </div>
           <input
             type="text"
-            placeholder="Search items, locations, or finders..."
+            placeholder="Search items, 
+states, or finders..."
             className="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             value={searchTerm}
             onChange={(e) => {
@@ -821,7 +859,8 @@ export default function AdminLostItems(): JSX.Element {
                   scope="col"
                   className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  Location
+                  
+               Serial Number
                 </th>
                 <th
                   scope="col"
@@ -851,8 +890,8 @@ export default function AdminLostItems(): JSX.Element {
                       <div className="flex-shrink-0 h-10 w-10">
                         <img
                           className="h-10 w-10 rounded-md object-cover"
-                          src={item.itemImage}
-                          alt={item.itemName}
+                          src={import.meta.env.VITE_API_BASE_URL + item.image}
+                          alt={item.title}
                           onError={(e) => {
                             (e.target as HTMLImageElement).src =
                               "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNiAxNkMyMC40MTgzIDE2IDI0IDE5LjU4MTcgMjQgMjRDMjQgMjguNDE4MyAyMC40MTgzIDMyIDE2IDMyQzExLjU4MTcgMzIgOCAyOC40MTgzIDggMjRDOCAxOS41ODE3IDExLjU4MTcgMTYgMTYgMTZaIiBmaWxsPSIjOUM5Qzk3Ii8+CjxwYXRoIGQ9Ik0yMS4zMzMzIDIxLjMzMzNWMjIuNjY2N0gyMi42NjY3VjI0SDIxLjMzMzNWMjUuMzMzM0gyMFYyNEgxOC42NjY3VjIyLjY2NjdIMjBWMjEuMzMzM0gyMS4zMzMzWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+";
@@ -861,32 +900,31 @@ export default function AdminLostItems(): JSX.Element {
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">
-                          {item.itemName}
+                          {item.title}
                         </div>
-                        <div className="text-sm w-0.5 text-gray-500">
-                          {item.ownerEmail}
+                        <div className="text-xs w-[15 px] text-gray-500">
+                          {item.losterEmail}
                         </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-4 py-4">
                     <div className="text-sm text-gray-900 max-w-xs">
-                      {item.additionalInfo
-}
+                      {item.additionalInfo}
                     </div>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{item.location}</div>
+                    <div className="text-sm text-gray-900">{item.serialNumber}</div>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{item.date}</div>
+                    <div className="text-sm text-gray-900">{item.dateFound}</div>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
-                      {item.ownerName}
+                      {item.firstName}
                     </div>
                     <div className="text-sm text-gray-500">
-                      {item.ownerPhone}
+                      {item.phoneNumber}
                     </div>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap text-center">
@@ -928,8 +966,8 @@ export default function AdminLostItems(): JSX.Element {
                     <div className="flex-shrink-0">
                       <img
                         className="h-16 w-16 rounded-md object-cover"
-                        src={item.itemImage}
-                        alt={item.itemName}
+                        src={import.meta.env.VITE_API_BASE_URL + item.image}
+                        alt={item.title}
                         onError={(e) => {
                           (e.target as HTMLImageElement).src =
                             "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yNiAyNkMzNC44MzY2IDI2IDQyIDMzLjE2MzQgNDIgNDJDNDIgNTAuODM2NiAzNC44MzY2IDU4IDI2IDU4QzE3LjE2MzQgNTggMTAgNTAuODM2NiAxMCA0MkMxMCAzMy4xNjM0IDE3LjE2MzQgMjYgMjYgMjZaIiBmaWxsPSIjOUM5Qzk3Ii8+CjxwYXRoIGQ9Ik0zNC4xMzMzIDM0LjEzMzNWMzYuMjY2N0gzNi4yNjY3VjM4LjRIMzQuMTMzM1Y0MC41MzMzSDMzLjA2NjdWMzguNEgzMC40VjM2LjI2NjdIMzMuMDY2N1YzNC4xMzMzSDM0LjEzMzNaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=";
@@ -940,10 +978,10 @@ export default function AdminLostItems(): JSX.Element {
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <h3 className="text-lg font-medium text-gray-900">
-                            {item.itemName}
+                            {item.title}
                           </h3>
                           <p className="text-sm  text-gray-500">
-                            {item.ownerEmail}
+                            {item.losterEmail}
                           </p>
                         </div>
                         <p className="text-sm text-gray-500 ml-2">
@@ -951,19 +989,18 @@ export default function AdminLostItems(): JSX.Element {
                         </p>
                       </div>
                       <p className="text-sm text-gray-700 mb-2">
-                        {item.additionalInfo
-}
+                        {item.additionalInfo}
                       </p>
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
-                          <span className="text-gray-500">Location:</span>
-                          <p className="text-gray-900">{item.location}</p>
+                          <span className="text-gray-500">SerialNumber:</span>
+                          <p className="text-gray-900">{item.serialNumber}</p>
                         </div>
                         <div>
                           <span className="text-gray-500">Found by:</span>
-                          <p className="text-gray-900">{item.foundBy}</p>
+                          <p className="text-gray-900">{item.losterEmail}</p>
                           <p className="text-gray-500 text-xs">
-                            {item.ownerPhone}
+                            {item.phoneNumber}
                           </p>
                         </div>
                       </div>

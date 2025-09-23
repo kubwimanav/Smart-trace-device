@@ -13,26 +13,25 @@ import {
   X,
   Save,
 } from "lucide-react";
-import { useDeleteFounditemMutation, useGetFounditemQuery } from "../../Api/item";
 import { toast } from "react-toastify";
+import { useDeleteFounditemMutation, useGetFounditemQuery } from "../../Api/founditem";
 
 // TypeScript interfaces
 interface LostItem {
-  _id: string;
   id: string;
-  title: string;
-  ownerName: string;
- losterEmail: string;
-  ownerPhone: string;
+  name: string;
+  category: string;
+  description: string;
+  serialnumber: string;
+  founderEmail: string;
   location: string;
-  date: string;
-   serialNumber: string;
-  additionalInfo: string;
-  image: string;
-  category?: string;
-  dateFound?: string;
-  foundBy?: string;
-  contact?: string;
+  phoneNumber: string;
+  firstName: string;
+  address: string;
+  province: string;
+  district: string;
+  lastName: string;
+  deviceimage: string;
 }
 
 interface EditModalProps {
@@ -49,26 +48,33 @@ interface ItemCardProps {
 }
 
 interface FormData {
-  title: string;
-  ownerName: string;
- losterEmail: string;
-  ownerPhone: string;
+  name: string;
+  category: string;
+  description: string;
+  serialnumber: string;
+  founderEmail: string;
   location: string;
-  date: string;
-   serialNumber: string;
-  additionalInfo: string;
-  image: string;
+  phoneNumber: string;
+  firstName: string;
+  address: string;
+  province: string;
+  district: string;
+  lastName: string;
+  deviceimage: string;
 }
 
 interface FormErrors {
-  general?: string;
-  title?: string;
- losterEmail?: string;
+  name?: string;
+  category?: string;
+  description?: string;
+  serialnumber?: string;
+  founderEmail?: string;
   location?: string;
-  date?: string;
-   serialNumber?: string;
-  additionalInfo?: string;
-  image?: string;
+  firstName?: string;
+  address?: string;
+  province?: string;
+  district?: string;
+  lastName?: string;
   [key: string]: string | undefined;
 }
 
@@ -83,45 +89,41 @@ const EditModal: React.FC<EditModalProps> = ({
   onSave,
 }) => {
   const [formData, setFormData] = useState<FormData>({
-    title: "",
-    ownerName: "",
-   losterEmail: "",
-    ownerPhone: "",
+    name: "",
+    category: "",
+    description: "",
+    serialnumber: "",
+    founderEmail: "",
     location: "",
-    date: "",
-     serialNumber: "",
-    additionalInfo: "",
-    image: "",
+    phoneNumber: "",
+    firstName: "",
+    address: "",
+    province: "",
+    district: "",
+    lastName: "",
+    deviceimage: "",
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Helper function to convert datetime to date format
-  const formatDateForInput = (dateString: string): string => {
-    if (!dateString) return "";
-    try {
-      const date = new Date(dateString);
-      return date.toISOString().split("T")[0];
-    } catch (error) {
-      console.error("Error formatting date:", error);
-      return "";
-    }
-  };
-
   // Initialize form data when item changes
   useEffect(() => {
     if (item && isOpen) {
       setFormData({
-        title: item.title || "",
-        ownerName: item.ownerName || "",
-       losterEmail: item.losterEmail || "",
-        ownerPhone: item.ownerPhone || "",
+        name: item.name || "",
+        firstName: item.firstName || "",
+        lastName: item.lastName || "",
+        founderEmail: item.founderEmail || "",
+        phoneNumber: item.phoneNumber || "",
         location: item.location || "",
-        date: formatDateForInput(item.date || item.date),
-         serialNumber: item. serialNumber || item. serialNumber || "",
-        additionalInfo: item.additionalInfo || item.additionalInfo || "",
-        image: item.image || "",
+        district: item.district || "",
+        province: item.province || "",
+        address: item.address || "",
+        category: item.category || "",
+        serialnumber: item.serialnumber || "",
+        description: item.description || "",
+        deviceimage: item.deviceimage || "",
       });
       setErrors({});
     }
@@ -154,7 +156,7 @@ const EditModal: React.FC<EditModalProps> = ({
       if (file.size > 5 * 1024 * 1024) {
         setErrors((prev) => ({
           ...prev,
-          image: "File size must be less than 5MB",
+          deviceimage: "File size must be less than 5MB",
         }));
         return;
       }
@@ -163,7 +165,7 @@ const EditModal: React.FC<EditModalProps> = ({
       if (!file.type.startsWith("image/")) {
         setErrors((prev) => ({
           ...prev,
-          image: "Please select a valid image file",
+          deviceimage: "Please select a valid image file",
         }));
         return;
       }
@@ -172,12 +174,12 @@ const EditModal: React.FC<EditModalProps> = ({
       reader.onload = (e) => {
         setFormData((prev) => ({
           ...prev,
-          image: e.target?.result as string,
+          deviceimage: e.target?.result as string,
         }));
         // Clear any previous image errors
         setErrors((prev) => ({
           ...prev,
-          image: "",
+          deviceimage: "",
         }));
       };
       reader.readAsDataURL(file);
@@ -189,31 +191,31 @@ const EditModal: React.FC<EditModalProps> = ({
     const newErrors: FormErrors = {};
 
     // Check if fields exist and are not empty
-    if (!formData.title || !formData.title.trim()) {
-      newErrors.title = "Item name is required";
+    if (!formData.name || !formData.name.trim()) {
+      newErrors.name = "Item name is required";
     }
 
     if (!formData.location || !formData.location.trim()) {
       newErrors.location = "Location is required";
     }
 
-    if (!formData.date || !formData.date.trim()) {
-      newErrors.date = "Date found is required";
+    if (!formData.lastName || !formData.lastName.trim()) {
+      newErrors.lastName = "Last name is required";
     }
 
-    if (!formData. serialNumber || !formData. serialNumber.trim()) {
-      newErrors. serialNumber = "Serial number is required";
+    if (!formData.serialnumber || !formData.serialnumber.trim()) {
+      newErrors.serialnumber = "Serial number is required";
     }
 
-    if (!formData.additionalInfo || !formData.additionalInfo.trim()) {
-      newErrors.additionalInfo = "additionalInfo is required";
+    if (!formData.description || !formData.description.trim()) {
+      newErrors.description = "Description is required";
     }
 
     // Validate email format if provided
-    if (formData.losterEmail && formData.losterEmail.trim()) {
+    if (formData.founderEmail && formData.founderEmail.trim()) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.losterEmail)) {
-        newErrors.losterEmail = "Please enter a valid email address";
+      if (!emailRegex.test(formData.founderEmail)) {
+        newErrors.founderEmail = "Please enter a valid email address";
       }
     }
 
@@ -229,8 +231,8 @@ const EditModal: React.FC<EditModalProps> = ({
       return;
     }
 
-    // Fixed: Properly access the item ID
-    const itemId = item?._id || item?.id;
+    // Get the item ID
+    const itemId = item?.id || item?.id;
 
     if (!item || !itemId) {
       console.error("Item ID is required for editing. Item:", item);
@@ -244,25 +246,43 @@ const EditModal: React.FC<EditModalProps> = ({
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       // Prepare data for API call
-      const updateData: LostItem = {
-        ...item,
-        title: formData.title,
-        ownerName: formData.ownerName,
-       losterEmail: formData.losterEmail,
-        ownerPhone: formData.ownerPhone,
+      const updateData = {
+        name: formData.name,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        founderEmail: formData.founderEmail,
+        phoneNumber: formData.phoneNumber,
         location: formData.location,
-        date: formData.date,
-         serialNumber: formData. serialNumber,
-        additionalInfo: formData.additionalInfo,
-        image: formData.image,
+        district: formData.district,
+        province: formData.province,
+        address: formData.address,
+        category: formData.category,
+        serialnumber: formData.serialnumber,
+        description: formData.description,
+        deviceimage: formData.deviceimage,
       };
 
-      // Call the onSave callback with updated data
-      onSave(updateData);
+      // Make API call to update the found item
+      const response = await fetch(
+        `https://smart-trace-device-backend.onrender.com/api/devices/found/${itemId}/`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const updatedItem = await response.json();
+
+      // Call the onSave callback with updated data from API response
+      onSave(updatedItem);
 
       // Close modal
       onClose();
@@ -270,7 +290,8 @@ const EditModal: React.FC<EditModalProps> = ({
       console.error("Error updating item:", error);
       setErrors((prev) => ({
         ...prev,
-        general: "Failed to update item. Please try again.",
+        general:
+          "Failed to update item. Please check your connection and try again.",
       }));
     } finally {
       setIsLoading(false);
@@ -280,15 +301,19 @@ const EditModal: React.FC<EditModalProps> = ({
   // Reset form and close modal
   const handleClose = () => {
     setFormData({
-      title: "",
-      ownerName: "",
-     losterEmail: "",
-      ownerPhone: "",
+      name: "",
+      category: "",
+      description: "",
+      serialnumber: "",
+      founderEmail: "",
       location: "",
-      date: "",
-       serialNumber: "",
-      additionalInfo: "",
-      image: "",
+      phoneNumber: "",
+      firstName: "",
+      address: "",
+      province: "",
+      district: "",
+      lastName: "",
+      deviceimage: "",
     });
     setErrors({});
     onClose();
@@ -338,9 +363,14 @@ const EditModal: React.FC<EditModalProps> = ({
                     Item Image
                   </label>
                   <div className="flex items-center space-x-4">
-                    {formData.image && (
+                    {formData.deviceimage && (
                       <img
-                        src={formData.image}
+                        src={
+                          formData.deviceimage.startsWith("data:")
+                            ? formData.deviceimage
+                            : import.meta.env.VITE_API_BASE_URL +
+                              formData.deviceimage
+                        }
                         alt="Item preview"
                         className="h-16 w-16 rounded-md object-cover border border-gray-200"
                       />
@@ -354,9 +384,9 @@ const EditModal: React.FC<EditModalProps> = ({
                       />
                     </div>
                   </div>
-                  {errors.image && (
+                  {errors.deviceimage && (
                     <p className="mt-1 text-sm text-red-600">
-                      {errors.image}
+                      {errors.deviceimage}
                     </p>
                   )}
                 </div>
@@ -364,37 +394,35 @@ const EditModal: React.FC<EditModalProps> = ({
                 {/* Item Name */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Item Name 
+                    Item Name
                   </label>
                   <input
                     type="text"
-                    name="title"
-                    value={formData.title}
+                    name="name"
+                    value={formData.name}
                     onChange={handleInputChange}
                     className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.title ? "border-red-300" : "border-gray-300"
+                      errors.name ? "border-red-300" : "border-gray-300"
                     }`}
                     placeholder="Enter item name"
                   />
-                  {errors.title && (
-                    <p className="mt-1 text-sm text-red-600">
-                      {errors.title}
-                    </p>
+                  {errors.name && (
+                    <p className="mt-1 text-sm text-red-600">{errors.name}</p>
                   )}
                 </div>
 
-                {/* Founder Name */}
+                {/* First Name */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Founder Name
+                    First Name
                   </label>
                   <input
                     type="text"
-                    name="ownerName"
-                    value={formData.ownerName}
+                    name="firstName"
+                    value={formData.firstName}
                     onChange={handleInputChange}
                     className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter founder name"
+                    placeholder="Enter first name"
                   />
                 </div>
 
@@ -405,33 +433,33 @@ const EditModal: React.FC<EditModalProps> = ({
                   </label>
                   <input
                     type="email"
-                    name="losterEmail"
-                    value={formData.losterEmail}
+                    name="founderEmail"
+                    value={formData.founderEmail}
                     onChange={handleInputChange}
                     className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.losterEmail ? "border-red-300" : "border-gray-300"
+                      errors.founderEmail ? "border-red-300" : "border-gray-300"
                     }`}
                     placeholder="Enter founder email"
                   />
-                  {errors.losterEmail && (
+                  {errors.founderEmail && (
                     <p className="mt-1 text-sm text-red-600">
-                      {errors.losterEmail}
+                      {errors.founderEmail}
                     </p>
                   )}
                 </div>
 
-                {/* Founder Phone */}
+                {/* Phone Number */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Founder Phone
+                    Phone Number
                   </label>
                   <input
                     type="tel"
-                    name="ownerPhone"
-                    value={formData.ownerPhone}
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
                     onChange={handleInputChange}
                     className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter founder phone"
+                    placeholder="Enter phone number"
                   />
                 </div>
 
@@ -457,65 +485,128 @@ const EditModal: React.FC<EditModalProps> = ({
                   )}
                 </div>
 
-                {/* Date Found */}
+                {/* Last Name */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Date Found
+                    Last Name
                   </label>
                   <input
-                    type="date"
-                    name="date"
-                    value={formData.date}
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
                     onChange={handleInputChange}
                     className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.date ? "border-red-300" : "border-gray-300"
+                      errors.lastName ? "border-red-300" : "border-gray-300"
                     }`}
+                    placeholder="Enter last name"
                   />
-                  {errors.date && (
-                    <p className="mt-1 text-sm text-red-600">{errors.date}</p>
+                  {errors.lastName && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.lastName}
+                    </p>
                   )}
+                </div>
+
+                {/* Category */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Category
+                  </label>
+                  <input
+                    type="text"
+                    name="category"
+                    value={formData.category}
+                    onChange={handleInputChange}
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter item category"
+                  />
                 </div>
 
                 {/* Serial Number */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Serial Number *
+                    Serial Number
                   </label>
                   <input
                     type="text"
-                    name=" serialNumber"
-                    value={formData. serialNumber}
+                    name="serialnumber"
+                    value={formData.serialnumber}
                     onChange={handleInputChange}
                     className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors. serialNumber ? "border-red-300" : "border-gray-300"
+                      errors.serialnumber ? "border-red-300" : "border-gray-300"
                     }`}
                     placeholder="Enter serial number"
                   />
-                  {errors. serialNumber && (
+                  {errors.serialnumber && (
                     <p className="mt-1 text-sm text-red-600">
-                      {errors. serialNumber}
+                      {errors.serialnumber}
                     </p>
                   )}
                 </div>
 
-                {/* additionalInfo */}
+                {/* District */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    District
+                  </label>
+                  <input
+                    type="text"
+                    name="district"
+                    value={formData.district}
+                    onChange={handleInputChange}
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter district"
+                  />
+                </div>
+
+                {/* Province */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Province
+                  </label>
+                  <input
+                    type="text"
+                    name="province"
+                    value={formData.province}
+                    onChange={handleInputChange}
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter province"
+                  />
+                </div>
+
+                {/* Address */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Address
+                  </label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter address"
+                  />
+                </div>
+
+                {/* Description */}
                 <div className="sm:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    additionalInfo *
+                    Description
                   </label>
                   <textarea
-                    name="additionalInfo"
-                    value={formData.additionalInfo}
+                    name="description"
+                    value={formData.description}
                     onChange={handleInputChange}
                     rows={3}
                     className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.additionalInfo ? "border-red-300" : "border-gray-300"
+                      errors.description ? "border-red-300" : "border-gray-300"
                     }`}
-                    placeholder="Enter detailed additionalInfo of the item"
+                    placeholder="Enter detailed description of the item"
                   />
-                  {errors.additionalInfo && (
+                  {errors.description && (
                     <p className="mt-1 text-sm text-red-600">
-                      {errors.additionalInfo}
+                      {errors.description}
                     </p>
                   )}
                 </div>
@@ -563,15 +654,15 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onEdit, onDelete }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <img
-              src={import.meta.env.VITE_API_BASE_URL + item.image}
-            alt={item.title}
+              src={import.meta.env.VITE_API_BASE_URL + item.deviceimage}
+            alt={item.name}
             className="w-12 h-12 rounded-md object-cover mr-4"
           />
           <div>
             <h3 className="text-sm font-medium text-gray-900">
-              {item.title}
+              {item.name}
             </h3>
-            <p className="text-xs text-gray-500">{item.ownerName}</p>
+            <p className="text-xs text-gray-500">{item.lastName}</p>
           </div>
         </div>
       </div>
@@ -582,24 +673,24 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onEdit, onDelete }) => {
           <p className="font-medium">{item.location}</p>
         </div>
         <div>
-          <p className="text-gray-500">Date Found:</p>
-          <p className="font-medium">{item.dateFound || item.date}</p>
+          <p className="text-gray-500">Address Found:</p>
+          <p className="font-medium">{item.address || item.address}</p>
         </div>
         <div>
           <p className="text-gray-500">Found By:</p>
-          <p className="font-medium">{item.foundBy || item.ownerName}</p>
+          <p className="font-medium">{item.founderEmail|| item.lastName}</p>
         </div>
         <div>
           <p className="text-gray-500">Contact:</p>
           <p className="font-medium truncate">
-            {item.contact || item.ownerPhone}
+            {item.firstName || item.phoneNumber}
           </p>
         </div>
       </div>
 
       <div className="mt-2 text-xs">
         <p className="text-gray-500">additionalInfo:</p>
-        <p className="font-medium text-gray-900">{item.additionalInfo}</p>
+        <p className="font-medium text-gray-900">{item.description}</p>
       </div>
 
       <div className="mt-4 flex justify-end space-x-2">
@@ -663,10 +754,10 @@ export default function AdminFoundItem(): JSX.Element {
   // Filter items based on search term
   const filteredItems = allItems?.filter((item) => {
     const matchesSearch =
-      item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.additionalInfo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.foundBy?.toLowerCase().includes(searchTerm.toLowerCase());
+      item.founderEmail?.toLowerCase().includes(searchTerm.toLowerCase());
 
     return matchesSearch;
   });
@@ -730,8 +821,8 @@ const handleConfirmDelete = async (id: string) => {
 };
 
 const handleDeleteClick = (item: LostItem) => {
-  if (item && item._id) {
-    handleConfirmDelete(item._id);
+  if (item && item.id) {
+    handleConfirmDelete(item.id);
   } else {
     console.error("Item or item ID is missing");
     toast.error("Cannot delete item - ID is missing");
@@ -756,7 +847,7 @@ const handleDeleteClick = (item: LostItem) => {
  
   return (
     <div className="w-full max-w-7xl mx-auto p-3 sm:p-6 bg-white shadow-lg rounded-lg">
-      <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2 sm:mb-2">
+      <h1 className="text-xl sm:text-xl font-normal text-gray-800 mb-2 sm:mb-2">
         Found Items
       </h1>
 
@@ -805,7 +896,7 @@ const handleDeleteClick = (item: LostItem) => {
                   scope="col"
                   className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  additionalInfo
+                  Description
                 </th>
                 <th
                   scope="col"
@@ -817,13 +908,13 @@ const handleDeleteClick = (item: LostItem) => {
                   scope="col"
                   className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  Date Lost
+                 Serial Number
                 </th>
                 <th
                   scope="col"
                   className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  Lost By
+                  Found By
                 </th>
                 <th
                   scope="col"
@@ -835,14 +926,14 @@ const handleDeleteClick = (item: LostItem) => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {currentItems?.map((item) => (
-                <tr key={item._id || item.id} className="hover:bg-gray-50">
+                <tr key={item.id || item.id} className="hover:bg-gray-50">
                   <td className="px-4 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 h-10 w-10">
                         <img
                           className="h-10 w-10 rounded-md object-cover"
-                          src={import.meta.env.VITE_API_BASE_URL + item.image}
-                          alt={item.title}
+                          src={import.meta.env.VITE_API_BASE_URL + item.deviceimage}
+                          alt={item.name}
                           onError={(e) => {
                             (e.target as HTMLImageElement).src =
                               "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNiAxNkMyMC40MTgzIDE2IDI0IDE5LjU4MTcgMjQgMjRDMjQgMjguNDE4MyAyMC40MTgzIDMyIDE2IDMyQzExLjU4MTcgMzIgOCAyOC40MTgzIDggMjRDOCAxOS41ODE3IDExLjU4MTcgMTYgMTYgMTZaIiBmaWxsPSIjOUM5Qzk3Ii8+CjxwYXRoIGQ9Ik0yMS4zMzMzIDIxLjMzMzNWMjIuNjY2N0gyMi42NjY3VjI0SDIxLjMzMzNWMjUuMzMzM0gyMFYyNEgxOC42NjY3VjIyLjY2NjdIMjBWMjEuMzMzM0gyMS4zMzMzWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+";
@@ -851,31 +942,31 @@ const handleDeleteClick = (item: LostItem) => {
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">
-                          {item.title}
+                          {item.name}
                         </div>
-                        <div className="text-sm w-0.5 text-gray-500">
-                          {item.losterEmail}
+                        <div className="text-xs w-[15 px] text-gray-500">
+                          {item.founderEmail}
                         </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-4 py-4">
                     <div className="text-sm text-gray-900 max-w-xs">
-                      {item.additionalInfo}
+                      {item.description}
                     </div>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">{item.location}</div>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{item.date}</div>
+                    <div className="text-sm text-gray-900">{item.serialnumber}</div>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
-                      {item.ownerName}
+                      {item.lastName}
                     </div>
                     <div className="text-sm text-gray-500">
-                      {item.ownerPhone}
+                      {item.phoneNumber}
                     </div>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap text-center">
@@ -909,7 +1000,7 @@ const handleDeleteClick = (item: LostItem) => {
           {currentItems?.length > 0 ? (
             currentItems?.map((item) => (
               <div
-                key={item._id || item.id}
+                key={item.id || item.id}
                 className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start justify-between">
@@ -917,8 +1008,8 @@ const handleDeleteClick = (item: LostItem) => {
                     <div className="flex-shrink-0">
                       <img
                         className="h-16 w-16 rounded-md object-cover"
-                        src={import.meta.env.VITE_API_BASE_URL + item.image}
-                        alt={item.title}
+                        src={import.meta.env.VITE_API_BASE_URL + item.deviceimage}
+                        alt={item.name}
                         onError={(e) => {
                           (e.target as HTMLImageElement).src =
                             "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yNiAyNkMzNC44MzY2IDI2IDQyIDMzLjE2MzQgNDIgNDJDNDIgNTAuODM2NiAzNC44MzY2IDU4IDI2IDU4QzE3LjE2MzQgNTggMTAgNTAuODM2NiAxMCA0MkMxMCAzMy4xNjM0IDE3LjE2MzQgMjYgMjYgMjZaIiBmaWxsPSIjOUM5Qzk3Ii8+CjxwYXRoIGQ9Ik0zNC4xMzMzIDM0LjEzMzNWMzYuMjY2N0gzNi4yNjY3VjM4LjRIMzQuMTMzM1Y0MC41MzMzSDMzLjA2NjdWMzguNEgzMC40VjM2LjI2NjdIMzMuMDY2N1YzNC4xMzMzSDM0LjEzMzNaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=";
@@ -929,18 +1020,18 @@ const handleDeleteClick = (item: LostItem) => {
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <h3 className="text-lg font-medium text-gray-900">
-                            {item.title}
+                            {item.name}
                           </h3>
                           <p className="text-sm  text-gray-500">
-                            {item.losterEmail}
+                            {item.founderEmail}
                           </p>
                         </div>
                         <p className="text-sm text-gray-500 ml-2">
-                          {item.date}
+                          {item.address}
                         </p>
                       </div>
                       <p className="text-sm text-gray-700 mb-2">
-                        {item.additionalInfo}
+                        {item.description}
                       </p>
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
@@ -949,9 +1040,9 @@ const handleDeleteClick = (item: LostItem) => {
                         </div>
                         <div>
                           <span className="text-gray-500">Found by:</span>
-                          <p className="text-gray-900">{item.foundBy}</p>
+                          <p className="text-gray-900">{item.founderEmail}</p>
                           <p className="text-gray-500 text-xs">
-                            {item.ownerPhone}
+                            {item.phoneNumber}
                           </p>
                         </div>
                       </div>

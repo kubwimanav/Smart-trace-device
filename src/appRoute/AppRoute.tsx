@@ -6,7 +6,6 @@ import LostItem from "../Landingpage/LostItem";
 import ReportFoundItem from "../Landingpage/ReportFoundItem";
 import ReportLostItem from "../Landingpage/ReportLostItem";
 import ScrollToTop from "../Landingpage/ScrollTop";
-import UserFoundItem from "../Dashboard/admin/AdminFoundItem";
 import ContactMessagesPage from "../Dashboard/admin/ContactMessages";
 import LandingAuth from "../Landingpage/auth";
 import AdminDashHome from "../Dashboard/admin/AdminDashHome";
@@ -20,7 +19,8 @@ import Register from "../Landingpage/Register";
 import OtpPage from "../Landingpage/otp";
 import AdminFoundItem from "../Dashboard/admin/AdminFoundItem";
 import FoundItem from "../Landingpage/FoundItem";
-import AdminLostItems from "../Dashboard/admin/AdminLostItem";
+import AdminLostItems from "../Dashboard/admin/AdminLostItems";
+import UserFoundItemById from "../Dashboard/userdash/UserFoundItemById";
 
 const AppRaute = () => {
   return (
@@ -48,7 +48,7 @@ const AppRaute = () => {
         <Route path="/userDash" element={<UserDashLayout />}>
           <Route index element={<UserDashHome />} />
           <Route path="userdash" element={<UserDashHome />} />
-          <Route path="userfounditem" element={<UserFoundItem />} />
+          <Route path="userfounditem" element={<UserFoundItemById />} />
           <Route path="users" element={<AdminManagement />} />
         </Route>
 

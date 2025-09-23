@@ -10,13 +10,15 @@ import {
   Menu,
 } from "lucide-react";
 import { MdDelete } from "react-icons/md";
-import { useGetContactQuery } from "../../Api/contact";
+import { useDeletecontactMutation, useGetContactQuery } from "../../Api/contact";
+import { toast } from "react-toastify";
+import Notiflix from "notiflix";
 
 // TypeScript interfaces
 interface ContactMessage {
   id: string;
   _id: string;
-  name: string;
+  last_name: string;
   email: string;
   subject: string;
   description: string;
@@ -60,7 +62,7 @@ export default function ContactMessagesPage(): JSX.Element {
   const handleStatusChange = (id: string, newStatus: string) => {
     setMessages(
       messages.map((message) =>
-        message.id === id
+        message._id === id
           ? {
               ...message,
               status: newStatus as "unread" | "pending" | "resolved",
@@ -68,7 +70,7 @@ export default function ContactMessagesPage(): JSX.Element {
           : message
       )
     );
-    if (selectedMessage && selectedMessage.id === id) {
+    if (selectedMessage && selectedMessage._id === id) {
       setSelectedMessage({
         ...selectedMessage,
         status: newStatus as "unread" | "pending" | "resolved",
@@ -76,10 +78,85 @@ export default function ContactMessagesPage(): JSX.Element {
     }
   };
 
+
+
+
+const [deletecontact] = useDeletecontactMutation();
+
+const handleConfirmDelete = (id: string) => {
+  Notiflix.Confirm.show(
+    "Delete Confirmation",
+    "Do you want to delete this message?",
+    "Delete",
+    "Cancel",
+    () => {
+      // User clicked Delete
+      console.log("Attempting to delete contact with ID:", id);
+
+      deletecontact(id);
+
+      // Update local state immediately after deletion call
+      setMessages((prevMessages) =>
+        prevMessages.filter((message) => {
+          const messageId = message._id || message.id?.toString();
+          return messageId !== id;
+        })
+      );
+
+      // Close modal if the deleted message is currently selected
+      if (selectedMessage) {
+        const selectedId =
+          selectedMessage._id || selectedMessage.id?.toString();
+        if (selectedId === id) {
+          setSelectedMessage(null);
+        }
+      }
+
+      toast.success("Message deleted successfully!");
+    },
+    () => {
+      // User clicked Cancel - do nothing
+      console.log("Delete cancelled");
+    },
+    {
+      width: "320px",
+      borderRadius: "8px",
+      titleColor: "#ff5549",
+      okButtonBackground: "#ff5549",
+    }
+  );
+};
+
+const handleDeleteClick = (item: ContactMessage) => {
+  console.log("Delete clicked for item:", item);
+
+  // Check for both _id and id fields since your API uses 'id'
+  const itemId = item._id || item.id;
+  console.log("Item ID (_id):", item._id);
+  console.log("Item ID (id):", item.id);
+  console.log("Final Item ID:", itemId);
+
+  if (!item) {
+    console.error("Item is null or undefined");
+    toast.error("Cannot delete - item not found");
+    return;
+  }
+
+  if (!itemId) {
+    console.error("Item ID is missing", item);
+    toast.error("Cannot delete - ID is missing");
+    return;
+  }
+
+  handleConfirmDelete(itemId.toString()); // Convert to string in case it's a number
+};
+
+
+
   // Filter messages based on search term and status filter
   const filteredMessages = messages.filter((message) => {
     const matchesSearch =
-      (message.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (message.last_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       (message.email || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       (message.description || "")
         .toLowerCase()
@@ -115,7 +192,7 @@ export default function ContactMessagesPage(): JSX.Element {
         <div className="bg-white rounded-lg shadow overflow-hidden">
           {/* Header */}
           <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center">
-            <h1 className="text-lg sm:text-xl font-semibold text-gray-800">
+            <h1 className="text-xl  font-normal mb-4 sm:mb-3 text-gray-800">
               Contact Messages
             </h1>
             <div className="flex space-x-2">
@@ -202,11 +279,11 @@ export default function ContactMessagesPage(): JSX.Element {
             {currentMessages.length > 0 ? (
               <div className="divide-y divide-gray-200">
                 {currentMessages.map((message) => (
-                  <div key={message.id} className="p-4">
+                  <div key={message._id} className="p-4">
                     <div className="flex justify-between items-start mb-2">
                       <div>
                         <h3 className="font-medium text-gray-900">
-                          {message.name || "Unknown"}
+                          {message.last_name || "Unknown"}
                         </h3>
                         <p className="text-xs text-gray-500">
                           {message.email || "No email"}
@@ -282,10 +359,10 @@ export default function ContactMessagesPage(): JSX.Element {
               <tbody className="bg-white divide-y divide-gray-200">
                 {currentMessages.length > 0 ? (
                   currentMessages.map((message) => (
-                    <tr key={message.id} className="hover:bg-gray-50">
+                    <tr key={message._id} className="hover:bg-gray-50">
                       <td className="px-4 py-3 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">
-                          {message.name || "Unknown"}
+                          {message.last_name || "Unknown"}
                         </div>
                         <div className="text-sm text-gray-500 md:hidden">
                           {message.email || "No email"}
@@ -318,10 +395,9 @@ export default function ContactMessagesPage(): JSX.Element {
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
-                          
                           <button
                             className="text-red-300 hover:text-blue-900 p-1"
-                            title="Reply"
+                            onClick={() => handleDeleteClick(message)}
                           >
                             <MdDelete size={16} />
                           </button>
@@ -437,7 +513,7 @@ export default function ContactMessagesPage(): JSX.Element {
                 <div className="mb-3">
                   <p className="text-sm font-medium text-gray-500">From</p>
                   <p className="text-sm text-gray-900">
-                    {selectedMessage.name || "Unknown"} (
+                    {selectedMessage.last_name || "Unknown"} (
                     {selectedMessage.email || "No email"})
                   </p>
                 </div>
@@ -465,7 +541,7 @@ export default function ContactMessagesPage(): JSX.Element {
                       className="text-xs border border-gray-300 rounded-md px-2 py-1"
                       value={selectedMessage.status || "unread"}
                       onChange={(e) =>
-                        handleStatusChange(selectedMessage.id, e.target.value)
+                        handleStatusChange(selectedMessage._id, e.target.value)
                       }
                     >
                       <option value="unread">Unread</option>
