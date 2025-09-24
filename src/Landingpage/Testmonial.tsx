@@ -82,7 +82,7 @@ const TestimonialCard: React.FC<Testimonial> = ({ quote, name, role, avatar,comp
         {/* <StarRating rating={rating} /> */}
         
         {/* Quote text */}
-        <p className="text-gray-700 text-base leading-relaxed mb-6 flex-1 relative z-10 font-small">
+        <p className="text-gray-700 text-md leading-relaxed mb-6 flex-1 relative z-10 font-small">
           "{quote}"
         </p>
         
@@ -121,10 +121,10 @@ const TestimonialComponent: React.FC = () => {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
-          <h1 className="text-4xl sm:text-4xl lg:text-4xl font-medium  mb-6 text-[#3A7196]    ">
+          <h1 className="text-3xl font-medium  mb-3 text-[#3A7196]    ">
             What Our Users Say
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-md text-gray-600 max-w-2xl mx-auto leading-relaxed">
             Don't take our word for it—hear from real people who've successfully recovered their lost items
           </p>
         </div>
