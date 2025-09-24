@@ -5,7 +5,6 @@ const baseQuery = fetchBaseQuery({
   prepareHeaders: (headers) => {
     // Get the access token from localStorage (matching the updated AuthContext)
     const accessToken = localStorage.getItem("accessToken");
-    console.log("vgfcdxsza\\AZSXDCV", accessToken);
 
     if (accessToken) {
       headers.set("Authorization", `Bearer ${accessToken}`);

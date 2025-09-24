@@ -2,6 +2,8 @@ import { FaMessage, FaUsers } from "react-icons/fa6";
 import { FaUserDoctor } from "react-icons/fa6";
 import { MdInsertDriveFile } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useGetLostitemByUserQuery } from "../../Api/lostitem";
+import { useGetFounditemByUserQuery } from "../../Api/founditem";
 function UserDashHome() {
   // Sample data for charts
 
@@ -38,10 +40,9 @@ function UserDashHome() {
       },
     ];
 
+  const { data: getlostitembyuser } = useGetLostitemByUserQuery();
+  const { data: getfounditembyuser } = useGetFounditemByUserQuery();
 
-  // Sample data for activity table
-
-  // Status badge color configuration
 
  
 
@@ -66,7 +67,7 @@ function UserDashHome() {
           <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center">
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">LostItems</span>
-              <span className="text-xm font-bold mt-1">{15}</span>
+              <span className="text-xm font-bold mt-1">{getlostitembyuser?.length}</span>
               <span className="text-sm text-green-500 mt-1">
                 Total Lost Items
               </span>
@@ -80,7 +81,7 @@ function UserDashHome() {
           <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center">
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">FoundItems</span>
-              <span className="text-sm font-bold mt-1">{12}</span>
+              <span className="text-sm font-bold mt-1">{getfounditembyuser?.length}</span>
               <span className="text-sm text-green-500 mt-1">
                 Total Found Items
               </span>

@@ -192,9 +192,9 @@ const handleDeleteClick = (item: ContactMessage) => {
         <div className="bg-white rounded-lg shadow overflow-hidden">
           {/* Header */}
           <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center">
-            <h1 className="text-xl  font-normal mb-4 sm:mb-3 text-gray-800">
+           <h5 className="text-size-xl font-bold text-primaryColor-100 mb-2 sm:mb-2">
               Contact Messages
-            </h1>
+            </h5>
             <div className="flex space-x-2">
               <button
                 className="md:hidden text-gray-600 hover:text-gray-900"

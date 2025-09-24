@@ -14,7 +14,7 @@ export const productApi = apiSlice.injectEndpoints({
         // Get user email from localStorage or you can pass it as parameter
         const userEmail = localStorage.getItem("email");
         return {
-          url: `/api/devices/found/by-${userEmail}/`,
+          url: `api/devices/found/by-email/?email=${userEmail}`,
           method: "GET",
         };
       },
