@@ -41,12 +41,6 @@ interface EditModalProps {
   onSave: (item: LostItem) => void;
 }
 
-interface ItemCardProps {
-  item: LostItem;
-  onEdit: (item: LostItem) => void;
-  onDelete: (id: string) => void;
-}
-
 interface FormData {
   title: string;
   firstName: string;
@@ -568,66 +562,7 @@ const EditModal: React.FC<EditModalProps> = ({
   );
 };
 
-const ItemCard: React.FC<ItemCardProps> = ({ item, onEdit, onDelete }) => {
-  return (
-    <div className="bg-white rounded-lg shadow mb-4 p-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center">
-          <img
-            src={import.meta.env.VITE_API_BASE_URL + item.image}
-            alt={item.title}
-            className="w-12 h-12 rounded-md object-cover mr-4"
-          />
-          <div>
-            <h3 className="text-sm font-medium text-gray-900">{item.title}</h3>
-            <p className="text-xs text-gray-500">{item.firstName}</p>
-          </div>
-        </div>
-      </div>
 
-      <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
-        <div>
-          <p className="text-gray-500">state:</p>
-          <p className="font-medium">{item.state}</p>
-        </div>
-        <div>
-          <p className="text-gray-500">Date Found:</p>
-          <p className="font-medium">{item.dateFound || item.date}</p>
-        </div>
-        <div>
-          <p className="text-gray-500">Found By:</p>
-          <p className="font-medium">{item.losterEmail || item.firstName}</p>
-        </div>
-        <div>
-          <p className="text-gray-500">Contact:</p>
-          <p className="font-medium truncate">
-            {item.phoneNumber || item.ownerPhone}
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-2 text-xs">
-        <p className="text-gray-500">Description:</p>
-        <p className="font-medium text-gray-900">{item.additionalInfo}</p>
-      </div>
-
-      <div className="mt-4 flex justify-end space-x-2">
-        <button
-          onClick={() => onEdit(item)}
-          className="p-2 text-blue-600 hover:bg-blue-50 rounded-full"
-        >
-          <Edit size={16} />
-        </button>
-        <button
-          onClick={() => onDelete(item.id)}
-          className="p-2 text-red-600 hover:bg-red-50 rounded-full"
-        >
-          <Trash2 size={16} />
-        </button>
-      </div>
-    </div>
-  );
-};
 
 // Mock ReportLostItem component
 const ReportLostItem: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
@@ -802,10 +737,10 @@ const handleDeleteClick = (item: LostItem) => {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-3 sm:p-6 bg-white shadow-lg rounded-lg">
-      <h1 className="text-xl font-normal text-gray-800 mb-2 sm:mb-2">
+    <div className="max-w-xl lg:max-w-3xl xl:max-w-7xl mx-auto p-3 sm:p-6 bg-white shadow-lg rounded-lg">
+      <h5 className="text-size-xl font-bold text-primaryColor-100 mb-2 sm:mb-2">
         Lost Items Dashboard
-      </h1>
+      </h5>
 
       {/* Search and filters */}
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-6">
@@ -838,7 +773,7 @@ states, or finders..."
       </div>
 
       {/* Desktop view - Table */}
-      <div className="hidden lg:block">
+      <div className="block">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -909,7 +844,7 @@ states, or finders..."
                     </div>
                   </td>
                   <td className="px-4 py-4">
-                    <div className="text-sm text-gray-900 max-w-xs">
+                    <div className="text-sm text-gray-900 ">
                       {item.additionalInfo}
                     </div>
                   </td>
@@ -950,99 +885,6 @@ states, or finders..."
             </tbody>
           </table>
         </div>
-      </div>
-
-      {/* Tablet view - Cards */}
-      <div className="hidden sm:block lg:hidden">
-        <div className="grid gap-4">
-          {currentItems?.length > 0 ? (
-            currentItems.map((item) => (
-              <div
-                key={item._id || item.id}
-                className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start space-x-4 flex-1">
-                    <div className="flex-shrink-0">
-                      <img
-                        className="h-16 w-16 rounded-md object-cover"
-                        src={import.meta.env.VITE_API_BASE_URL + item.image}
-                        alt={item.title}
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src =
-                            "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yNiAyNkMzNC44MzY2IDI2IDQyIDMzLjE2MzQgNDIgNDJDNDIgNTAuODM2NiAzNC44MzY2IDU4IDI2IDU4QzE3LjE2MzQgNTggMTAgNTAuODM2NiAxMCA0MkMxMCAzMy4xNjM0IDE3LjE2MzQgMjYgMjYgMjZaIiBmaWxsPSIjOUM5Qzk3Ii8+CjxwYXRoIGQ9Ik0zNC4xMzMzIDM0LjEzMzNWMzYuMjY2N0gzNi4yNjY3VjM4LjRIMzQuMTMzM1Y0MC41MzMzSDMzLjA2NjdWMzguNEgzMC40VjM2LjI2NjdIMzMuMDY2N1YzNC4xMzMzSDM0LjEzMzNaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=";
-                        }}
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <h3 className="text-lg font-medium text-gray-900">
-                            {item.title}
-                          </h3>
-                          <p className="text-sm  text-gray-500">
-                            {item.losterEmail}
-                          </p>
-                        </div>
-                        <p className="text-sm text-gray-500 ml-2">
-                          {item.date}
-                        </p>
-                      </div>
-                      <p className="text-sm text-gray-700 mb-2">
-                        {item.additionalInfo}
-                      </p>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="text-gray-500">SerialNumber:</span>
-                          <p className="text-gray-900">{item.serialNumber}</p>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">Found by:</span>
-                          <p className="text-gray-900">{item.losterEmail}</p>
-                          <p className="text-gray-500 text-xs">
-                            {item.phoneNumber}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col space-y-2 ml-4">
-                    <button
-                      onClick={() => handleEdit(item)}
-                      className="text-blue-600 hover:text-blue-800 p-2 rounded-md hover:bg-blue-50 transition-colors"
-                      title="Edit item"
-                    >
-                      <Edit size={18} />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteClick(item)}
-                      className="text-red-600 hover:text-red-800 p-2 rounded-md hover:bg-red-50 transition-colors"
-                      title="Delete item"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="py-6 text-center text-gray-500">
-              No items found matching your search criteria
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Mobile Card Layout */}
-      <div className="md:hidden space-y-4">
-        {currentItems?.map((item) => (
-          <ItemCard
-            key={item.id}
-            item={item}
-            onEdit={handleEdit}
-            onDelete={handleConfirmDelete}
-          />
-        ))}
       </div>
 
       {/* Pagination */}

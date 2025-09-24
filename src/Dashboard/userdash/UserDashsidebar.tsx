@@ -7,6 +7,7 @@ import {
   MdPayment
 } from "react-icons/md";
 import logo from '../../assets/images/logo.jpeg'
+import { useAuth } from "../../context/AuthContext";
 
 
 
@@ -34,7 +35,7 @@ const UserDashSidebar:React.FC<ToggleProps> = ({ isOpen, toggleSidebar }) => {
 
     {
       name: "Lost Items",
-      path: "users",
+      path: "userlostitem",
       icon: <MdPayment className="h-4 w-4 mr-3" />,
     },
 
@@ -53,6 +54,8 @@ const UserDashSidebar:React.FC<ToggleProps> = ({ isOpen, toggleSidebar }) => {
       toggleSidebar();
     }
   };
+
+  const { logout } = useAuth();
 
   return (
     <aside
@@ -87,7 +90,9 @@ const UserDashSidebar:React.FC<ToggleProps> = ({ isOpen, toggleSidebar }) => {
         </ul>
         <div className=" text-red-500 flex items-center mt-20 ml-6">
           <MdOutlineLogout className=" h-5 w-5 mr-3" />
-          <Link to={"/"} className=" mb-1">
+          <Link
+            onClick={logout}
+            to={"#"} className=" mb-1">
             Logout
           </Link>
         </div>

@@ -1,6 +1,8 @@
 import React, { useState, type JSX } from "react";
 import { Trash2, ChevronLeft, ChevronRight, Search } from "lucide-react";
-import { useGetUsersQuery } from "../../Api/user";
+import { useDeleteUserMutation, useGetUsersQuery } from "../../Api/user";
+import Notiflix from "notiflix";
+import { toast } from "react-toastify";
 
 interface User {
   id: string;
@@ -24,10 +26,10 @@ export default function AdminManagement(): JSX.Element {
   
   const staticUsers = data;
   // Use static data instead of context
-  const [users, setUsers] = useState<User[]>(staticUsers);
+  const [users] = useState<User[]>(staticUsers);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading] = useState<boolean>(false);
   const usersPerPage: number = 3;
 
   // Filter users based on search term
@@ -111,36 +113,100 @@ export default function AdminManagement(): JSX.Element {
     return pageNumbers;
   };
 
-  const handleConfirmDelete = async (id: string): Promise<void> => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
+  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
+
+
+const handleConfirmDelete = (id: string) => {
+  Notiflix.Confirm.show(
+    'Delete Confirmation',
+    'Do you want to delete this User?',
+    'Delete',
+    'Cancel',
+    async () => {
       try {
-        setIsLoading(true);
-        // Simulate API call delay
-        await new Promise<void>((resolve) => setTimeout(resolve, 1000));
-
-        // Remove user from static data
-        setUsers((prevUsers: User[]) =>
-          prevUsers.filter((user: User) => user._id !== id)
-        );
-
-        setIsLoading(false);
-        alert("User deleted successfully");
-      } catch (error: unknown) {
-        setIsLoading(false);
-        console.log(error);
-        alert("Failed to delete user");
+        console.log('Attempting to delete User with ID:', id);
+        
+        // Call the delete mutation and wait for response
+        const result = await deleteUser(id).unwrap();
+        
+        console.log('Delete successful:', result);
+        toast.success("User deleted successfully!");
+        
+        // The RTK Query will automatically update the cache and refetch data
+        // No need to manually update local state since useGetLostitemQuery will re-run
+        
+      } catch (error: any) {
+        console.error('Delete failed:', error);
+        
+        // Handle different types of errors
+        let errorMessage = "Failed to delete user. Please try again.";
+        
+        if (error?.status === 404) {
+          errorMessage = "Item not found. It may have already been deleted.";
+        } else if (error?.status === 403) {
+          errorMessage = "You don't have permission to delete this item.";
+        } else if (error?.status === 500) {
+          errorMessage = "Server error. Please try again later.";
+        } else if (error?.data?.message) {
+          errorMessage = error.data.message;
+        } else if (error?.message) {
+          errorMessage = error.message;
+        }
+        
+        toast.error(errorMessage);
       }
+    },
+    () => {
+      // User clicked Cancel - do nothing
+      console.log("Delete cancelled");
+    },
+    {
+      width: '320px',
+      borderRadius: '8px',
+      titleColor: '#ff5549',
+      okButtonBackground: '#ff5549',
     }
-  };
+  );
+};
+
+const handleDeleteClick = (item: any) => {
+  console.log('Delete clicked for item:', item);
+  
+  // Check for both _id and id fields since your API uses 'id'
+  const itemId = item._id || item.id;
+  console.log('Item ID (_id):', item._id);
+  console.log('Item ID (id):', item.id);
+  console.log('Final Item ID:', itemId);
+  
+  if (!item) {
+    console.error("Item is null or undefined");
+    toast.error("Cannot delete - item not found");
+    return;
+  }
+  
+  if (!itemId) {
+    console.error("User ID is missing", item);
+    toast.error("Cannot delete item - ID is missing");
+    return;
+  }
+  
+  // Prevent multiple delete attempts if already deleting
+  if (isDeleting) {
+    toast.warning("Please wait, deletion in progress...");
+    return;
+  }
+  
+  handleConfirmDelete(itemId.toString());
+};
 
   let displayIndex: number = indexOfFirstUser + 1;
 
   return (
     <div className=" bg-gray-50 p-4">
       <div className="w-full px-2 sm:px-4 py-2 mx-auto max-w-7xl">
-        <h1 className="text-xl  font-normal mb-4 sm:mb-3 text-gray-800">
+        <h5 className="text-size-xl font-bold text-primaryColor-100 mb-2 sm:mb-2">
           User Management Dashboard
-        </h1>
+        </h5>
 
         {/* Search and controls */}
         <div className="flex flex-col md:flex-row md:justify-between mb-2 gap-2 sm:gap-2">
@@ -218,7 +284,6 @@ export default function AdminManagement(): JSX.Element {
                     className="px-2 sm:px-4 py-2 sm:py-3 text-left text-sm font-medium text-gray-500 tracking-wider hidden lg:table-cell"
                   >
                     Location
-
                   </th>
                   <th
                     scope="col"
@@ -243,20 +308,17 @@ export default function AdminManagement(): JSX.Element {
                       <div className="flex items-center">
                         <div className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0 rounded-full bg-primaryColor-100 flex items-center justify-center text-white mr-2 sm:mr-3 text-xs sm:text-sm font-medium">
                           {user.name?.charAt(0) ||
-                            user.last_name
-.charAt(0).toUpperCase()}
+                            user.last_name.charAt(0).toUpperCase()}
                         </div>
                         <div className="text-xs sm:text-sm font-medium text-gray-900">
                           <div className="truncate max-w-24 sm:max-w-none">
-                            {user.last_name
-}
+                            {user.last_name}
                           </div>
                           <div className="md:hidden text-xs text-gray-500 mt-1 truncate max-w-24 sm:max-w-none">
                             {user.email}
                           </div>
                           <div className="lg:hidden text-xs text-gray-500 mt-1 md:block truncate max-w-24 sm:max-w-none">
-                            {user.lost_location
-}
+                            {user.lost_location}
                           </div>
                         </div>
                       </div>
@@ -267,18 +329,16 @@ export default function AdminManagement(): JSX.Element {
                       </div>
                     </td>
                     <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 hidden lg:table-cell">
-                      {user.lost_location
-}
+                      {user.lost_location}
                     </td>
                     <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
-                        onClick={() => handleConfirmDelete(user._id)}
+                        onClick={() => handleDeleteClick(user)}
                         className="text-red-600 hover:text-red-800 transition-colors p-1 rounded hover:bg-red-50"
-                        aria-label={`Delete user ${user.last_name
-}`}
+                        aria-label={`Delete user ${user.last_name}`}
                         disabled={isLoading}
                       >
-                        <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <Trash2 size={16} />
                       </button>
                     </td>
                   </tr>

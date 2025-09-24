@@ -21,6 +21,7 @@ import AdminFoundItem from "../Dashboard/admin/AdminFoundItem";
 import FoundItem from "../Landingpage/FoundItem";
 import AdminLostItems from "../Dashboard/admin/AdminLostItems";
 import UserFoundItemById from "../Dashboard/userdash/UserFoundItemById";
+import UserLostItemById from "../Dashboard/userdash/UserLostItemById";
 
 const AppRaute = () => {
   return (
@@ -49,7 +50,7 @@ const AppRaute = () => {
           <Route index element={<UserDashHome />} />
           <Route path="userdash" element={<UserDashHome />} />
           <Route path="userfounditem" element={<UserFoundItemById />} />
-          <Route path="users" element={<AdminManagement />} />
+          <Route path="userlostitem" element={<UserLostItemById />} />
         </Route>
 
         <Route path="/" element={<Layout />}>
