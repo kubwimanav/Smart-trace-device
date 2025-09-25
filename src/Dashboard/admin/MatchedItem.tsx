@@ -113,7 +113,7 @@ export default function MatchedItem(): JSX.Element {
 
 
   return (
-    <div className="max-w-xl lg:max-w-3xl xl:max-w-7xl mx-auto p-3 sm:p-6 bg-white shadow-lg rounded-lg">
+    <div className="max-w-xl md:max-w-3xl lg:max-w-7xl xl:max-w-7xl mx-auto p-3 sm:p-6 bg-white shadow-lg rounded-lg">
       <h1 className="text-2xl font-normal text-gray-800 mb-2 sm:mb-2">
         Matched Items
       </h1>
