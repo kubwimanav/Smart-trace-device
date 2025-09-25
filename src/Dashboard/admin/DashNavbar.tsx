@@ -38,7 +38,6 @@ const UserHeader:React.FC<ToggleProps>= ({ toggleSidebar, isMobile }) => {
     <>
       <header className="bg-white shadow-sm px-3 sm:px-6 py-3 flex items-center justify-between z-30 relative">
         {/* Logo and Menu Toggle */}
-        <div className="flex items-center">
           {/* Menu toggle button - only visible on mobile */}
           {isMobile && (
             <button
@@ -51,13 +50,7 @@ const UserHeader:React.FC<ToggleProps>= ({ toggleSidebar, isMobile }) => {
           )}
 
           {/* Logo */}
-          <div className="flex items-center">
-            <span className="ml-2 font-bold text-gray-800 text-lg">
-              Symart Trace System
-            </span>
-            
-          </div>
-        </div>
+          
 
         {/* Search Input - Responsive positioning */}
         <div className="hidden md:flex items-center flex-1 ml-4 lg:ml-20 mr-4 relative max-w-md mx-auto">

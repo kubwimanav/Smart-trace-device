@@ -308,7 +308,7 @@ const handleDeleteClick = (item: any) => {
                       <div className="flex items-center">
                         <div className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0 rounded-full bg-primaryColor-100 flex items-center justify-center text-white mr-2 sm:mr-3 text-xs sm:text-sm font-medium">
                           {user.name?.charAt(0) ||
-                            user.last_name.charAt(0).toUpperCase()}
+                            user.last_name?.charAt(0).toUpperCase()}
                         </div>
                         <div className="text-xs sm:text-sm font-medium text-gray-900">
                           <div className="truncate max-w-24 sm:max-w-none">
@@ -378,7 +378,7 @@ const handleDeleteClick = (item: any) => {
                 </button>
 
                 {totalPages > 0 &&
-                  getPageNumbers().map((page: number | string, index: number) =>
+                  getPageNumbers()?.map((page: number | string, index: number) =>
                     page === "..." ? (
                       <span
                         key={`ellipsis-${index}`}
