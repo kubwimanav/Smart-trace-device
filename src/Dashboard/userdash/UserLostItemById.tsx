@@ -731,7 +731,7 @@ export default function UserLostItemById(): JSX.Element {
   };
 
   return (
-    <div className="max-w-xl lg:max-w-3xl xl:max-w-7xl mx-auto p-3 sm:p-6 bg-white shadow-lg rounded-lg">
+    <div className="max-w-xl md:max-w-3xl lg:max-w-7xl xl:max-w-7xl mx-auto p-3 sm:p-6 bg-white shadow-lg rounded-lg">
       <h5 className="text-size-xl font-bold text-primaryColor-100 mb-2 sm:mb-2">
         Lost Items Dashboard
       </h5>
@@ -883,7 +883,6 @@ states, or finders..."
           </table>
         </div>
       </div>
-
 
       {/* Pagination */}
       <div className="flex items-center justify-between border-t border-gray-200 bg-white pt-3 mt-4">

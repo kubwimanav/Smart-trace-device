@@ -737,7 +737,7 @@ const handleDeleteClick = (item: LostItem) => {
   };
 
   return (
-    <div className="max-w-xl lg:max-w-3xl xl:max-w-7xl mx-auto p-3 sm:p-6 bg-white shadow-lg rounded-lg">
+    <div className="max-w-xl md:max-w-3xl lg:max-w-7xl xl:max-w-7xl mx-auto p-3 sm:p-6 bg-white shadow-lg rounded-lg">
       <h5 className="text-size-xl font-bold text-primaryColor-100 mb-2 sm:mb-2">
         Lost Items Dashboard
       </h5>
@@ -794,8 +794,7 @@ states, or finders..."
                   scope="col"
                   className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  
-               Serial Number
+                  Serial Number
                 </th>
                 <th
                   scope="col"
@@ -849,10 +848,14 @@ states, or finders..."
                     </div>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{item.serialNumber}</div>
+                    <div className="text-sm text-gray-900">
+                      {item.serialNumber}
+                    </div>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{item.dateFound}</div>
+                    <div className="text-sm text-gray-900">
+                      {item.dateFound}
+                    </div>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
