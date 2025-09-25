@@ -1,4 +1,4 @@
-import { FaMessage, FaUsers } from "react-icons/fa6";
+import {  FaUsers } from "react-icons/fa6";
 import { FaUserDoctor } from "react-icons/fa6";
 import { MdInsertDriveFile } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -50,13 +50,15 @@ function UserDashHome() {
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-7xl mx-auto">
         {/* Stat Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
           {/* Card 1 */}
           <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center">
             <div className="flex flex-col">
-              <span className="text-sm text-gray-500">Users</span>
-              <span className="text-xm font-bold mt-1">{users.length}</span>
-              <span className="text-sm text-green-500 mt-1">Total Users</span>
+              <span className="text-sm text-gray-500">Total Items</span>
+              <span className="text-xm font-bold mt-1">
+                {getlostitembyuser?.length + getfounditembyuser?.length}
+              </span>
+              <span className="text-sm text-green-500 mt-1">Total items</span>
             </div>
             <div className="w-7 h-7 rounded-sm bg-[#EFF6FF] flex items-center justify-center text-blue-400 text-xl">
               <FaUsers />
@@ -67,7 +69,9 @@ function UserDashHome() {
           <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center">
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">LostItems</span>
-              <span className="text-xm font-bold mt-1">{getlostitembyuser?.length}</span>
+              <span className="text-xm font-bold mt-1">
+                {getlostitembyuser?.length}
+              </span>
               <span className="text-sm text-green-500 mt-1">
                 Total Lost Items
               </span>
@@ -81,7 +85,9 @@ function UserDashHome() {
           <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center">
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">FoundItems</span>
-              <span className="text-sm font-bold mt-1">{getfounditembyuser?.length}</span>
+              <span className="text-sm font-bold mt-1">
+                {getfounditembyuser?.length}
+              </span>
               <span className="text-sm text-green-500 mt-1">
                 Total Found Items
               </span>
@@ -91,19 +97,6 @@ function UserDashHome() {
             </div>
           </div>
 
-          {/* Card 4 */}
-          <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center">
-            <div className="flex flex-col">
-              <span className="text-sm text-gray-500">Messages</span>
-              <span className="text-sm font-bold mt-1">{10}</span>
-              <span className="text-sm text-green-500 mt-1">
-                Total Messages
-              </span>
-            </div>
-            <div className="w-7 h-7 rounded-sm bg-[#FFFBEB] flex items-center justify-center text-[#F59E0B] text-xl">
-              <FaMessage />
-            </div>
-          </div>
         </div>
 
         {/* Charts Section */}

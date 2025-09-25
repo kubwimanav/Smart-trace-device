@@ -1,7 +1,6 @@
 import { useEffect, useState, type JSX } from "react";
 import {
   Search,
-  Plus,
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
@@ -618,7 +617,7 @@ export default function UserLostItemById(): JSX.Element {
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
-  const openReportModal = () => setIsReportModalOpen(true);
+  // const openReportModal = () => setIsReportModalOpen(true);
   const closeReportModal = () => setIsReportModalOpen(false);
 
   // Pagination handlers
@@ -744,8 +743,7 @@ export default function UserLostItemById(): JSX.Element {
           </div>
           <input
             type="text"
-            placeholder="Search items, 
-states, or finders..."
+            placeholder="Search items, states, or finders..."
             className="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             value={searchTerm}
             onChange={(e) => {
@@ -755,7 +753,7 @@ states, or finders..."
           />
         </div>
 
-        <div className="flex flex-row gap-2 sm:gap-4">
+        {/* <div className="flex flex-row gap-2 sm:gap-4">
           <button
             onClick={openReportModal}
             className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primaryColor-100 hover:bg-primaryColor-50 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -763,7 +761,7 @@ states, or finders..."
             <Plus size={16} className="mr-2" />
             Add Lost Item
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* Desktop view - Table */}

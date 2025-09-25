@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Mail, Lock, Eye, EyeOff, Backpack } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff} from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -70,10 +70,7 @@ const Login: React.FC = () => {
       <div className="flex flex-col lg:flex-row w-full max-w-[800px] min-h-[500px] shadow-lg rounded-2xl overflow-hidden">
         {/* Left Section (Invite to Sign Up) */}
         <div className="w-full lg:w-1/2 bg-primaryColor-100 text-white flex flex-col items-center justify-center p-6 sm:p-10">
-          <Link to={"/"} className="flex items-center gap-2 self-start text-white/90 hover:text-white mb-6">
-            <Backpack />
-            <span>Back</span>
-          </Link>
+         
           <h2 className="text-2xl sm:text-3xl font-medium mb-2 text-center">
             Hello, Friend!
           </h2>

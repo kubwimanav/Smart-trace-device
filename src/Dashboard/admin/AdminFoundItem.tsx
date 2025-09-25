@@ -3,7 +3,6 @@ import { useEffect, useState, type JSX } from "react";
 import Notiflix from "notiflix";
 import {
   Search,
-  Plus,
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
@@ -704,7 +703,7 @@ export default function AdminFoundItem(): JSX.Element {
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
-  const openReportModal = () => setIsReportModalOpen(true);
+  // const openReportModal = () => setIsReportModalOpen(true);
   const closeReportModal = () => setIsReportModalOpen(false);
 
   // Pagination handlers
@@ -802,7 +801,7 @@ const handleDeleteClick = (item: LostItem) => {
           />
         </div>
 
-        <div className="flex flex-row gap-2 sm:gap-4">
+        {/* <div className="flex flex-row gap-2 sm:gap-4">
           <button
             onClick={openReportModal}
             className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primaryColor-100  hover:bg-primaryColor-50 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -810,7 +809,7 @@ const handleDeleteClick = (item: LostItem) => {
             <Plus size={16} className="mr-2" />
             Add Found Item
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* Desktop view - Table */}
