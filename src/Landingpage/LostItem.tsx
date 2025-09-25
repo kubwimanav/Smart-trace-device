@@ -207,8 +207,7 @@ import homei from "../assets/images/home.jpg";
 import LostItemCard from "../hooks/useItem";
 import { Search, ChevronDown } from "lucide-react";
 import { useGetLostitemQuery } from "../Api/lostitem";
-import ReUsableButton from "../ReusableComponents/ReUsableButton";
-import { Link } from "react-router-dom";
+
 
 interface LostItem {
   id: string;
@@ -264,12 +263,20 @@ const LostItem: React.FC = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
+        {" "}
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
         <div className="relative z-10 font-medium text-[20px] sm:text-[25px] text-white leading-tight mb-3 sm:mb-3">
-          <p className="font-normal mt-3 sm:text-4xl lg:text-5xl leading-snug drop-shadow-md">
-            Verify New Product Here
+        <div className="text-white grid gap-5">
+          <p className=" font-normal  mt-2 text-3xl leading-snug drop-shadow-md">
+            Verify Before You Buy
           </p>
-        </div>
+          <p className="text-lg md:text-xl">
+            Reporting your lost or stolen device helps protect everyone by
+            making it harder to resell and easier for a finder to return it to
+            you.
+          </p>
+          </div>
+          </div>
       </div>
 
       <div className="w-full p-8">
@@ -359,15 +366,12 @@ const LostItem: React.FC = () => {
         {/* Items Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-center justify-items-center place-items-center mx-auto">
           {filteredItems.length > 0 ? (
-            filteredItems.map((item) => (
+            filteredItems.map((item:any) => (
               <div className="w-full max-w-sm" key={item.id}>
                 <LostItemCard
-                  id={item.id}
                   title={item.title}
                   image={import.meta.env.VITE_API_BASE_URL + item.image}
-                  location={item.location}
-                  dateLost={item.dateLost}
-                  category={item.category}
+                  location={item.state}
                 />
               </div>
             ))

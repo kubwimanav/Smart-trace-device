@@ -267,9 +267,16 @@ const ReportLostItem: React.FC = () => {
       >
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
         <div className="relative z-10 font-medium text-[20px] sm:text-[25px] text-white leading-tight mb-3 sm:mb-3">
-          <p className="font-normal mt-3 sm:text-4xl lg:text-5xl leading-snug drop-shadow-md">
-            Report Your Lost Device. Help Us Stop Theft.
-          </p>
+          <div className="text-white grid gap-5">
+          <p className=" font-normal  mt-2 text-3xl leading-snug drop-shadow-md">
+              Report your Lost Device. Help Us Stop Theft.
+            </p>
+            <p className="text-lg md:text-xl">
+              Reporting your lost or stolen device helps protect everyone by
+              making it harder to resell and easier for a finder to return it to
+              you.
+            </p>{" "}
+          </div>
         </div>
       </div>
       {/* Main Content */}
@@ -331,9 +338,7 @@ const ReportLostItem: React.FC = () => {
                   <option value="laptops">Laptops</option>
                   <option value="tablets">Tablets</option>
                   <option value="cameras">Cameras</option>
-                  <option value="audio">
-                    Audio Devices
-                  </option>
+                  <option value="audio">Audio Devices</option>
                   <option value="other">Other Electronics</option>
                 </ReUsableSelect>
                 {errors && (
@@ -640,10 +645,11 @@ const ReportLostItem: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className={`px-8 py-3 rounded-md text-white font-medium transition-all ${isLoading
+            className={`px-8 py-3 rounded-md text-white font-medium transition-all ${
+              isLoading
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-primaryColor-100 hover:bg-blue-400 hover:shadow-lg"
-              }`}
+            }`}
           >
             {isLoading ? "Submitting..." : "Submit Lost Items"}
           </button>
