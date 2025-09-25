@@ -1,74 +1,66 @@
 import React, { useState, useEffect } from "react";
 import homei from "../assets/images/image1-24.jpg";
 import LostItemCard from "../hooks/useItem";
-
-import { Search, ChevronDown} from "lucide-react";
+import { Search, ChevronDown } from "lucide-react";
 import type { Founditem } from "../type/type";
 import { useGetFounditemQuery } from "../Api/founditem";
 
 const FoundItem: React.FC = () => {
   const { data } = useGetFounditemQuery();
-  
+
+  // Default to [] to avoid undefined issues
+  const lostItems: Founditem[] = data ?? [];
+
   const [searchTerm, setSearchTerm] = useState("");
   const [searchBy, setSearchBy] = useState<"title" | "location">("title");
   const [showSearchOptions, setShowSearchOptions] = useState(false);
-  const [filteredItems, setFilteredItems] = useState<Founditem[]>([]);
-
-  const lostItems = data;
-
-
+  const [filteredItems, setFilteredItems] = useState<Founditem[]>(lostItems);
 
   // Rwandan districts for location filtering
   const rwandanDistricts = [
     "Kicukiro", "Gasabo", "Nyarugenge", "Bugesera", "Kamonyi", "Rwamagana",
-    "Gicumbi", "Ruhango", "Nyamagabe", "Nyanza", "Kayonza", "Ngoma", 
+    "Gicumbi", "Ruhango", "Nyamagabe", "Nyanza", "Kayonza", "Ngoma",
     "Nyagatare", "Gatsibo", "Rubavu", "Rutsiro", "Karongi", "Nyabihu",
     "Ngororero", "Rusizi", "Muhanga", "Huye", "Nyamasheke", "Rulindo"
   ];
 
-  // Apply search filter when search term or searchBy changes
+  // Search filtering
   useEffect(() => {
     if (!searchTerm.trim()) {
       setFilteredItems(lostItems);
       return;
     }
 
-    const results = lostItems.filter((item:any) => {
-      const searchLower = searchTerm.toLowerCase();
-      
+    const searchLower = searchTerm.toLowerCase();
+
+    const results = lostItems.filter((item: Founditem) => {
       if (searchBy === "title") {
-        return item.title?.toLowerCase().includes(searchLower);
+        return item.name?.toLowerCase().includes(searchLower);
       } else {
-        return item.location && item.location.toLowerCase().includes(searchLower);
+        return item.location?.toLowerCase().includes(searchLower);
       }
     });
 
     setFilteredItems(results);
   }, [searchTerm, searchBy, lostItems]);
 
-  const clearSearch = () => {
-    setSearchTerm("");
-  };
+  const clearSearch = () => setSearchTerm("");
 
   return (
-    <div>
+    <div>      
       <div
-        className="h-screen flex flex-col items-center justify-center gap-10 py-20 px-4 md:px-16 lg:px-60 text-center text-white bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900"
+        className="relative h-[70vh] md:h-[75vh] lg:h-[80vh] flex flex-col items-center justify-center gap-10 px-4 md:px-16 lg:px-60 text-center text-white overflow-hidden"
         style={{
-          background: `linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url(${homei})`,
+          background: `linear-gradient(rgba(41, 108, 181, 0.65), rgba(2, 17, 32, 0.84)), url(${homei})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div className="text-white grid gap-5">
-          <h1 className="font-bold text-3xl md:text-4xl">
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
+        <div className="relative z-10 font-medium text-[20px] sm:text-[25px] text-white leading-tight mb-3 sm:mb-3">
+          <p className="font-normal mt-3 sm:text-4xl lg:text-5xl leading-snug drop-shadow-md">
             Looking for Your Device?
-          </h1>
-          <p className="text-lg md:text-xl">
-            Reporting your lost or stolen device helps protect everyone by
-            making it harder to resell and easier for a finder to return it to
-            you.
           </p>
         </div>
       </div>
@@ -77,11 +69,8 @@ const FoundItem: React.FC = () => {
         <div className="max-w-7xl mx-auto mb-8 space-y-4">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <h1 className="text-2xl font-bold">Browse Found Items</h1>
-
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-              {/* Search with integrated filter dropdown */}
               <div className="relative flex-1 flex">
-                {/* Search type dropdown */}
                 <div className="relative">
                   <button
                     onClick={() => setShowSearchOptions(!showSearchOptions)}
@@ -115,7 +104,7 @@ const FoundItem: React.FC = () => {
                   )}
                 </div>
 
-                {/* Search input */}
+                {/* Search Input */}
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
@@ -133,8 +122,6 @@ const FoundItem: React.FC = () => {
             </div>
           </div>
 
-          
-
           <p className="text-gray-600">
             Statistics show 85% of lost property (phones, bags, pets, luggage,
             etc.) is in honest hands. Let Lostings help you find the
@@ -143,11 +130,11 @@ const FoundItem: React.FC = () => {
           </p>
         </div>
 
-        {/* Results count */}
+        {/* Results Count */}
         <div className="mb-6 flex justify-between items-center">
           <p className="text-gray-600">
-            {filteredItems?.length}{" "}
-            {filteredItems?.length === 1 ? "item" : "items"} found
+            {filteredItems.length}{" "}
+            {filteredItems.length === 1 ? "item" : "items"} found
             {searchTerm ? ` matching "${searchTerm}" in ${searchBy}` : ""}
           </p>
 
@@ -161,12 +148,13 @@ const FoundItem: React.FC = () => {
           )}
         </div>
 
+        {/* Results Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-center justify-items-center place-items-center mx-auto">
-          {filteredItems?.length > 0 ? (
+          {filteredItems.length > 0 ? (
             filteredItems.map((item) => (
-              <div className="w-full max-w-sm">
+              <div key={item.id} className="w-full max-w-sm">
                 <LostItemCard
-                  title={item.name}
+                  title={item.name} // change to item.title if API returns title
                   image={import.meta.env.VITE_API_BASE_URL + item.deviceimage}
                   location={item.location}
                 />
@@ -180,6 +168,7 @@ const FoundItem: React.FC = () => {
                   ? `No items found matching "${searchTerm}" in ${searchBy}`
                   : "No found items have been reported yet"}
               </p>
+
               {searchBy === "location" && searchTerm && (
                 <div className="mt-4">
                   <p className="text-sm text-gray-500 mb-2">

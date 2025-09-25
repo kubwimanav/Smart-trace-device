@@ -20,7 +20,7 @@ interface FormData {
   serialNumber: string;
   firstName: string;
   lastName: string;
-  losterEmail:string;
+  losterEmail: string;
   phoneNumber: string;
   // email: string;
 }
@@ -62,7 +62,7 @@ const ReportLostItem: React.FC = () => {
     firstName: "",
     lastName: "",
     phoneNumber: "",
-    losterEmail:"",
+    losterEmail: "",
     // email: "",
   });
   const [errors, setErrors] = React.useState<any>({});
@@ -79,7 +79,7 @@ const ReportLostItem: React.FC = () => {
       [name]: value,
     }));
     // Clear error when user starts typing
-    setErrors((prev:any) => ({
+    setErrors((prev: any) => ({
       ...prev,
       [name]: "",
     }));
@@ -132,7 +132,7 @@ const ReportLostItem: React.FC = () => {
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.losterEmail)) {
-      newErrors.losterEmail="Please enter a valid email address.";
+      newErrors.losterEmail = "Please enter a valid email address.";
     }
 
     setErrors(newErrors);
@@ -148,46 +148,46 @@ const ReportLostItem: React.FC = () => {
 
 
 
- const data = new window.FormData();
+    const data = new window.FormData();
 
- // Append text fields
- data.append("title", formData.title);
- data.append("dateFound", formData.dateFound);
- data.append("category", formData.category);
- data.append("timeFound", formData.timeFound);
- data.append("brand", formData.brand);
- data.append("additionalInfo", formData.additionalInfo);
- data.append("addressType", formData.addressType);
- data.append("state", formData.state);
- data.append("cityTown", formData.cityTown);
- data.append("serialNumber", formData.serialNumber);
- data.append("firstName", formData.firstName);
- data.append("lastName", formData.lastName);
- data.append("phoneNumber", formData.phoneNumber);
- data.append("losterEmail", formData.losterEmail);
+    // Append text fields
+    data.append("title", formData.title);
+    data.append("dateFound", formData.dateFound);
+    data.append("category", formData.category);
+    data.append("timeFound", formData.timeFound);
+    data.append("brand", formData.brand);
+    data.append("additionalInfo", formData.additionalInfo);
+    data.append("addressType", formData.addressType);
+    data.append("state", formData.state);
+    data.append("cityTown", formData.cityTown);
+    data.append("serialNumber", formData.serialNumber);
+    data.append("firstName", formData.firstName);
+    data.append("lastName", formData.lastName);
+    data.append("phoneNumber", formData.phoneNumber);
+    data.append("losterEmail", formData.losterEmail);
 
- // Append files (only if not null)
- if (formData.image) {
-   data.append("image", formData.image);
- }
- if (formData.recepiet) {
-   data.append("recepiet", formData.recepiet);
- }
+    // Append files (only if not null)
+    if (formData.image) {
+      data.append("image", formData.image);
+    }
+    if (formData.recepiet) {
+      data.append("recepiet", formData.recepiet);
+    }
 
-    
-    
-    
+
+
+
     try {
       const response = await fetch(
         "https://smart-trace-device-backend.onrender.com/api/devices/lost/",
         {
           method: "POST",
-          body:data,
+          body: data,
         }
       );
 
       if (response.ok) {
-       // Reset form
+        // Reset form
         setFormData({
           title: "",
           dateFound: "",
@@ -204,15 +204,15 @@ const ReportLostItem: React.FC = () => {
           firstName: "",
           lastName: "",
           phoneNumber: "",
-          losterEmail:"",
+          losterEmail: "",
           // email: "",
         });
 
         toast.success("Lost item reported successfully!");
       } else {
-      
+
         toast.error(
-           "Failed to report lost item. Please try again."
+          "Failed to report lost item. Please try again."
         );
       }
     } catch (error) {
@@ -230,13 +230,13 @@ const ReportLostItem: React.FC = () => {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev:any) => ({ ...prev, [name]: "" }));
+    setErrors((prev: any) => ({ ...prev, [name]: "" }));
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div
+      {/* <div
         className="h-screen flex flex-col items-center justify-center gap-10 py-20 px-4 md:px-16 lg:px-60 text-center text-white bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900"
         style={{
           background: `linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url(${homei})`,
@@ -255,14 +255,28 @@ const ReportLostItem: React.FC = () => {
             you.
           </p>{" "}
         </div>
+      </div> */}
+      <div
+        className="relative h-[70vh] md:h-[75vh] lg:h-[80vh] flex flex-col items-center justify-center gap-10 px-4 md:px-16 lg:px-60 text-center text-white overflow-hidden"
+        style={{
+          background: `linear-gradient(rgba(41, 108, 181, 0.65), rgba(2, 17, 32, 0.84)), url(${homei})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
+        <div className="relative z-10 font-medium text-[20px] sm:text-[25px] text-white leading-tight mb-3 sm:mb-3">
+          <p className="font-normal mt-3 sm:text-4xl lg:text-5xl leading-snug drop-shadow-md">
+            Report Your Lost Device. Help Us Stop Theft.
+          </p>
+        </div>
       </div>
-
       {/* Main Content */}
       <form
         onSubmit={handleSubmit}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12"
       >
-        {/* Found Item Information Section */}
         <div className="bg-white rounded-lg shadow-sm mb-8">
           <div className="p-6 lg:p-8">
             <h2 className="text-xl lg:text-2xl font-semibold text-gray-900 mb-2">
@@ -318,7 +332,7 @@ const ReportLostItem: React.FC = () => {
                   <option value="tablets">Tablets</option>
                   <option value="cameras">Cameras</option>
                   <option value="audio">
-                    Audio Devices 
+                    Audio Devices
                   </option>
                   <option value="other">Other Electronics</option>
                 </ReUsableSelect>
@@ -626,11 +640,10 @@ const ReportLostItem: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className={`px-8 py-3 rounded-md text-white font-medium transition-all ${
-              isLoading
+            className={`px-8 py-3 rounded-md text-white font-medium transition-all ${isLoading
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-primaryColor-100 hover:bg-blue-400 hover:shadow-lg"
-            }`}
+              }`}
           >
             {isLoading ? "Submitting..." : "Submit Lost Items"}
           </button>
