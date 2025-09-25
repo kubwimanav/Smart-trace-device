@@ -26,7 +26,7 @@ export default function About() {
       >
          <div className="absolute inset-0 bg-black/60 backdrop-blur-[3px]"></div>
         <div className= "relative z-10  font-medium text-[20px] sm:text-[25px]  text-white leading-tight mb-3 sm:mb-3">
-          <p className=" font-normal  mt-3 sm:text-4xl lg:text-5xl leading-snug drop-shadow-md">
+          <p className=" font-normal  mt-2 text-3xl leading-snug drop-shadow-md">
             A safer way to report, find, and verify electronic devices.
           </p>
         </div>  
@@ -48,13 +48,13 @@ export default function About() {
             {/* Left side - Content */}
             <div className="order-2 lg:order-1 space-y-4">
              
-              <div className="mb-9">
-                <h1 className="text-4xl sm:text-4xl lg:text-4xl font-medium  mb-6 text-[#3A7196]   ">
+              <div className="mb-7">
+                <h1 className="text-3xl font-medium  mb-3 text-[#3A7196]   ">
                   Stop Fraud, Reunite Device And Build Trust
                 </h1>
               </div>
 
-              <p className="text-size-md sm:text-size-md text-gray-600 leading-relaxed max-w-xl">
+              <p className="text-md  text-gray-600 leading-relaxed max-w-xl">
                 Digitalization has enabled our recovery platform to harness the
                 power of data matching. By collecting and analyzing device
                 information, we can successfully reunite owners with their lost
@@ -83,11 +83,11 @@ export default function About() {
       <div className="bg-[#f0f9ff] py-15 px-4 sm:py-15 sm:px-6 lg:py-15 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Section Title */}
-          <div className="text-center mb-9">
-            <h1 className="text-4xl sm:text-4xl lg:text-4xl font-medium  mb-6 text-[#3A7196]    ">
+          <div className="text-center mb-7">
+            <h1 className="text-3xl font-medium  mb-4 text-[#3A7196]    ">
               Our Services
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-md text-gray-600 max-w-2xl mx-auto leading-relaxed">
               Our services make it easy to report, find, and verify lost gadgets quickly, securely, and reliably.
             </p>
           </div>
@@ -115,17 +115,17 @@ export default function About() {
 
       <div className="bg-white py-16 px-4 sm:py-15 sm:px-6 lg:py-15 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-9">
-            <h1 className="text-4xl sm:text-4xl lg:text-4xl font-medium  mb-6 text-[#3A7196]    ">
+          <div className="text-center">
+            <h1 className="text-3xl font-medium  mb-3 text-[#3A7196]    ">
               Why We Exist &amp; What We Aim For
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-md text-gray-600 max-w-2xl mx-auto leading-relaxed">
               We exist to help reunite people with lost gadgets and aim to build safer, trusted communities.
             </p>
           </div>
 
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center bg">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center ">
             <div className="">
               <img src={mission} alt="" />
             </div>

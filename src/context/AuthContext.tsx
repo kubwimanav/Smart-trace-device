@@ -72,17 +72,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // Store the access token from the response
         localStorage.setItem("accessToken", data.access);
         localStorage.setItem("email", email);
-        console.log("Access token saved to localStorage:", data.access);
-        console.log(
-          "Verification - token retrieved:",
-          localStorage.getItem("accessToken")
-        );
+      
       }
 
       // Optionally store refresh token too
       if (data.refresh) {
         localStorage.setItem("refreshToken", data.refresh);
-        console.log("Refresh token saved:", data.refresh);
       }
       console.log(data);
 

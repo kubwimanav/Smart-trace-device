@@ -100,7 +100,7 @@ const ContactUs: React.FC<FormErrors> = () => {
           {/* Left Section - Get In Touch */}
           <div className="space-y-8">
             <div>
-              <h1 className="text-4xl sm:text-4xl lg:text-4xl font-medium  my-6 text-[#3A7196] ">
+              <h1 className="text-3xl font-medium  my-6 text-primaryColor-100 ">
                 Get In Touch
               </h1>
               <p className="text-gray-600 leading-relaxed">
@@ -165,9 +165,9 @@ const ContactUs: React.FC<FormErrors> = () => {
 
           {/* Right Section - Contact Form */}
           <div className="bg-[#f0f9ff] rounded-3xl  p-9">
-            <h2 className="text-4xl sm:text-4xl lg:text-4xl font-medium mb-5  text-[#3A7196]">
-              Leave Your message
-            </h2>
+            <h1 className="text-3xl font-medium mb-5  text-primaryColor-100">
+              Leave Your Message
+            </h1>
 
             <div className="space-y-4">
               {/* First Row */}

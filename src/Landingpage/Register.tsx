@@ -1,6 +1,6 @@
 // src/pages/register.tsx
 import React, { useState } from "react";
-import { Mail, Lock, User, Eye, EyeOff, Backpack } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff, } from "lucide-react";
 import { MdLocationPin, MdOutlinePhone } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -102,8 +102,8 @@ const Register: React.FC = () => {
       <div className="flex flex-col lg:flex-row w-full max-w-[800px] min-h-[500px] shadow-lg rounded-2xl overflow-hidden">
         {/* Left Section (Invite to Login) */}
         <div className="w-full lg:w-1/2 bg-primaryColor-100 text-white flex flex-col items-center justify-center p-6 sm:p-10">
-          <Link to={"/"} className="flex align-middle gap-2 self-start text-white/90 hover:text-white mb-6">
-            <Backpack className="text-white" />
+          <Link to={"/"} className="flex items-center gap-2 self-start text-white/90 hover:text-white mb-6">
+            <Backpack className="text-red-300" />
             <span>Back</span>
           </Link>
           <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-center">

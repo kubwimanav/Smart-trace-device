@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Mail, Lock, User, Eye, EyeOff, Backpack } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff} from "lucide-react";
 import { MdLocationPin, MdOutlinePhone } from "react-icons/md";
-import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext"; // ✅ Import Auth Context
 
 interface FormErrors {
@@ -139,10 +138,6 @@ const onSubmit = async () => {
         {/* Left Section */}
         {activeForm === "signup" ? (
           <div className="w-full lg:w-1/2 bg-primaryColor-100 text-white flex flex-col items-center justify-center p-6 sm:p-10">
-            <Link to={"/"} className="flex">
-              <Backpack className="text-red-300" />
-              <p>Back</p>
-            </Link>
             <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-center">
               Welcome Back!
             </h2>

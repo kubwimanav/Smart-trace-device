@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Bell, Search, Menu, LogOut, Settings } from "lucide-react";
+import { Search, Menu, LogOut, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import profile from "../../assets/images/ChatGPT.png";
@@ -34,11 +34,13 @@ const UserHeader:React.FC<ToggleProps>= ({ toggleSidebar, isMobile }) => {
     setShowProfileDropdown(false);
   };
 
+const Name = localStorage.getItem("email");
+const username = Name ? Name.split("@")[0] : "";  
+
   return (
     <>
       <header className="bg-white shadow-sm px-3 sm:px-6 py-3 flex items-center justify-between z-30 relative">
         {/* Logo and Menu Toggle */}
-        <div className="flex items-center">
           {/* Menu toggle button - only visible on mobile */}
           {isMobile && (
             <button
@@ -51,13 +53,7 @@ const UserHeader:React.FC<ToggleProps>= ({ toggleSidebar, isMobile }) => {
           )}
 
           {/* Logo */}
-          <div className="flex items-center">
-            <span className="ml-2 font-bold text-gray-800 text-lg">
-              Symart Trace System
-            </span>
-            
-          </div>
-        </div>
+          
 
         {/* Search Input - Responsive positioning */}
         <div className="hidden md:flex items-center flex-1 ml-4 lg:ml-20 mr-4 relative max-w-md mx-auto">
@@ -76,12 +72,7 @@ const UserHeader:React.FC<ToggleProps>= ({ toggleSidebar, isMobile }) => {
 
         {/* Notification & Profile */}
         <div className="flex items-center space-x-3 sm:space-x-4">
-          <div className="relative">
-            <Bell className="h-5 w-5 sm:h-6 sm:w-6 text-gray-500" />
-            <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">
-              3
-            </span>
-          </div>
+          <p>{username}</p>
 
           {/* Profile Dropdown */}
           <div className="relative" ref={dropdownRef}>

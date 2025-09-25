@@ -3,7 +3,6 @@ import { useEffect, useState, type JSX } from "react";
 import Notiflix from "notiflix";
 import {
   Search,
-  Plus,
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
@@ -41,11 +40,6 @@ interface EditModalProps {
   onSave: (item: LostItem) => void;
 }
 
-interface ItemCardProps {
-  item: LostItem;
-  onEdit: (item: LostItem) => void;
-  onDelete: (id: string) => void;
-}
 
 interface FormData {
   name: string;
@@ -648,68 +642,6 @@ const EditModal: React.FC<EditModalProps> = ({
   );
 };
 
-const ItemCard: React.FC<ItemCardProps> = ({ item, onEdit, onDelete }) => {
-  return (
-    <div className="bg-white rounded-lg shadow mb-4 p-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center">
-          <img
-              src={import.meta.env.VITE_API_BASE_URL + item.deviceimage}
-            alt={item.name}
-            className="w-12 h-12 rounded-md object-cover mr-4"
-          />
-          <div>
-            <h3 className="text-sm font-medium text-gray-900">
-              {item.name}
-            </h3>
-            <p className="text-xs text-gray-500">{item.lastName}</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
-        <div>
-          <p className="text-gray-500">Location:</p>
-          <p className="font-medium">{item.location}</p>
-        </div>
-        <div>
-          <p className="text-gray-500">Address Found:</p>
-          <p className="font-medium">{item.address || item.address}</p>
-        </div>
-        <div>
-          <p className="text-gray-500">Found By:</p>
-          <p className="font-medium">{item.founderEmail|| item.lastName}</p>
-        </div>
-        <div>
-          <p className="text-gray-500">Contact:</p>
-          <p className="font-medium truncate">
-            {item.firstName || item.phoneNumber}
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-2 text-xs">
-        <p className="text-gray-500">additionalInfo:</p>
-        <p className="font-medium text-gray-900">{item.description}</p>
-      </div>
-
-      <div className="mt-4 flex justify-end space-x-2">
-        <button
-          onClick={() => onEdit(item)}
-          className="p-2 text-blue-600 hover:bg-blue-50 rounded-full"
-        >
-          <Edit size={16} />
-        </button>
-        <button
-          onClick={() => onDelete(item.id)}
-          className="p-2 text-red-600 hover:bg-red-50 rounded-full"
-        >
-          <Trash2 size={16} />
-        </button>
-      </div>
-    </div>
-  );
-};
 
 // Mock ReportLostItem component
 const ReportLostItem: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
@@ -771,7 +703,7 @@ export default function AdminFoundItem(): JSX.Element {
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
-  const openReportModal = () => setIsReportModalOpen(true);
+  // const openReportModal = () => setIsReportModalOpen(true);
   const closeReportModal = () => setIsReportModalOpen(false);
 
   // Pagination handlers
@@ -846,10 +778,10 @@ const handleDeleteClick = (item: LostItem) => {
 
  
   return (
-    <div className="w-full max-w-7xl mx-auto p-3 sm:p-6 bg-white shadow-lg rounded-lg">
-      <h1 className="text-xl sm:text-xl font-normal text-gray-800 mb-2 sm:mb-2">
+    <div className="max-w-xl md:max-w-3xl lg:max-w-7xl xl:max-w-7xl mx-auto p-3 sm:p-6 bg-white shadow-lg rounded-lg">
+      <h5 className="text-size-xl font-bold text-primaryColor-100 mb-2 sm:mb-2">
         Found Items
-      </h1>
+      </h5>
 
       {/* Search and filters */}
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-6">
@@ -869,7 +801,7 @@ const handleDeleteClick = (item: LostItem) => {
           />
         </div>
 
-        <div className="flex flex-row gap-2 sm:gap-4">
+        {/* <div className="flex flex-row gap-2 sm:gap-4">
           <button
             onClick={openReportModal}
             className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primaryColor-100  hover:bg-primaryColor-50 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -877,11 +809,11 @@ const handleDeleteClick = (item: LostItem) => {
             <Plus size={16} className="mr-2" />
             Add Found Item
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* Desktop view - Table */}
-      <div className="hidden lg:block">
+      <div className="block">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -908,7 +840,7 @@ const handleDeleteClick = (item: LostItem) => {
                   scope="col"
                   className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                 Serial Number
+                  Serial Number
                 </th>
                 <th
                   scope="col"
@@ -932,7 +864,9 @@ const handleDeleteClick = (item: LostItem) => {
                       <div className="flex-shrink-0 h-10 w-10">
                         <img
                           className="h-10 w-10 rounded-md object-cover"
-                          src={import.meta.env.VITE_API_BASE_URL + item.deviceimage}
+                          src={
+                            import.meta.env.VITE_API_BASE_URL + item.deviceimage
+                          }
                           alt={item.name}
                           onError={(e) => {
                             (e.target as HTMLImageElement).src =
@@ -959,12 +893,12 @@ const handleDeleteClick = (item: LostItem) => {
                     <div className="text-sm text-gray-900">{item.location}</div>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{item.serialnumber}</div>
+                    <div className="text-sm text-gray-900">
+                      {item.serialnumber}
+                    </div>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {item.lastName}
-                    </div>
+                    <div className="text-sm text-gray-900">{item.lastName}</div>
                     <div className="text-sm text-gray-500">
                       {item.phoneNumber}
                     </div>
@@ -992,99 +926,6 @@ const handleDeleteClick = (item: LostItem) => {
             </tbody>
           </table>
         </div>
-      </div>
-
-      {/* Tablet view - Cards */}
-      <div className="hidden sm:block lg:hidden">
-        <div className="grid gap-4">
-          {currentItems?.length > 0 ? (
-            currentItems?.map((item) => (
-              <div
-                key={item.id || item.id}
-                className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start space-x-4 flex-1">
-                    <div className="flex-shrink-0">
-                      <img
-                        className="h-16 w-16 rounded-md object-cover"
-                        src={import.meta.env.VITE_API_BASE_URL + item.deviceimage}
-                        alt={item.name}
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src =
-                            "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yNiAyNkMzNC44MzY2IDI2IDQyIDMzLjE2MzQgNDIgNDJDNDIgNTAuODM2NiAzNC44MzY2IDU4IDI2IDU4QzE3LjE2MzQgNTggMTAgNTAuODM2NiAxMCA0MkMxMCAzMy4xNjM0IDE3LjE2MzQgMjYgMjYgMjZaIiBmaWxsPSIjOUM5Qzk3Ii8+CjxwYXRoIGQ9Ik0zNC4xMzMzIDM0LjEzMzNWMzYuMjY2N0gzNi4yNjY3VjM4LjRIMzQuMTMzM1Y0MC41MzMzSDMzLjA2NjdWMzguNEgzMC40VjM2LjI2NjdIMzMuMDY2N1YzNC4xMzMzSDM0LjEzMzNaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=";
-                        }}
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <h3 className="text-lg font-medium text-gray-900">
-                            {item.name}
-                          </h3>
-                          <p className="text-sm  text-gray-500">
-                            {item.founderEmail}
-                          </p>
-                        </div>
-                        <p className="text-sm text-gray-500 ml-2">
-                          {item.address}
-                        </p>
-                      </div>
-                      <p className="text-sm text-gray-700 mb-2">
-                        {item.description}
-                      </p>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="text-gray-500">Location:</span>
-                          <p className="text-gray-900">{item.location}</p>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">Found by:</span>
-                          <p className="text-gray-900">{item.founderEmail}</p>
-                          <p className="text-gray-500 text-xs">
-                            {item.phoneNumber}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col space-y-2 ml-4">
-                    <button
-                      onClick={() => handleEdit(item)}
-                      className="text-blue-600 hover:text-blue-800 p-2 rounded-md hover:bg-blue-50 transition-colors"
-                      title="Edit item"
-                    >
-                      <Edit size={18} />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteClick(item)}
-                      className="text-red-600 hover:text-red-800 p-2 rounded-md hover:bg-red-50 transition-colors"
-                      title="Delete item"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="py-6 text-center text-gray-500">
-              No items found matching your search criteria
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Mobile Card Layout */}
-      <div className="md:hidden space-y-4">
-        {currentItems?.map((item) => (
-          <ItemCard
-            key={item.id}
-            item={item}
-            onEdit={handleEdit}
-            onDelete={handleConfirmDelete}
-          />
-        ))}
       </div>
 
       {/* Pagination */}
