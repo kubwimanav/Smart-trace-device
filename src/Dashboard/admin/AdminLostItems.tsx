@@ -29,7 +29,7 @@ interface LostItem {
   image: string;
   dateFound?: string;
   foundBy?: string;
- phoneNumber?: string;
+  phoneNumber?: string;
   description?: string;
 }
 

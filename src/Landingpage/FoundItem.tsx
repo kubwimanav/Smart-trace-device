@@ -47,7 +47,7 @@ const FoundItem: React.FC = () => {
   const clearSearch = () => setSearchTerm("");
 
   return (
-    <div>      
+    <div>
       <div
         className="relative h-[70vh] md:h-[75vh] lg:h-[80vh] flex flex-col items-center justify-center gap-10 px-4 md:px-16 lg:px-60 text-center text-white overflow-hidden"
         style={{
@@ -59,9 +59,16 @@ const FoundItem: React.FC = () => {
       >
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
         <div className="relative z-10 font-medium text-[20px] sm:text-[25px] text-white leading-tight mb-3 sm:mb-3">
-          <p className="font-normal mt-3 sm:text-4xl lg:text-5xl leading-snug drop-shadow-md">
+        <div className="text-white grid gap-5">
+          <p className=" font-normal  mt-2 text-3xl leading-snug drop-shadow-md">
             Looking for Your Device?
           </p>
+          <p className="text-lg md:text-xl">
+            Reporting your lost or stolen device helps protect everyone by
+            making it harder to resell and easier for a finder to return it to
+            you.
+            </p>
+            </div>
         </div>
       </div>
 
@@ -152,7 +159,7 @@ const FoundItem: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-center justify-items-center place-items-center mx-auto">
           {filteredItems.length > 0 ? (
             filteredItems.map((item) => (
-              <div key={item.id} className="w-full max-w-sm">
+              <div className="w-full max-w-sm">
                 <LostItemCard
                   title={item.name} // change to item.title if API returns title
                   image={import.meta.env.VITE_API_BASE_URL + item.deviceimage}

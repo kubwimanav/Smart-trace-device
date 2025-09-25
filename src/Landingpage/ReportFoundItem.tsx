@@ -211,7 +211,7 @@ const ReportFoundItem: React.FC = () => {
           </p>{" "}
         </div>
       </div> */}
-       <div
+      <div
         className="relative h-[70vh] md:h-[75vh] lg:h-[80vh] flex flex-col items-center justify-center gap-10 px-4 md:px-16 lg:px-60 text-center text-white overflow-hidden"
         style={{
           background: `linear-gradient(rgba(41, 108, 181, 0.65), rgba(2, 17, 32, 0.84)), url(${homei})`,
@@ -222,9 +222,16 @@ const ReportFoundItem: React.FC = () => {
       >
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
         <div className="relative z-10 font-medium text-[20px] sm:text-[25px] text-white leading-tight mb-3 sm:mb-3">
-          <p className="font-normal mt-3 sm:text-4xl lg:text-5xl leading-snug drop-shadow-md">
-            Found A Device? Do The Right Thing.
-          </p>
+          <div className="text-white grid gap-5">
+          <p className=" font-normal  mt-2 text-3xl leading-snug drop-shadow-md">
+              Found a Device? Do the Right Thing.{" "}
+            </p>
+            <p className="text-lg md:text-xl">
+              You've taken the first step to reuniting a lost device with its
+              rightful owner. Use our secure database to check if the device has
+              been reported lost or stolen.
+            </p>{" "}
+          </div>
         </div>
       </div>
       {/* Main Content */}

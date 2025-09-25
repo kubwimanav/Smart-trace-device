@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import {Search, Menu, LogOut, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import profile from "../../assets/images/ChatGPT.png";
+import profile from "../../assets/images/profile.jpg";
 interface ToggleProps {
   isOpen?: any;
   toggleSidebar: any;
