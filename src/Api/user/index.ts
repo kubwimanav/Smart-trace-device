@@ -15,19 +15,27 @@ export const productApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    getReport: builder.query<any, void>({
+      query: () => ({
+        url: "api/reports/stats/location/",
+        method: "GET",
+      }),
+    }),
+
     deleteUser: builder.mutation({
       query: (id) => ({
         url: `api/auth/users/${id}/delete/`,
         method: "DELETE",
       }),
     }),
- 
   }),
 });
 
 export const {
   useGetUsersQuery,
   useGetMatchQuery,
+  useGetReportQuery,
   useDeleteUserMutation,
  
 } = productApi;

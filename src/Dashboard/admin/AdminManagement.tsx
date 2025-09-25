@@ -22,7 +22,6 @@ interface User {
 export default function AdminManagement(): JSX.Element {
 
   const { data } = useGetUsersQuery();
- 
   
   const staticUsers = data;
   // Use static data instead of context
@@ -201,6 +200,7 @@ const handleDeleteClick = (item: any) => {
 
   let displayIndex: number = indexOfFirstUser + 1;
 
+
   return (
     <div className=" bg-gray-50 p-4">
       <div className="w-full px-2 sm:px-4 py-2 mx-auto max-w-7xl">
@@ -225,14 +225,14 @@ const handleDeleteClick = (item: any) => {
               }}
             />
           </div>
-          <button
+          {/* <button
             className="bg-primaryColor-100 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors w-full md:w-auto text-sm"
             onClick={() =>
               alert("Add User functionality would be implemented here")
             }
           >
             Add New User
-          </button>
+          </button> */}
         </div>
 
         {/* Show message when no results */}
