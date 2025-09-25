@@ -666,7 +666,7 @@ export default function UserLostItemById(): JSX.Element {
           } else if (error?.status === 403) {
             errorMessage = "You don't have permission to delete this item.";
           } else if (error?.status === 500) {
-            errorMessage = "Server error. Please try again later";
+            errorMessage = "Server error. Please try again later.";
           } else if (error?.data?.message) {
             errorMessage = error.data.message;
           } else if (error?.message) {
