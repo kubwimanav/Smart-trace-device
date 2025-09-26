@@ -4,12 +4,21 @@ import LostItemCard from "../hooks/useItem";
 import { Search, ChevronDown } from "lucide-react";
 import type { Founditem } from "../type/type";
 import { useGetFounditemQuery } from "../Api/founditem";
+import { TbPlayerTrackNextFilled, TbPlayerTrackPrevFilled } from "react-icons/tb";
+import ReactPaginate from "react-paginate";
 
 const FoundItem: React.FC = () => {
   const { data } = useGetFounditemQuery();
+  const [pagenumber, setPagenumber] = useState(0);
+  const bookpage = 8;
+  const pagevisited = pagenumber * bookpage;
+  const displayFoundItem = data?.slice(pagevisited, pagevisited + bookpage);
+  const changepage = ({ selected }: any) => {
+    setPagenumber(selected);
+  }
 
   // Default to [] to avoid undefined issues
-  const lostItems: Founditem[] = data ?? [];
+  const lostItems: Founditem[] =displayFoundItem ?? [];
 
   const [searchTerm, setSearchTerm] = useState("");
   const [searchBy, setSearchBy] = useState<"title" | "location">("title");
@@ -59,16 +68,16 @@ const FoundItem: React.FC = () => {
       >
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
         <div className="relative z-10 font-medium text-[20px] sm:text-[25px] text-white leading-tight mb-3 sm:mb-3">
-        <div className="text-white grid gap-5">
-          <p className=" font-normal  mt-2 text-3xl leading-snug drop-shadow-md">
-            Looking for Your Device?
-          </p>
-          <p className="text-lg md:text-xl">
-            Reporting your lost or stolen device helps protect everyone by
-            making it harder to resell and easier for a finder to return it to
-            you.
+          <div className="text-white grid gap-5">
+            <p className=" font-normal  mt-2 text-3xl leading-snug drop-shadow-md">
+              Looking for Your Device?
             </p>
-            </div>
+            <p className="text-lg md:text-xl">
+              Reporting your lost or stolen device helps protect everyone by
+              making it harder to resell and easier for a finder to return it to
+              you.
+            </p>
+          </div>
         </div>
       </div>
 
@@ -76,57 +85,6 @@ const FoundItem: React.FC = () => {
         <div className="max-w-7xl mx-auto mb-8 space-y-4">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <h1 className="text-2xl font-bold">Browse Found Items</h1>
-            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-              <div className="relative flex-1 flex">
-                <div className="relative">
-                  <button
-                    onClick={() => setShowSearchOptions(!showSearchOptions)}
-                    className="h-full px-4 py-2 border border-gray-300 rounded-l-md bg-gray-50 hover:bg-gray-100 flex items-center gap-1 text-sm font-medium"
-                  >
-                    {searchBy === "title" ? "Title" : "Location"}
-                    <ChevronDown className="w-4 h-4" />
-                  </button>
-
-                  {showSearchOptions && (
-                    <div className="absolute top-full left-0 mt-1 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10">
-                      <button
-                        onClick={() => {
-                          setSearchBy("title");
-                          setShowSearchOptions(false);
-                        }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                      >
-                        Search by Title
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSearchBy("location");
-                          setShowSearchOptions(false);
-                        }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                      >
-                        Search by Location
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                {/* Search Input */}
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
-                    placeholder={
-                      searchBy === "title"
-                        ? "Search by item title..."
-                        : "Search by district..."
-                    }
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-r-md rounded-l-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-                  />
-                </div>
-              </div>
-            </div>
           </div>
 
           <p className="text-gray-600">
@@ -136,9 +94,59 @@ const FoundItem: React.FC = () => {
             property with our lost and found department today!
           </p>
         </div>
+        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+          <div className="relative flex-1 flex">
+            <div className="relative">
+              <button
+                onClick={() => setShowSearchOptions(!showSearchOptions)}
+                className="h-full px-4 py-2 border border-gray-300 rounded-l-md bg-gray-50 hover:bg-gray-100 flex items-center gap-1 text-sm font-medium"
+              >
+                {searchBy === "title" ? "Title" : "Location"}
+                <ChevronDown className="w-4 h-4" />
+              </button>
 
+              {showSearchOptions && (
+                <div className="absolute top-full left-0 mt-1 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                  <button
+                    onClick={() => {
+                      setSearchBy("title");
+                      setShowSearchOptions(false);
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                  >
+                    Search by Title
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSearchBy("location");
+                      setShowSearchOptions(false);
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                  >
+                    Search by Location
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Search Input */}
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                placeholder={
+                  searchBy === "title"
+                    ? "Search by item title..."
+                    : "Search by district..."
+                }
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 pr-4 py-2 border border-gray-300 rounded-r-md rounded-l-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+              />
+            </div>
+          </div>
+        </div>
         {/* Results Count */}
-        <div className="mb-6 flex justify-between items-center">
+        <div className="mb-3 mt-2 flex justify-between items-center">
           <p className="text-gray-600">
             {filteredItems.length}{" "}
             {filteredItems.length === 1 ? "item" : "items"} found
@@ -198,6 +206,18 @@ const FoundItem: React.FC = () => {
           )}
         </div>
       </div>
+      <ReactPaginate
+        className=" flex justify-center items-center gap-2 mb-6"
+        pageCount={Math.ceil(data?.length / bookpage)}
+        previousLabel={<TbPlayerTrackPrevFilled />}
+        nextLabel={<TbPlayerTrackNextFilled />}
+        onPageChange={changepage}
+        containerClassName="pagination"
+        previousLinkClassName="prevBtn text-2xl text-gray-500"
+        nextLinkClassName="nextBtn text-2xl text-gray-500"
+        disabledClassName="disabled"
+        activeClassName="paginationactve bg-primaryColor-100 text-white h-5 w-5 rounded-sm flex justify-center items-center"
+      ></ReactPaginate>
     </div>
   );
 };

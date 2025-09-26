@@ -3,6 +3,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { PiOfficeChair } from "react-icons/pi";
 import { toast, ToastContainer } from "react-toastify";
 import ReUsableInput from "../ReusableComponents/ReUsableInput";
+import { MdOutlineLocationOn } from "react-icons/md";
 
 interface FormErrors {
   first_name?: string;
@@ -94,7 +95,6 @@ const ContactUs: React.FC<FormErrors> = () => {
       id="contact"
       className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8"
     >
-    
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           {/* Left Section - Get In Touch */}
@@ -112,10 +112,11 @@ const ContactUs: React.FC<FormErrors> = () => {
 
             {/* Head Office */}
             <div className="flex items-start space-x-4">
-              <div className="w-16 h-16 rounded-full border border-gray-300 flex items-center justify-center flex-shrink-0">
-                <div className=" text-gray-600">
-                  <PiOfficeChair />
-                </div>
+              <div className="w-16 h-16 rounded-full border border-primaryColor-100 flex items-center justify-center flex-shrink-0">
+                <PiOfficeChair
+                  size={35}
+                  className="text-primaryColor-100 font-normal"
+                />
               </div>
               <div>
                 <h3 className="text-xl font-normal text-gray-900 mb-2">
@@ -127,28 +128,11 @@ const ContactUs: React.FC<FormErrors> = () => {
 
             {/* Location */}
             <div className="flex items-start space-x-4">
-              <div className="w-16 h-16 rounded-full border border-gray-300 flex items-center justify-center flex-shrink-0">
-                <div className="w-8 h-8 text-gray-600">
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    className="w-full h-full"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                </div>
+              <div className="w-16 h-16 rounded-full border border-primaryColor-100 flex items-center justify-center flex-shrink-0">
+                <MdOutlineLocationOn
+                  size={35}
+                  className="text-primaryColor-100 font-normal"
+                />
               </div>
               <div>
                 <h3 className="text-xl font-normal text-gray-900 mb-2">

@@ -280,8 +280,7 @@ const Navbar: React.FC<HeaderProps> = () => {
                   )}
                 </div>
 
-                <button
-                  onClick={() => scrollToSection("contact")}
+                <Link to={'contact'}
                   className={`font-medium text-sm xl:text-base tracking-wide transition-colors ${
                     isContactActive
                       ? "text-blue-500"
@@ -289,13 +288,14 @@ const Navbar: React.FC<HeaderProps> = () => {
                   }`}
                 >
                   Contact Us
-                </button>
+                </Link>
               </nav>
 
               {/* Login Button */}
-              <button className="bg-primaryColor-100 text-white px-5 py-2 xl:px-6 xl:py-2 font-medium text-sm xl:text-base hover:bg-slate-600 rounded-4xl transition-all duration-200 hover:shadow-md">
-                <Link to={"/login"}>Login</Link>
-              </button>
+               <Link to={"/login"} className="bg-primaryColor-100 text-white px-5 py-2 xl:px-6 xl:py-2 font-medium text-sm xl:text-base hover:bg-slate-600 rounded-4xl transition-all duration-200 hover:shadow-md">
+                Login
+              </Link>
+             
             </div>
 
             {/* Mobile menu button */}
@@ -456,16 +456,12 @@ const Navbar: React.FC<HeaderProps> = () => {
             </button>
 
             {/* Mobile Login Button */}
-            <div className="pt-4 pb-2">
-              <button
-                onClick={() => setIsMobileMenuOpen(false)}
+             <Link to={"/LandingAuth"}
                 className="w-full bg-slate-500 text-white py-2 px-4 font-medium text-base rounded-lg hover:bg-slate-600 transition-all duration-200 hover:shadow-md"
               >
-                <Link to={"/LandingAuth"} className="block w-full h-full">
+                
                   Login
                 </Link>
-              </button>
-            </div>
 
             {/* Mobile Social Icons */}
             <div className="flex items-center justify-center space-x-6 pt-4 pb-2 border-t border-gray-200">

@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Search, Menu, LogOut, Settings } from "lucide-react";
+import { Search, Menu, LogOut} from "lucide-react";
 import { Link } from "react-router-dom";
 
 import profile from "../../assets/images/profile.jpg";
+import { useAuth } from "../../context/AuthContext";
 interface ToggleProps {
   isOpen?: any;
   toggleSidebar: any;
@@ -30,9 +31,8 @@ const UserHeader:React.FC<ToggleProps>= ({ toggleSidebar, isMobile }) => {
     setShowProfileDropdown(!showProfileDropdown);
   };
 
-  const handleLinkClick = () => {
-    setShowProfileDropdown(false);
-  };
+
+  const { logout } = useAuth();
 
 const Name = localStorage.getItem("email");
 const username = Name ? Name.split("@")[0] : "";  
@@ -89,19 +89,10 @@ const username = Name ? Name.split("@")[0] : "";
 
             {/* Dropdown Menu */}
             {showProfileDropdown && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+              <div className="absolute right-0 mt-2 w-30 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
                 <Link
-                  to="adminsetting"
-                  onClick={handleLinkClick}
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                >
-                  <Settings className="h-4 w-4 mr-3" />
-                  Settings
-                </Link>
-                <hr className="my-1" />
-                <Link
-                  to="/"
-                  onClick={handleLinkClick}
+                  to={"#"}
+                  onClick={logout}
                   className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left"
                 >
                   <LogOut className="h-4 w-4 mr-3" />

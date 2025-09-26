@@ -1,15 +1,12 @@
 import { useState, useEffect, type JSX } from "react";
 import {
-  Send,
   Search,
-  Filter,
   X,
   ChevronLeft,
   ChevronRight,
-  MoreHorizontal,
   Menu,
+  Trash2,
 } from "lucide-react";
-import { MdDelete } from "react-icons/md";
 import { useDeletecontactMutation, useGetContactQuery } from "../../Api/contact";
 import { toast } from "react-toastify";
 import Notiflix from "notiflix";
@@ -18,24 +15,22 @@ import Notiflix from "notiflix";
 interface ContactMessage {
   id: string;
   _id: string;
+  first_name:string,
   last_name: string;
   email: string;
   subject: string;
   description: string;
   message: string;
-  time: string;
-  status: "unread" | "pending" | "resolved";
 }
 
 // Static data
 
 export default function ContactMessagesPage(): JSX.Element {
-    const { data } = useGetContactQuery();
+  const { data } = useGetContactQuery();
   const contact = data;
 
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filterStatus, setFilterStatus] = useState<string>("all");
   const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(
     null
   );
@@ -57,27 +52,6 @@ export default function ContactMessagesPage(): JSX.Element {
       setMessages(processedMessages);
     }
   }, [contact]);
-
-  // Update status handler
-  const handleStatusChange = (id: string, newStatus: string) => {
-    setMessages(
-      messages.map((message) =>
-        message._id === id
-          ? {
-              ...message,
-              status: newStatus as "unread" | "pending" | "resolved",
-            }
-          : message
-      )
-    );
-    if (selectedMessage && selectedMessage._id === id) {
-      setSelectedMessage({
-        ...selectedMessage,
-        status: newStatus as "unread" | "pending" | "resolved",
-      });
-    }
-  };
-
 
 
 
@@ -162,10 +136,7 @@ const handleDeleteClick = (item: ContactMessage) => {
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
 
-    const matchesFilter =
-      filterStatus === "all" || message.status === filterStatus;
-
-    return matchesSearch && matchesFilter;
+    return matchesSearch ;
   });
 
   // Pagination logic
@@ -177,12 +148,7 @@ const handleDeleteClick = (item: ContactMessage) => {
   );
   const totalPages = Math.ceil(filteredMessages.length / messagesPerPage);
 
-  // Status badge color mapping
-  const statusColors: Record<string, string> = {
-    unread: "bg-blue-100 text-blue-800",
-    pending: "bg-yellow-100 text-yellow-800",
-    resolved: "bg-green-100 text-green-800",
-  };
+  
 
   
   
@@ -192,7 +158,7 @@ const handleDeleteClick = (item: ContactMessage) => {
         <div className="bg-white rounded-lg shadow overflow-hidden">
           {/* Header */}
           <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center">
-           <h5 className="text-size-xl font-bold text-primaryColor-100 mb-2 sm:mb-2">
+            <h5 className="text-size-xl font-bold text-primaryColor-100 mb-2 sm:mb-2">
               Contact Messages
             </h5>
             <div className="flex space-x-2">
@@ -202,32 +168,12 @@ const handleDeleteClick = (item: ContactMessage) => {
               >
                 <Menu size={20} />
               </button>
-              <span className="hidden md:inline text-blue-600 hover:text-blue-800 cursor-pointer font-medium text-sm">
-                View All
-              </span>
             </div>
           </div>
 
-          {/* Mobile menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden px-4 py-2 bg-gray-50 border-b border-gray-200">
-              <div className="flex flex-col space-y-2">
-                <button className="text-left text-blue-600 hover:text-blue-800 font-medium text-sm py-1">
-                  View All Messages
-                </button>
-                <button className="text-left text-blue-600 hover:text-blue-800 font-medium text-sm py-1">
-                  Export Data
-                </button>
-                <button className="text-left text-blue-600 hover:text-blue-800 font-medium text-sm py-1">
-                  Settings
-                </button>
-              </div>
-            </div>
-          )}
-
           {/* Search and filter */}
           <div className="px-4 py-3 flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 md:space-x-3 border-b border-gray-200">
-            <div className="relative w-full md:w-64">
+            <div className="relative w-full ">
               <input
                 type="text"
                 placeholder="Search messages..."
@@ -253,95 +199,17 @@ const handleDeleteClick = (item: ContactMessage) => {
                 </button>
               )}
             </div>
-
-            <div className="flex items-center space-x-2 w-full md:w-auto">
-              <span className="text-gray-500">
-                <Filter size={18} />
-              </span>
-              <select
-                className="border border-gray-300 rounded-md px-3 py-2 w-full"
-                value={filterStatus}
-                onChange={(e) => {
-                  setFilterStatus(e.target.value);
-                  setCurrentPage(1); // Reset to first page on filter change
-                }}
-              >
-                <option value="all">All Status</option>
-                <option value="unread">Unread</option>
-                <option value="pending">Pending</option>
-                <option value="resolved">Resolved</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Mobile Card View */}
-          <div className="md:hidden">
-            {currentMessages.length > 0 ? (
-              <div className="divide-y divide-gray-200">
-                {currentMessages.map((message) => (
-                  <div key={message._id} className="p-4">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 className="font-medium text-gray-900">
-                          {message.last_name || "Unknown"}
-                        </h3>
-                        <p className="text-xs text-gray-500">
-                          {message.email || "No email"}
-                        </p>
-                      </div>
-                      <span
-                        className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                          statusColors[message.status] || statusColors.unread
-                        }`}
-                      >
-                        {(message.status || "unread").charAt(0).toUpperCase() +
-                          (message.status || "unread").slice(1)}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-700 mb-2 line-clamp-2">
-                      {message.description || "No description available"}
-                    </p>
-                    <div className="flex justify-between items-center">
-                      <p className="text-xs text-gray-500">
-                        {message.time || "Recently"}
-                      </p>
-                      <div className="flex space-x-2">
-                        <button
-                          className="text-blue-600 hover:text-blue-900 p-1"
-                          title="View Details"
-                          onClick={() => setSelectedMessage(message)}
-                        >
-                          <MoreHorizontal size={16} />
-                        </button>
-                        <button
-                          className="text-blue-600 hover:text-blue-900 p-1"
-                          title="Reply"
-                        >
-                          <Send size={16} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="p-12 text-center text-gray-500">
-                {messages.length === 0
-                  ? "No messages available"
-                  : "No messages found matching your criteria"}
-              </div>
-            )}
           </div>
 
           {/* Desktop Table View */}
-          <div className="hidden md:block overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="block overflow-x-auto">
+            <table className="w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 tracking-wider">
                     Name
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 tracking-wider hidden lg:table-cell">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 tracking-wider">
                     Email
                   </th>
 
@@ -362,15 +230,15 @@ const handleDeleteClick = (item: ContactMessage) => {
                     <tr key={message._id} className="hover:bg-gray-50">
                       <td className="px-4 py-3 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">
-                          {message.last_name || "Unknown"}
+                          {message.first_name || "Unknown"}
                         </div>
-                        <div className="text-sm text-gray-500 md:hidden">
-                          {message.email || "No email"}
+                        <div className="text-sm text-gray-500 ">
+                          {message.last_name}
                         </div>
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap hidden lg:table-cell">
+                      <td className="px-4 py-3 ">
                         <div className="text-sm text-gray-500">
-                          {message.email || "No email"}
+                          {message.email}
                         </div>
                       </td>
 
@@ -380,26 +248,16 @@ const handleDeleteClick = (item: ContactMessage) => {
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900 flex items-center">
-                          <span className="line-clamp-1 xl:line-clamp-2">
-                            {message.description || "No description available"}
-                          </span>
-                          <button
-                            className="ml-1 flex-shrink-0 text-sm text-blue-600 hover:text-blue-800"
-                            title="View full description"
-                            onClick={() => setSelectedMessage(message)}
-                          >
-                            <MoreHorizontal size={16} />
-                          </button>
-                        </div>
+                        <span className="">
+                          {message.description}</span>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
                           <button
-                            className="text-red-300 hover:text-blue-900 p-1"
+                            className="text-red-600 hover:text-blue-900 p-1"
                             onClick={() => handleDeleteClick(message)}
                           >
-                            <MdDelete size={16} />
+                            <Trash2 size={16} />
                           </button>
                         </div>
                       </td>
@@ -493,84 +351,6 @@ const handleDeleteClick = (item: ContactMessage) => {
             </div>
           )}
         </div>
-
-        {/* Message Detail Modal */}
-        {selectedMessage && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-auto">
-              <div className="px-4 py-3 bg-gray-50 border-b flex justify-between items-center">
-                <h3 className="text-lg font-medium text-gray-900">
-                  Message Details
-                </h3>
-                <button
-                  onClick={() => setSelectedMessage(null)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  <X size={18} />
-                </button>
-              </div>
-              <div className="px-4 py-3 max-h-64 sm:max-h-96 overflow-y-auto">
-                <div className="mb-3">
-                  <p className="text-sm font-medium text-gray-500">From</p>
-                  <p className="text-sm text-gray-900">
-                    {selectedMessage.last_name || "Unknown"} (
-                    {selectedMessage.email || "No email"})
-                  </p>
-                </div>
-                <div className="mb-3">
-                  <p className="text-sm font-medium text-gray-500">Time</p>
-                  <p className="text-sm text-gray-900">
-                    {selectedMessage.time || "Recently"}
-                  </p>
-                </div>
-                <div className="mb-3">
-                  <p className="text-sm font-medium text-gray-500">Status</p>
-                  <div className="flex items-center space-x-2 mt-1">
-                    <span
-                      className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                        statusColors[selectedMessage.status] ||
-                        statusColors.unread
-                      }`}
-                    >
-                      {(selectedMessage.status || "unread")
-                        .charAt(0)
-                        .toUpperCase() +
-                        (selectedMessage.status || "unread").slice(1)}
-                    </span>
-                    <select
-                      className="text-xs border border-gray-300 rounded-md px-2 py-1"
-                      value={selectedMessage.status || "unread"}
-                      onChange={(e) =>
-                        handleStatusChange(selectedMessage._id, e.target.value)
-                      }
-                    >
-                      <option value="unread">Unread</option>
-                      <option value="pending">Pending</option>
-                      <option value="resolved">Resolved</option>
-                    </select>
-                  </div>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Message</p>
-                  <p className="text-sm text-gray-900 mt-1">
-                    {selectedMessage.description || "No description available"}
-                  </p>
-                </div>
-              </div>
-              <div className="px-4 py-3 bg-gray-50 border-t flex justify-end space-x-3">
-                <button
-                  className="py-1.5 px-3 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-                  onClick={() => setSelectedMessage(null)}
-                >
-                  Close
-                </button>
-                <button className="py-1.5 px-3 bg-blue-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700">
-                  Reply
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
