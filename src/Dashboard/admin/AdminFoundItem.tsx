@@ -11,6 +11,7 @@ import {
   Trash2,
   X,
   Save,
+  Plus,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useDeleteFounditemMutation, useGetFounditemQuery } from "../../Api/founditem";
@@ -673,8 +674,7 @@ export default function AdminFoundItem(): JSX.Element {
   const { data,refetch } = useGetFounditemQuery();
   
 
-  const staticLostItems = data;
-  const allItems: LostItem[] = staticLostItems;
+  const allItems: LostItem[] = data || [];
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -703,7 +703,7 @@ export default function AdminFoundItem(): JSX.Element {
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
-  // const openReportModal = () => setIsReportModalOpen(true);
+  const openReportModal = () => setIsReportModalOpen(true);
   const closeReportModal = () => setIsReportModalOpen(false);
 
   // Pagination handlers
@@ -714,40 +714,57 @@ export default function AdminFoundItem(): JSX.Element {
     setCurrentPage((prev) => Math.min(totalPages, prev + 1));
   const goToLastPage = () => setCurrentPage(totalPages);
 
-  // Form handling
 
-  // Edit handler
-  // const handleEditClick = (item: LostItem) => {
-  //   setSelected(item);
-  //   setOpen(true);
-  // };
 
 const [deleteProduct] = useDeleteFounditemMutation();
 
-const handleConfirmDelete = async (id: string) => {
+ const handleConfirmDelete = (id: string) => {
   Notiflix.Confirm.show(
-    'Delete Confirmation',
-    'Do you want to delete this item?',
-    'Delete',
-    'Cancel',
-    () => {
-      // User clicked Delete
-      deleteProduct(id);
-      toast.success("Product deleted successfully!");
-      refetch();
-      console.log(id);
-      
-      
+    "Delete Confirmation",
+    "Do you want to delete this item?",
+    "Delete",
+    "Cancel",
+    async () => {
+      try {
+        console.log("Attempting to delete lost item with ID:", id);
+
+        const result = await deleteProduct(id).unwrap();
+
+        console.log("Delete successful:", result);
+        toast.success("FoundItem deleted successfully!", {
+          autoClose: 2000,
+        });
+
+        // Force refetch to update UI immediately
+        await refetch();
+      } catch (error: any) {
+        console.error("Delete failed:", error);
+
+        let errorMessage = "Failed to delete item. Please try again.";
+
+        if (error?.status === 404) {
+          errorMessage = "Item not found. It may have already been deleted.";
+        } else if (error?.status === 403) {
+          errorMessage = "You don't have permission to delete this item.";
+        } else if (error?.status === 500) {
+          errorMessage = "Server error. Please try again later.";
+        } else if (error?.data?.message) {
+          errorMessage = error.data.message;
+        } else if (error?.message) {
+          errorMessage = error.message;
+        }
+
+        toast.error(errorMessage);
+      }
     },
     () => {
-      // User clicked Cancel - do nothing
       console.log("Delete cancelled");
     },
     {
-      width: '320px',
-      borderRadius: '8px',
-      titleColor: '#ff5549',
-      okButtonBackground: '#ff5549',
+      width: "320px",
+      borderRadius: "8px",
+      titleColor: "#ff5549",
+      okButtonBackground: "#ff5549",
     }
   );
 };
@@ -760,10 +777,6 @@ const handleDeleteClick = (item: LostItem) => {
     toast.error("Cannot delete item - ID is missing");
   }
 };
-  // const handleCancelDelete = () => {
-  //   setShowDeleteConfirm(false);
-  //   setTourToDelete(null);
-  // };
 
   const handleEdit = (item: LostItem) => {
     setItemToEdit(item);
@@ -801,7 +814,7 @@ const handleDeleteClick = (item: LostItem) => {
           />
         </div>
 
-        {/* <div className="flex flex-row gap-2 sm:gap-4">
+        <div className="flex flex-row gap-2 sm:gap-4">
           <button
             onClick={openReportModal}
             className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primaryColor-100  hover:bg-primaryColor-50 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -809,7 +822,7 @@ const handleDeleteClick = (item: LostItem) => {
             <Plus size={16} className="mr-2" />
             Add Found Item
           </button>
-        </div> */}
+        </div>
       </div>
 
       {/* Desktop view - Table */}

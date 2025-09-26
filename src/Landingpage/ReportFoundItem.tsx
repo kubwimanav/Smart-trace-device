@@ -175,9 +175,9 @@ const ReportFoundItem: React.FC = () => {
           lastName: "",
           deviceimage: null,
         });
-        toast.success("FoundItem Created successfully!");
+        toast.success("FoundItem Reported successfully!");
       } else {
-        toast.error("Failed to Create FoundItem. Please try again.");
+        toast.error("Failed to Report FoundItem. Please try again.");
       }
     } catch (error) {
       console.error("Error for creating item:", error);

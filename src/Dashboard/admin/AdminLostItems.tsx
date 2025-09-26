@@ -9,10 +9,12 @@ import {
   Trash2,
   X,
   Save,
+  Plus,
 } from "lucide-react";
 import Notiflix from "notiflix";
 import { toast } from "react-toastify";
 import { useDeleteLostitemMutation, useGetLostitemQuery } from "../../Api/lostitem";
+import LostItemForm from "../../Landingpage/LostItemForm";
 
 // TypeScript interfaces
 interface LostItem {
@@ -562,35 +564,9 @@ const EditModal: React.FC<EditModalProps> = ({
 };
 
 
-
-// Mock ReportLostItem component
-const ReportLostItem: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
-  isOpen,
-  onClose,
-}) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
-        <h2 className="text-lg font-semibold mb-4">Report Lost Item</h2>
-        <p className="text-gray-600 mb-4">
-          This is a placeholder for the Report Lost Item form.
-        </p>
-        <button
-          onClick={onClose}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  );
-};
-
 export default function AdminLostItems(): JSX.Element {
-  const { data} = useGetLostitemQuery();  
-  const allItems: LostItem[] = data;
+  const { data, refetch } = useGetLostitemQuery(); // Add refetch here
+  const allItems: LostItem[] = data || [];
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -604,8 +580,7 @@ export default function AdminLostItems(): JSX.Element {
     const matchesSearch =
       item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.
-state?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.state?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.foundBy?.toLowerCase().includes(searchTerm.toLowerCase());
 
     return matchesSearch;
@@ -618,9 +593,8 @@ state?.toLowerCase().includes(searchTerm.toLowerCase()) ||
   const totalPages = Math.ceil(filteredItems?.length / itemsPerPage);
   const [itemToEdit, setItemToEdit] = useState<LostItem | null>(null);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
-
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
-  // const openReportModal = () => setIsReportModalOpen(true);
+  const openReportModal = () => setIsReportModalOpen(true);
   const closeReportModal = () => setIsReportModalOpen(false);
 
   // Pagination handlers
@@ -635,35 +609,34 @@ state?.toLowerCase().includes(searchTerm.toLowerCase()) ||
 
   // Edit handler
 
-
   // Delete handlers
-const [deleteLostitem, { isLoading: isDeleting }] = useDeleteLostitemMutation();
+  const [deleteLostitem, { isLoading: isDeleting }] =
+    useDeleteLostitemMutation();
 
-const handleConfirmDelete = (id: string) => {
+ const handleConfirmDelete = (id: string) => {
   Notiflix.Confirm.show(
-    'Delete Confirmation',
-    'Do you want to delete this item?',
-    'Delete',
-    'Cancel',
+    "Delete Confirmation",
+    "Do you want to delete this item?",
+    "Delete",
+    "Cancel",
     async () => {
       try {
-        console.log('Attempting to delete lost item with ID:', id);
-        
-        // Call the delete mutation and wait for response
+        console.log("Attempting to delete lost item with ID:", id);
+
         const result = await deleteLostitem(id).unwrap();
-        
-        console.log('Delete successful:', result);
-        toast.success("Product deleted successfully!");
-        
-        // The RTK Query will automatically update the cache and refetch data
-        // No need to manually update local state since useGetLostitemQuery will re-run
-        
+
+        console.log("Delete successful:", result);
+        toast.success("LostItem deleted successfully!", {
+          autoClose: 2000,
+        });
+
+        // Force refetch to update UI immediately
+        await refetch();
       } catch (error: any) {
-        console.error('Delete failed:', error);
-        
-        // Handle different types of errors
+        console.error("Delete failed:", error);
+
         let errorMessage = "Failed to delete item. Please try again.";
-        
+
         if (error?.status === 404) {
           errorMessage = "Item not found. It may have already been deleted.";
         } else if (error?.status === 403) {
@@ -675,54 +648,51 @@ const handleConfirmDelete = (id: string) => {
         } else if (error?.message) {
           errorMessage = error.message;
         }
-        
+
         toast.error(errorMessage);
       }
     },
     () => {
-      // User clicked Cancel - do nothing
       console.log("Delete cancelled");
     },
     {
-      width: '320px',
-      borderRadius: '8px',
-      titleColor: '#ff5549',
-      okButtonBackground: '#ff5549',
+      width: "320px",
+      borderRadius: "8px",
+      titleColor: "#ff5549",
+      okButtonBackground: "#ff5549",
     }
   );
 };
 
-const handleDeleteClick = (item: LostItem) => {
-  console.log('Delete clicked for item:', item);
-  
-  // Check for both _id and id fields since your API uses 'id'
-  const itemId = item._id || item.id;
-  console.log('Item ID (_id):', item._id);
-  console.log('Item ID (id):', item.id);
-  console.log('Final Item ID:', itemId);
-  
-  if (!item) {
-    console.error("Item is null or undefined");
-    toast.error("Cannot delete - item not found");
-    return;
-  }
-  
-  if (!itemId) {
-    console.error("Item ID is missing", item);
-    toast.error("Cannot delete item - ID is missing");
-    return;
-  }
-  
-  // Prevent multiple delete attempts if already deleting
-  if (isDeleting) {
-    toast.warning("Please wait, deletion in progress...");
-    return;
-  }
-  
-  handleConfirmDelete(itemId.toString());
-};
+  const handleDeleteClick = (item: LostItem) => {
+    console.log("Delete clicked for item:", item);
 
- 
+    // Check for both _id and id fields since your API uses 'id'
+    const itemId = item._id || item.id;
+    console.log("Item ID (_id):", item._id);
+    console.log("Item ID (id):", item.id);
+    console.log("Final Item ID:", itemId);
+
+    if (!item) {
+      console.error("Item is null or undefined");
+      toast.error("Cannot delete - item not found");
+      return;
+    }
+
+    if (!itemId) {
+      console.error("Item ID is missing", item);
+      toast.error("Cannot delete item - ID is missing");
+      return;
+    }
+
+    // Prevent multiple delete attempts if already deleting
+    if (isDeleting) {
+      toast.warning("Please wait, deletion in progress...");
+      return;
+    }
+
+    handleConfirmDelete(itemId.toString());
+  };
 
   const handleEdit = (item: LostItem) => {
     setItemToEdit(item);
@@ -749,8 +719,7 @@ const handleDeleteClick = (item: LostItem) => {
           </div>
           <input
             type="text"
-            placeholder="Search items, 
-states, or finders..."
+            placeholder="Search items, states, or finders..."
             className="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             value={searchTerm}
             onChange={(e) => {
@@ -760,7 +729,7 @@ states, or finders..."
           />
         </div>
 
-        {/* <div className="flex flex-row gap-2 sm:gap-4">
+        <div className="flex flex-row gap-2 sm:gap-4">
           <button
             onClick={openReportModal}
             className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primaryColor-100 hover:bg-primaryColor-50 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -768,7 +737,7 @@ states, or finders..."
             <Plus size={16} className="mr-2" />
             Add Lost Item
           </button>
-        </div> */}
+        </div>
       </div>
 
       {/* Desktop view - Table */}
@@ -1001,7 +970,7 @@ states, or finders..."
         </div>
       </div>
 
-      <ReportLostItem isOpen={isReportModalOpen} onClose={closeReportModal} />
+      <LostItemForm isOpen={isReportModalOpen} onClose={closeReportModal} />
 
       {/* Edit Modal */}
       <EditModal
