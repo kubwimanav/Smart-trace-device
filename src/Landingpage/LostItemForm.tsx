@@ -3,8 +3,6 @@ import { Upload, X } from "lucide-react";
 import ReUsableInput from "../ReusableComponents/ReUsableInput";
 import ReUsableSelect from "../ReusableComponents/ReUsableSelect";
 import { toast, ToastContainer } from "react-toastify";
-import type LostItem from "./LostItem";
-
 interface FormData {
   title: string;
   dateFound: string;
@@ -49,7 +47,7 @@ interface FormErrors {
   // email: string;
 }
 
-const LostItemForm: React.FC<EditModalProps> = ({ isOpen,onClose }) => {
+const LostItemForm: React.FC<EditModalProps> = ({ onClose }) => {
   const [formData, setFormData] = React.useState<FormData>({
     title: "",
     dateFound: "",

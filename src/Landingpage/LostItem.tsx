@@ -176,7 +176,8 @@ const LostItem: React.FC = () => {
                   title={item.title}
                   image={`${import.meta.env.VITE_API_BASE_URL}${item.image}`}
                   location={item.cityTown}
-                />
+                  id={item.id}
+                  type="lost"/>
               </div>
             ))
           ) : (
@@ -193,7 +194,7 @@ const LostItem: React.FC = () => {
       </div>
       <ReactPaginate
         className=" flex justify-center items-center gap-2 mb-6"
-        pageCount={Math.ceil(data?.length / bookpage)}
+        pageCount={Math?.ceil(data?.length / bookpage)}
         previousLabel={<TbPlayerTrackPrevFilled />}
         nextLabel={<TbPlayerTrackNextFilled />}
         onPageChange={changepage}

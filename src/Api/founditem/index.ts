@@ -27,6 +27,12 @@ export const productApi = apiSlice.injectEndpoints({
     //     body: data,
     //   }),
     // }),
+    getFoundbyid: builder.mutation({
+      query: (id) => ({
+        url: `api/devices/found/${id}/`,
+        method: "GET",
+      }),
+    }),
 
     deleteFounditem: builder.mutation({
       query: (id) => ({
@@ -40,5 +46,6 @@ export const productApi = apiSlice.injectEndpoints({
 export const {
   useGetFounditemQuery,
   useGetFounditemByUserQuery,
+  useGetFoundbyidMutation,
   useDeleteFounditemMutation,
 } = productApi;

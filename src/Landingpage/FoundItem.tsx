@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import homei from "../assets/images/image1-24.jpg";
-import LostItemCard from "../hooks/useItem";
 import { Search, ChevronDown } from "lucide-react";
 import type { Founditem } from "../type/type";
 import { useGetFounditemQuery } from "../Api/founditem";
 import { TbPlayerTrackNextFilled, TbPlayerTrackPrevFilled } from "react-icons/tb";
 import ReactPaginate from "react-paginate";
+import FoundItemCard from "../hooks/FounditemCard";
 
 const FoundItem: React.FC = () => {
   const { data } = useGetFounditemQuery();
@@ -166,9 +166,10 @@ const FoundItem: React.FC = () => {
         {/* Results Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-center justify-items-center place-items-center mx-auto">
           {filteredItems.length > 0 ? (
-            filteredItems.map((item) => (
-              <div className="w-full max-w-sm">
-                <LostItemCard
+            filteredItems.map((item:any) => (
+              <div key={item.id} className="w-full max-w-sm">
+                <FoundItemCard
+                  id={item.id}
                   title={item.name} // change to item.title if API returns title
                   image={import.meta.env.VITE_API_BASE_URL + item.deviceimage}
                   location={item.location}
