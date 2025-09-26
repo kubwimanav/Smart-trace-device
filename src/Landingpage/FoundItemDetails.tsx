@@ -10,14 +10,13 @@ import {
   Mail,
   AlertCircle,
 } from "lucide-react";
-import { useGetLostbyidMutation } from "../Api/lostitem";
+import { useGetFoundbyidMutation } from "../Api/founditem";
 
-const LostItemDetail: React.FC = () => {
+const FoundItemDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-
   const [getLostById, { data: item, isLoading, error }] =
-    useGetLostbyidMutation();
+    useGetFoundbyidMutation();
 
   useEffect(() => {
     if (id) {
@@ -53,18 +52,6 @@ const LostItemDetail: React.FC = () => {
       </div>
     );
   }
-
-  const formatDate = (dateString: string) => {
-    try {
-      return new Date(dateString).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    } catch {
-      return dateString;
-    }
-  };
 
   const getStatusColor = (status?: string) => {
     switch (status) {
@@ -139,7 +126,7 @@ const LostItemDetail: React.FC = () => {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <Tag className="w-5 h-5 text-gray-500 flex-shrink-0" />
-                  <div>
+                  <div className="flex items-center justify-center gap-3">
                     <span className="text-sm text-gray-500">Category:</span>
                     <p className="font-medium">
                       {item.category || "Not specified"}
@@ -150,7 +137,7 @@ const LostItemDetail: React.FC = () => {
                 {item.brand && (
                   <div className="flex items-center gap-3">
                     <Package className="w-5 h-5 text-gray-500 flex-shrink-0" />
-                    <div>
+                    <div className="flex items-center justify-center gap-3">
                       <span className="text-sm text-gray-500">Brand:</span>
                       <p className="font-medium">{item.brand}</p>
                     </div>
@@ -159,15 +146,17 @@ const LostItemDetail: React.FC = () => {
 
                 <div className="flex items-center gap-3">
                   <Calendar className="w-5 h-5 text-gray-500 flex-shrink-0" />
-                  <div>
-                    <span className="text-sm text-gray-500">Date Lost:</span>
-                    <p className="font-medium">{formatDate(item.dateLost)}</p>
+                  <div className="flex items-center justify-center gap-3">
+                    <span className="text-sm text-gray-500">
+                      Address Found:
+                    </span>
+                    <p className="font-medium">{item.address}</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3">
+                <div className="flex items-center gap-3">
                   <MapPin className="w-5 h-5 text-gray-500 flex-shrink-0 mt-0.5" />
-                  <div>
+                  <div className="flex items-center justify-center gap-3">
                     <span className="text-sm text-gray-500">Location:</span>
                     <p className="font-medium">{item.location}</p>
                   </div>
@@ -181,7 +170,7 @@ const LostItemDetail: React.FC = () => {
                 Description
               </h2>
               <p className="text-gray-700 leading-relaxed">
-                {item.description || "No additional description provided."}
+                {item.description}
               </p>
             </div>
 
@@ -231,8 +220,8 @@ const LostItemDetail: React.FC = () => {
                   </button>
                 )}
 
-                <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                  Report Issue
+                <button className="px-4 py-2 bg-primaryColor-100 text-white hover:text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                  Claim Item
                 </button>
               </div>
             </div>
@@ -243,4 +232,4 @@ const LostItemDetail: React.FC = () => {
   );
 };
 
-export default LostItemDetail;
+export default FoundItemDetail;

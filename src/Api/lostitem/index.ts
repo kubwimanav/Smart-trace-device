@@ -26,7 +26,12 @@ export const productApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-
+    getLostbyid: builder.mutation({
+      query: (id) => ({
+        url: `api/devices/lost/${id}/`,
+        method: "GET",
+      }),
+    }),
     deleteLostitem: builder.mutation({
       query: (id) => ({
         url: `/api/devices/lost/${id}/delete/`,
@@ -39,6 +44,7 @@ export const productApi = apiSlice.injectEndpoints({
 export const {
     useCreateLostMutation,
     useGetLostitemQuery,
+    useGetLostbyidMutation,
     useGetLostitemByUserQuery,
     useDeleteLostitemMutation,
   
