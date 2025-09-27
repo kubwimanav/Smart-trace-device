@@ -9,7 +9,7 @@ const AdminReport = () => {
       <div>
         <h2 className=" text-primaryColor-100">Found Report</h2>
           <div className="block">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto rounded-md">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
@@ -68,7 +68,7 @@ const AdminReport = () => {
       <div>
         <h2 className="text-primaryColor-100">Lost Report</h2>
           <div className="block">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto rounded-md">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>

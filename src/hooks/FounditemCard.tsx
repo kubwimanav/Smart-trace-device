@@ -25,7 +25,7 @@ const FoundItemCard: React.FC<LostItemCardProps> = ({
       <div className="w-full bg-gray-100">
         <img src={image} alt={title} className="w-full h-55  object-cover" />
       </div>
-      <div className="p-4 border-t-1 border-gray-400">
+      <div className="py-4 px-1 border-t-1 border-gray-400">
         <h3 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base">
           Title: {title}
         </h3>
@@ -34,9 +34,9 @@ const FoundItemCard: React.FC<LostItemCardProps> = ({
         </p>
         <button
           onClick={handleCardClick}
-          className=" w-full text-blue-600 hover:text-blue-800 text-xs sm:text-sm font-medium transition-colors"
+          className=" w-full bg-primaryColor-100 rounded-md py-2 text-white hover:bg-blue-900 text-xs sm:text-sm font-medium transition-colors"
         >
-          View Lost Item
+          View Item Details
         </button>
       </div>
     </div>

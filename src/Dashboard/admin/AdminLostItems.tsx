@@ -564,6 +564,32 @@ const EditModal: React.FC<EditModalProps> = ({
 };
 
 
+const ReportLostItem: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
+  isOpen,
+  onClose,
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-[rgba(49,49,49,0.8)] bg-opacity-80  flex justify-center items-start sm:items-center z-1000 p-2 sm:p-4 ">
+      <div className="relative w-full max-w-[320px] xs:max-w-[380px] sm:max-w-[400px] md:max-w-[450px]">
+        {/* Close button */}
+        <button
+          className="absolute right-0 top-0 z-20 flex items-center justify-center h-8 w-8 bg-blue-700 text-white hover:bg-blue-800 transition-colors -mt-2 -mr-2 rounded-md shadow-lg"
+          onClick={onClose}
+          aria-label="Close"
+        >
+          <X size={18} className="sm:w-5 sm:h-5" />
+        </button>
+        <LostItemForm isOpen={false} onClose={function (): void {
+          throw new Error("Function not implemented.");
+        } }        />
+      </div>
+    </div>
+  );
+};
+
+
 export default function AdminLostItems(): JSX.Element {
   const { data, refetch } = useGetLostitemQuery(); // Add refetch here
   const allItems: LostItem[] = data || [];
@@ -970,7 +996,7 @@ export default function AdminLostItems(): JSX.Element {
         </div>
       </div>
 
-      <LostItemForm isOpen={isReportModalOpen} onClose={closeReportModal} />
+      <ReportLostItem isOpen={isReportModalOpen} onClose={closeReportModal} />
 
       {/* Edit Modal */}
       <EditModal

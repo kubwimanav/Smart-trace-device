@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   ArrowLeft,
   Calendar,
@@ -139,10 +139,10 @@ const LostItemDetail: React.FC = () => {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <Tag className="w-5 h-5 text-gray-500 flex-shrink-0" />
-                  <div>
+                  <div className="flex items-center justify-center gap-3">
                     <span className="text-sm text-gray-500">Category:</span>
                     <p className="font-medium">
-                      {item.category || "Not specified"}
+                      {item.category }
                     </p>
                   </div>
                 </div>
@@ -150,7 +150,7 @@ const LostItemDetail: React.FC = () => {
                 {item.brand && (
                   <div className="flex items-center gap-3">
                     <Package className="w-5 h-5 text-gray-500 flex-shrink-0" />
-                    <div>
+                    <div className="flex items-center justify-center gap-3">
                       <span className="text-sm text-gray-500">Brand:</span>
                       <p className="font-medium">{item.brand}</p>
                     </div>
@@ -159,17 +159,17 @@ const LostItemDetail: React.FC = () => {
 
                 <div className="flex items-center gap-3">
                   <Calendar className="w-5 h-5 text-gray-500 flex-shrink-0" />
-                  <div>
+                  <div className="flex items-center justify-center gap-3">
                     <span className="text-sm text-gray-500">Date Lost:</span>
-                    <p className="font-medium">{formatDate(item.dateLost)}</p>
+                    <p className="font-medium">{formatDate(item.dateFound)}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-gray-500 flex-shrink-0 mt-0.5" />
-                  <div>
+                  <div className="flex items-center justify-center gap-3">
                     <span className="text-sm text-gray-500">Location:</span>
-                    <p className="font-medium">{item.location}</p>
+                    <p className="font-medium">{item.cityTown}</p>
                   </div>
                 </div>
               </div>
@@ -181,7 +181,7 @@ const LostItemDetail: React.FC = () => {
                 Description
               </h2>
               <p className="text-gray-700 leading-relaxed">
-                {item.description || "No additional description provided."}
+                {item.additionalInfo}
               </p>
             </div>
 
@@ -231,9 +231,12 @@ const LostItemDetail: React.FC = () => {
                   </button>
                 )}
 
-                <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                  Report Issue
-                </button>
+                <Link
+                  to={"founditem"}
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200  transition-colors"
+                >
+                  Report Item
+                </Link>
               </div>
             </div>
           </div>

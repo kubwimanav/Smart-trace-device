@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useDeleteFounditemMutation, useGetFounditemQuery } from "../../Api/founditem";
+import FoundItemForm from "../../Landingpage/FoundItemForm";
 
 // TypeScript interfaces
 interface LostItem {
@@ -652,18 +653,18 @@ const ReportLostItem: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
-        <h2 className="text-lg font-semibold mb-4">Report Lost Item</h2>
-        <p className="text-gray-600 mb-4">
-          This is a placeholder for the Report Lost Item form.
-        </p>
+    <div className="fixed inset-0 bg-[rgba(49,49,49,0.8)] bg-opacity-80  flex justify-center items-start sm:items-center z-1000 p-2 sm:p-4 ">
+      <div className="relative w-full max-w-[320px] xs:max-w-[380px] sm:max-w-[400px] md:max-w-[450px]">
+        {/* Close button */}
         <button
+          className="absolute right-0 top-0 z-20 flex items-center justify-center h-8 w-8 bg-blue-700 text-white hover:bg-blue-800 transition-colors -mt-2 -mr-2 rounded-md shadow-lg"
           onClick={onClose}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          aria-label="Close"
         >
-          Close
+          <X size={18} className="sm:w-5 sm:h-5" />
         </button>
+        <FoundItemForm
+        />
       </div>
     </div>
   );
@@ -701,10 +702,6 @@ export default function AdminFoundItem(): JSX.Element {
   const totalPages = Math.ceil(filteredItems?.length / itemsPerPage);
   const [itemToEdit, setItemToEdit] = useState<LostItem | null>(null);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
-
-  const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
-  const openReportModal = () => setIsReportModalOpen(true);
-  const closeReportModal = () => setIsReportModalOpen(false);
 
   // Pagination handlers
   const goToFirstPage = () => setCurrentPage(1);
@@ -788,6 +785,18 @@ const handleDeleteClick = (item: LostItem) => {
     setShowEditModal(false);
     setItemToEdit(null);
   };
+
+
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openReportModal = () => {
+      setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+      setIsModalOpen(false);
+    };
 
  
   return (
@@ -1053,7 +1062,10 @@ const handleDeleteClick = (item: LostItem) => {
         </div>
       </div>
 
-      <ReportLostItem isOpen={isReportModalOpen} onClose={closeReportModal} />
+      <ReportLostItem
+        isOpen={isModalOpen}
+        onClose={closeModal}
+      />
 
       {/* Edit Modal */}
       <EditModal

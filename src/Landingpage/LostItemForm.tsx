@@ -1,5 +1,5 @@
 import React from "react";
-import { Upload, X } from "lucide-react";
+import { Upload} from "lucide-react";
 import ReUsableInput from "../ReusableComponents/ReUsableInput";
 import ReUsableSelect from "../ReusableComponents/ReUsableSelect";
 import { toast, ToastContainer } from "react-toastify";
@@ -47,7 +47,7 @@ interface FormErrors {
   // email: string;
 }
 
-const LostItemForm: React.FC<EditModalProps> = ({ onClose }) => {
+const LostItemForm: React.FC<EditModalProps> = () => {
   const [formData, setFormData] = React.useState<FormData>({
     title: "",
     dateFound: "",
@@ -228,219 +228,183 @@ const LostItemForm: React.FC<EditModalProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <button
-        // className="absolute right-0 top-0 z-20 flex items-center justify-center h-8 w-8 bg-blue-700 text-white hover:bg-blue-800 transition-colors -mt-2 -mr-2 rounded-md shadow-lg"
-        onClick={onClose}
-        aria-label="Close"
-      >
-        <X size={18} className="sm:w-5 sm:h-5" />
-      </button>
+    <div className=" overflow-y-auto h-[90vh] bg-gray-50 rounded-2xl ">
       <form
         onSubmit={handleSubmit}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12"
+        className="max-w-7xl mx-auto flex flex-col gap-5 px-4 sm:px-6 lg:px-8 py-8 overflow-y-auto"
       >
-        <div className="bg-white rounded-lg shadow-sm mb-8">
-          <div className="p-6 lg:p-8">
-            <h2 className="text-xl lg:text-2xl font-semibold text-gray-900 mb-2">
-              LostItem Information
-            </h2>
-            <p className="text-gray-600 mb-8 text-sm lg:text-base">
-              Please be descriptive when reporting your lost or stolen device.
-              The more details you provide, the easier it will be to assist you.
-            </p>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-7 lg:gap-7">
-              {/* Title */}
-              <div>
-                <ReUsableInput
-                  type="text"
-                  label="Title"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  placeholder="Title Of Item Found"
+        <div className=" flex flex-col gap-3 p-6 bg-white rounded-lg shadow-sm">
+          <h2 className="text-xl font-bold text-gray-900 mb-2">
+            Lost Item Information
+          </h2>
+          <div>
+            <ReUsableInput
+              type="text"
+              label="Title"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              placeholder="Title Of Item Found"
+            />
+            {errors && <p className=" text-sm text-red-400">{errors.title}</p>}
+          </div>
+          {/* Date Item Found */}
+          <div>
+            <ReUsableInput
+              label="Date Found"
+              placeholder="Date Found"
+              type="date"
+              name="dateFound"
+              value={formData.dateFound}
+              onChange={handleInputChange}
+            />
+            {errors && (
+              <p className=" text-sm text-red-400">{errors.dateFound}</p>
+            )}
+          </div>
+          {/* Category */}
+          <div>
+            <ReUsableSelect
+              label="Choose Category"
+              name="category"
+              value={formData.category}
+              onChange={handleInputChange}
+            >
+              <option value="">Select Electronic Category</option>
+              <option value="phones">Phones</option>
+              <option value="laptops">Laptops</option>
+              <option value="tablets">Tablets</option>
+              <option value="cameras">Cameras</option>
+              <option value="audio">Audio Devices</option>
+              <option value="other">Other Electronics</option>
+            </ReUsableSelect>
+            {errors && (
+              <p className=" text-sm text-red-400">{errors.category}</p>
+            )}
+          </div>
+          {/* Time Found */}
+          <div>
+            <ReUsableInput
+              label="Time Found"
+              placeholder="Time Found"
+              type="time"
+              name="timeFound"
+              value={formData.timeFound}
+              onChange={handleInputChange}
+            />
+            {errors && (
+              <p className=" text-sm text-red-400">{errors.timeFound}</p>
+            )}
+          </div>
+          {/* Upload Receipt */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Upload Receipt/Proof of Ownership
+            </label>
+            <div className="border-2 border-dashed border-gray-300 rounded-md px-12 py-7 text-center hover:border-gray-400 transition-colors cursor-pointer">
+              <Upload className="w-4 h-4 text-gray-400 mx-auto mb-2" />
+              <p className="text-gray-500 text-xs mb-2">
+                {formData.recepiet
+                  ? formData.recepiet.name
+                  : "Upload Proof of Ownership(eg:invoice,Receipt,etc.)"}
+              </p>
+              <input
+                type="file"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  setFormData((prev) => ({
+                    ...prev,
+                    recepiet: file,
+                  }));
+                }}
+                accept="application/pdf,image/*"
+                className="hidden"
+                id="recepiet-upload"
+              />
+              <label
+                htmlFor="recepiet-upload"
+                className="cursor-pointer text-sm text-blue-600 hover:text-blue-800"
+              >
+                Choose File
+              </label>
+            </div>
+          </div>
+          {/* Upload Image */}
+          <div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Upload Device Image
+              </label>
+              <div className="border-2 border-dashed border-gray-300 rounded-md px-12 py-6 text-center hover:border-gray-400 transition-colors cursor-pointer">
+                <Upload className="w-4 h-4 text-gray-400 mx-auto mb-2" />
+                <p className="text-gray-500 text-xs mb-2">
+                  {formData.image ? formData.image.name : "Upload Device Image"}
+                </p>
+                <input
+                  type="file"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] || null;
+                    setFormData((prev) => ({
+                      ...prev,
+                      image: file,
+                    }));
+                  }}
+                  accept="application/pdf,image/*"
+                  className="hidden"
+                  id="image-upload"
                 />
-                {errors && (
-                  <p className=" text-sm text-red-400">{errors.title}</p>
-                )}
-              </div>
-
-              {/* Date Item Found */}
-              <div>
-                <ReUsableInput
-                  label="Date Found"
-                  placeholder="Date Found"
-                  type="date"
-                  name="dateFound"
-                  value={formData.dateFound}
-                  onChange={handleInputChange}
-                />
-                {errors && (
-                  <p className=" text-sm text-red-400">{errors.dateFound}</p>
-                )}
-              </div>
-
-              {/* Category */}
-              <div>
-                <ReUsableSelect
-                  label="Choose Category"
-                  name="category"
-                  value={formData.category}
-                  onChange={handleInputChange}
+                <label
+                  htmlFor="image-upload"
+                  className="cursor-pointer text-sm text-blue-600 hover:text-blue-800"
                 >
-                  <option value="">Select Electronic Category</option>
-                  <option value="phones">Phones</option>
-                  <option value="laptops">Laptops</option>
-                  <option value="tablets">Tablets</option>
-                  <option value="cameras">Cameras</option>
-                  <option value="audio">Audio Devices</option>
-                  <option value="other">Other Electronics</option>
-                </ReUsableSelect>
-                {errors && (
-                  <p className=" text-sm text-red-400">{errors.category}</p>
-                )}
-              </div>
-
-              {/* Time Found */}
-              <div>
-                <ReUsableInput
-                  label="Time Found"
-                  placeholder="Time Found"
-                  type="time"
-                  name="timeFound"
-                  value={formData.timeFound}
-                  onChange={handleInputChange}
-                />
-                {errors && (
-                  <p className=" text-sm text-red-400">{errors.timeFound}</p>
-                )}
-              </div>
-
-              {/* Upload Receipt */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Upload Receipt/Proof of Ownership
+                  Choose File
                 </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-md p-12 lg:p-16 text-center hover:border-gray-400 transition-colors cursor-pointer">
-                  <Upload className="w-6 h-6 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-500 text-xs mb-2">
-                    {formData.recepiet
-                      ? formData.recepiet.name
-                      : "Upload Proof of Ownership(eg:invoice,Receipt,etc.)"}
-                  </p>
-                  <input
-                    type="file"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0] || null;
-                      setFormData((prev) => ({
-                        ...prev,
-                        recepiet: file,
-                      }));
-                    }}
-                    accept="application/pdf,image/*"
-                    className="hidden"
-                    id="recepiet-upload"
-                  />
-                  <label
-                    htmlFor="recepiet-upload"
-                    className="cursor-pointer text-sm text-blue-600 hover:text-blue-800"
-                  >
-                    Choose File
-                  </label>
-                </div>
               </div>
-
-              {/* Upload Image */}
-              <div>
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Upload Device Image
-                  </label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-md p-12 lg:p-16 text-center hover:border-gray-400 transition-colors cursor-pointer">
-                    <Upload className="w-6 h-6 text-gray-400 mx-auto mb-2" />
-                    <p className="text-gray-500 text-xs mb-2">
-                      {formData.image
-                        ? formData.image.name
-                        : "Upload Device Image"}
-                    </p>
-                    <input
-                      type="file"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0] || null;
-                        setFormData((prev) => ({
-                          ...prev,
-                          image: file,
-                        }));
-                      }}
-                      accept="application/pdf,image/*"
-                      className="hidden"
-                      id="image-upload"
-                    />
-                    <label
-                      htmlFor="image-upload"
-                      className="cursor-pointer text-sm text-blue-600 hover:text-blue-800"
-                    >
-                      Choose File
-                    </label>
-                  </div>
-                  {errors && (
-                    <p className=" text-sm text-red-400">{errors.image}</p>
-                  )}
-                </div>
-              </div>
-
-              <div>
-                <ReUsableInput
-                  label="Brand"
-                  type="text"
-                  name="brand"
-                  value={formData.brand}
-                  onChange={handleChange}
-                  placeholder="Search Brand"
-                />
-                {errors && (
-                  <p className=" text-sm text-red-400">{errors.brand}</p>
-                )}
-              </div>
-
-              {/* Additional Information */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Additional Information
-                </label>
-                <div>
-                  <textarea
-                    name="additionalInfo"
-                    value={formData.additionalInfo}
-                    onChange={handleChange}
-                    placeholder="Additional Information"
-                    rows={5}
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none resize-vertical"
-                  />
-                  {errors && (
-                    <p className=" text-sm text-red-400">
-                      {errors.additionalInfo}
-                    </p>
-                  )}
-                </div>
-              </div>
+              {errors && (
+                <p className=" text-sm text-red-400">{errors.image}</p>
+              )}
+            </div>
+          </div>
+          <div>
+            <ReUsableInput
+              label="Brand"
+              type="text"
+              name="brand"
+              value={formData.brand}
+              onChange={handleChange}
+              placeholder="Search Brand"
+            />
+            {errors && <p className=" text-sm text-red-400">{errors.brand}</p>}
+          </div>
+          {/* Additional Information */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Additional Information
+            </label>
+            <div>
+              <textarea
+                name="additionalInfo"
+                value={formData.additionalInfo}
+                onChange={handleChange}
+                placeholder="Additional Information"
+                rows={5}
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none resize-vertical"
+              />
+              {errors && (
+                <p className=" text-sm text-red-400">{errors.additionalInfo}</p>
+              )}
             </div>
           </div>
         </div>
 
         {/* Location Information Section */}
-        <div className="bg-white rounded-lg shadow-sm mb-8">
-          <div className="p-6 lg:p-8">
-            <h2 className="text-xl lg:text-2xl font-semibold text-gray-900 mb-2">
+        <div className="bg-white rounded-lg shadow-sm">
+          <div className="p-6 ">
+            <h2 className="text-md font-bold text-gray-900 mb-2">
               Location Information
             </h2>
-            <p className="text-gray-600 mb-8 text-sm lg:text-base">
-              Please be descriptive when reporting found, the more information
-              you give us the better chance when we
-            </p>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            <div className="grid gap-3 ">
               {/* Address */}
               <div>
                 <ReUsableSelect
@@ -526,15 +490,11 @@ const LostItemForm: React.FC<EditModalProps> = ({ onClose }) => {
         {/* Contact Information Section */}
         <div className="bg-white rounded-lg shadow-sm mb-8">
           <div className="p-6 lg:p-8">
-            <h2 className="text-xl lg:text-2xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-md  font-bold text-gray-900 mb-2">
               Contact Information
             </h2>
-            <p className="text-gray-600 mb-8 text-sm lg:text-base">
-              Your contact information is kept private and only shared if a
-              match is found with your permission.
-            </p>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            <div className="grid gap-3">
               {/* First Name */}
               <div>
                 <ReUsableInput
