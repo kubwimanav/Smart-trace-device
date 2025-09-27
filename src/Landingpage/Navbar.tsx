@@ -15,12 +15,7 @@ interface HeaderProps {
 }
 
 const Navbar: React.FC<HeaderProps> = () => {
-  const scrollToSection = (id: any) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+ 
 
   const [openBrowseritem, setopenBrowseritem] = useState(false);
   const [open, setOpen] = useState(false);
@@ -318,13 +313,13 @@ const Navbar: React.FC<HeaderProps> = () => {
       {/* Mobile Navigation */}
       {isMobileMenuOpen && (
         <div
-          className={`lg:hidden bg-white border-t border-gray-200 shadow-lg transition-transform duration-300 ${
+          className={`lg:hidden h-screen bg-white border-t border-gray-200 shadow-lg transition-transform duration-300 ${
             isScrolled
               ? "-translate-y-[50px] sm:-translate-y-[60px]"
               : "translate-y-0"
           }`}
         >
-          <div className="px-4 sm:px-6 py-4 space-y-1 max-h-screen overflow-y-auto">
+          <div className="px-4 sm:px-6 py-4 space-y-4">
             {/* Mobile Home Link */}
             <Link
               to="home"
@@ -441,30 +436,25 @@ const Navbar: React.FC<HeaderProps> = () => {
             </div>
 
             {/* Mobile Contact Link */}
-            <button
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                scrollToSection("contact");
-              }}
-              className={`block font-medium text-base py-3 px-4 rounded-lg transition-all text-left w-full ${
+             <Link to={'/contact'}         className={`block font-medium text-base py-3 px-4 rounded-lg transition-all text-left w-full ${
                 isContactActive
                   ? "text-blue-600 bg-blue-50"
                   : "text-slate-700 hover:text-blue-600 hover:bg-gray-50"
               }`}
             >
               Contact Us
-            </button>
+            </Link>
 
             {/* Mobile Login Button */}
              <Link to={"/LandingAuth"}
-                className="w-full bg-slate-500 text-white py-2 px-4 font-medium text-base rounded-lg hover:bg-slate-600 transition-all duration-200 hover:shadow-md"
+                 className=" flex items-center justify-center  w-full bg-slate-500 text-white py-2 px-8 font-medium text-base rounded-lg hover:bg-slate-600 transition-all duration-200 hover:shadow-md"
               >
                 
                   Login
                 </Link>
 
             {/* Mobile Social Icons */}
-            <div className="flex items-center justify-center space-x-6 pt-4 pb-2 border-t border-gray-200">
+            <div className="flex items-center justify-center space-x-6  mt-6 pt-4 pb-2 border-t border-gray-200">
               <Link
                 to=""
                 className="text-slate-400 hover:text-slate-600 transition-colors p-2"

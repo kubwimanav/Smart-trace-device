@@ -177,7 +177,7 @@ const LostItem: React.FC = () => {
                   image={`${import.meta.env.VITE_API_BASE_URL}${item.image}`}
                   location={item.cityTown}
                   id={item.id}
-                  type="lost"/>
+                  />
               </div>
             ))
           ) : (
