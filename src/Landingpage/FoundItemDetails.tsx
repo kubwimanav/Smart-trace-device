@@ -101,9 +101,9 @@ const FoundItemDetail: React.FC = () => {
           {/* Image Section */}
           <div className="space-y-4">
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              {item.image ? (
+              {item.deviceimage ? (
                 <img
-                  src={import.meta.env.VITE_API_BASE_URL + item.image}
+                  src={item.deviceimage}
                   alt={item.title}
                   className="w-full h-80 md:h-96 object-cover"
                 />

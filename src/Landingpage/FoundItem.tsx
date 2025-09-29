@@ -171,7 +171,7 @@ const FoundItem: React.FC = () => {
                 <FoundItemCard
                   id={item.id}
                   title={item.name} // change to item.title if API returns title
-                  image={import.meta.env.VITE_API_BASE_URL + item.deviceimage}
+                  image={item.deviceimage}
                   location={item.location}
                 />
               </div>

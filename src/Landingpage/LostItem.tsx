@@ -174,7 +174,7 @@ const LostItem: React.FC = () => {
               <div className="w-full max-w-sm" key={item.id}>
                 <LostItemCard
                   title={item.title}
-                  image={`${import.meta.env.VITE_API_BASE_URL}${item.image}`}
+                  image={item.image}
                   location={item.cityTown}
                   id={item.id}
                   />

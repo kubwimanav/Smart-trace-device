@@ -29,7 +29,7 @@ const Footer: React.FC<FooterProps> = () => {
             isn't equal. Let me fix the responsive grid layout and padding to
             make it look better on all screen sizes.
           </p>
-          <div className=" flex gap-2">
+          <div className=" flex flex-col gap-2 sm:flex-row">
             <input
               type="text"
               placeholder="Enter your email"
