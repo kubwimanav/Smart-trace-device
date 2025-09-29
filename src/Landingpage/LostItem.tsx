@@ -168,7 +168,7 @@ const LostItem: React.FC = () => {
         </div>
 
         {/* Items Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-center justify-items-center place-items-center mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 items-center justify-items-center place-items-center mx-auto">
           {filteredItems.length > 0 ? (
             filteredItems.map((item: any) => (
               <div className="w-full max-w-sm" key={item.id}>
