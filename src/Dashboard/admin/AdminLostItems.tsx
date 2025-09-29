@@ -818,7 +818,7 @@ export default function AdminLostItems(): JSX.Element {
                       <div className="flex-shrink-0 h-10 w-10">
                         <img
                           className="h-10 w-10 rounded-md object-cover"
-                          src={import.meta.env.VITE_API_BASE_URL + item.image}
+                          src={item.image}
                           alt={item.title}
                           onError={(e) => {
                             (e.target as HTMLImageElement).src =

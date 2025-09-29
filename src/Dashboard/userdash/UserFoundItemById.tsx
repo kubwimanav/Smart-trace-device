@@ -860,7 +860,7 @@ export default function UserFoundItemById(): JSX.Element {
                         <img
                           className="h-10 w-10 rounded-md object-cover"
                           src={
-                            import.meta.env.VITE_API_BASE_URL + item.deviceimage
+                             item.deviceimage
                           }
                           alt={item.name}
                           onError={(e) => {

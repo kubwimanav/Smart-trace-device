@@ -251,7 +251,7 @@ const LostItemForm: React.FC<EditModalProps> = () => {
           {/* Date Item Found */}
           <div>
             <ReUsableInput
-              label="Date Found"
+              label="Date Lost"
               placeholder="Date Found"
               type="date"
               name="dateFound"
@@ -285,8 +285,8 @@ const LostItemForm: React.FC<EditModalProps> = () => {
           {/* Time Found */}
           <div>
             <ReUsableInput
-              label="Time Found"
-              placeholder="Time Found"
+              label="Time Lost"
+              placeholder="Time Lost"
               type="time"
               name="timeFound"
               value={formData.timeFound}
